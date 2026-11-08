@@ -1,0 +1,43 @@
+name: Resource suggestion
+description: Propose an official technology resource with a clear reason to include it
+title: "[Resource] "
+body:
+  - type: input
+    id: name
+    attributes:
+      label: Resource name
+      placeholder: Official project or documentation name
+    validations:
+      required: true
+  - type: input
+    id: url
+    attributes:
+      label: Official documentation URL
+      placeholder: https://
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Kind
+      options:
+        - Official documentation
+        - Learning guide
+        - Specification
+        - Community resource
+    validations:
+      required: true
+  - type: textarea
+    id: rationale
+    attributes:
+      label: What does it help someone do?
+      description: Include audience, concrete use case, strengths, and at least one limitation.
+    validations:
+      required: true
+  - type: textarea
+    id: comparison
+    attributes:
+      label: Alternatives and verification
+      description: What alternatives did you consider, and what did you personally check?
+    validations:
+      required: true

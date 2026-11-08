@@ -1,0 +1,30 @@
+name: Report an inaccurate or outdated entry
+description: Help us fix broken links, factual mistakes, or documentation drift
+title: "[Correction] "
+body:
+  - type: input
+    id: entry
+    attributes:
+      label: Atlas page or resource
+      placeholder: Link to the affected file
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What is incorrect?
+      description: Give the existing claim or broken link and the observed problem.
+    validations:
+      required: true
+  - type: input
+    id: evidence
+    attributes:
+      label: Authoritative source for the correction
+      placeholder: https://
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Suggested fix
+      description: Optional wording or a correction you would recommend.
