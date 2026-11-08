@@ -1,0 +1,302 @@
+[
+  {
+    "id": "python",
+    "name": "Python documentation",
+    "category": "programming-languages",
+    "subcategory": "Python language",
+    "kind": "official-docs",
+    "url": "https://docs.python.org/3/",
+    "summary": "Upstream tutorial, language reference, and standard-library documentation for Python.",
+    "verified_on": "2026-11-08"
+  },
+  {
+    "id": "rust",
+    "name": "The Rust Programming Language",
+    "category": "programming-languages",
+    "subcategory": "Rust language",
+    "kind": "official-guide",
+    "url": "https://doc.rust-lang.org/book/",
+    "summary": "The official Rust book explains ownership, borrowing, types, error handling, and application development.",
+    "verified_on": "2026-11-08"
+  },
+  {
+    "id": "typescript",
+    "name": "TypeScript documentation",
+    "category": "programming-languages",
+    "subcategory": "Typed JavaScript",
+    "kind": "official-docs",
+    "url": "https://www.typescriptlang.org/docs/",
+    "summary": "Official TypeScript handbook and references for a JavaScript type-checking language and toolchain.",
+    "verified_on": "2026-11-08"
+  },
+  {
+    "id": "javascript-mdn",
+    "name": "MDN JavaScript",
+    "category": "programming-languages",
+    "subcategory": "JavaScript fundamentals",
+    "kind": "reference",
+    "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript",
+    "summary": "MDN's JavaScript guide and reference explain language syntax, built-in objects, and browser-oriented examples.",
+    "verified_on": "2026-11-08"
+  },
+  {
+    "id": "missing-semester",
+    "name": "The Missing Semester",
+    "category": "computer-science-fundamentals",
+    "subcategory": "Developer foundations",
+    "kind": "learning-course",
+    "url": "https://missing.csail.mit.edu/",
+    "summary": "MIT-hosted course about shell use, editors, version control, and tooling often omitted from formal curricula.",
+    "verified_on": "2026-11-08"
+  },
+  {
+    "id": "scikit-learn",
+    "name": "scikit-learn documentation",
+    "category": "artificial-intelligence-machine-learning",
+    "subcategory": "Classical machine learning",
+    "kind": "official-docs",
+    "url": "https://scikit-learn.org/stable/",
+    "summary": "Documentation for Python estimators, preprocessing, model selection, and evaluation utilities.",
+    "verified_on": "2026-11-08"
+  },
+  {
+    "id": "jax",
+    "name": "JAX documentation",
+    "category": "artificial-intelligence-machine-learning",
+    "subcategory": "Differentiable numerical computing",
+    "kind": "official-docs",
+    "url": "https://docs.jax.dev/en/latest/",
+    "summary": "Documentation for array computation and transformations such as automatic differentiation and compilation.",
+    "verified_on": "2026-11-08"
+  },
+  {
+    "id": "pytorch",
+    "name": "PyTorch documentation",
+    "category": "deep-learning-neural-networks",
+    "subcategory": "Deep learning framework",
+    "kind": "official-docs",
+    "url": "https://docs.pytorch.org/docs/2.15/index.html",
+    "summary": "Official tensor, automatic differentiation, neural-network module, and training references.",
+    "verified_on": "2026-11-08"
+  },
+  {
+    "id": "tensorflow",
+    "name": "TensorFlow Guide",
+    "category": "deep-learning-neural-networks",
+    "subcategory": "Deep learning framework",
+    "kind": "official-docs",
+    "url": "https://www.tensorflow.org/guide",
+    "summary": "Upstream guides for TensorFlow and its Keras-based model-building and data-processing workflows.",
+    "verified_on": "2026-11-08"
+  },
+  {
+    "id": "git",
+    "name": "Git reference",
+    "category": "software-engineering",
+    "subcategory": "Version control",
+    "kind": "official-docs",
+    "url": "https://git-scm.com/docs",
+    "summary": "Upstream reference for Git commands, branching, merges, rebases, and repository history.",
+    "verified_on": "2026-11-08"
+  },
+  {
+    "id": "embedded-rust",
+    "name": "The Embedded Rust Book",
+    "category": "systems-programming",
+    "subcategory": "Bare-metal embedded programming",
+    "kind": "official-guide",
+    "url": "https://docs.rust-embedded.org/book/",
+    "summary": "Community-maintained Rust book on programming microcontrollers and bare-metal environments.",
+    "verified_on": "2026-11-08"
+  },
+  {
+    "id": "llvm",
+    "name": "LLVM documentation",
+    "category": "compiler-development",
+    "subcategory": "Compiler infrastructure",
+    "kind": "official-docs",
+    "url": "https://llvm.org/docs/",
+    "summary": "Official LLVM documentation for IR, passes, backend concepts, and frontend-building tutorials.",
+    "verified_on": "2026-11-08"
+  },
+  {
+    "id": "linux-kernel-docs",
+    "name": "Linux kernel documentation",
+    "category": "operating-systems",
+    "subcategory": "Operating-system internals",
+    "kind": "official-docs",
+    "url": "https://docs.kernel.org/",
+    "summary": "Upstream Linux kernel documentation covering subsystem interfaces, development processes, and internals.",
+    "verified_on": "2026-11-08"
+  },
+  {
+    "id": "postgresql",
+    "name": "PostgreSQL documentation",
+    "category": "databases-storage",
+    "subcategory": "Client-server relational database",
+    "kind": "official-docs",
+    "url": "https://www.postgresql.org/docs/current/",
+    "summary": "Official PostgreSQL reference for SQL, data types, transactions, administration, and extension features.",
+    "verified_on": "2026-11-08"
+  },
+  {
+    "id": "sqlite",
+    "name": "SQLite documentation",
+    "category": "databases-storage",
+    "subcategory": "Embedded relational database",
+    "kind": "official-docs",
+    "url": "https://www.sqlite.org/docs.html",
+    "summary": "Upstream documentation for the embeddable SQLite database, SQL syntax, CLI, and interfaces.",
+    "verified_on": "2026-11-08"
+  },
+  {
+    "id": "vscode",
+    "name": "Visual Studio Code documentation",
+    "category": "developer-tools",
+    "subcategory": "Code editor",
+    "kind": "official-docs",
+    "url": "https://code.visualstudio.com/docs",
+    "summary": "Official documentation for the VS Code editor, extensions, debugging, source control, and settings.",
+    "verified_on": "2026-11-08"
+  },
+  {
+    "id": "mdn-learn",
+    "name": "MDN Learn web development",
+    "category": "web-development",
+    "subcategory": "Web fundamentals",
+    "kind": "learning-guide",
+    "url": "https://developer.mozilla.org/en-US/docs/Learn_web_development",
+    "summary": "MDN's structured curriculum for HTML, CSS, accessibility, JavaScript, and web fundamentals.",
+    "verified_on": "2026-11-08"
+  },
+  {
+    "id": "react",
+    "name": "React Learn",
+    "category": "web-development",
+    "subcategory": "UI library",
+    "kind": "official-guide",
+    "url": "https://react.dev/learn",
+    "summary": "Upstream React guide for components, props, state, rendering, and UI interactions.",
+    "verified_on": "2026-11-08"
+  },
+  {
+    "id": "android-dev",
+    "name": "Android Developers documentation",
+    "category": "mobile-desktop-development",
+    "subcategory": "Android applications",
+    "kind": "official-docs",
+    "url": "https://developer.android.com/develop",
+    "summary": "Google's official Android development resources, samples, APIs, and platform guidance.",
+    "verified_on": "2026-11-08"
+  },
+  {
+    "id": "flutter",
+    "name": "Flutter documentation",
+    "category": "mobile-desktop-development",
+    "subcategory": "Multi-platform UI toolkit",
+    "kind": "official-docs",
+    "url": "https://docs.flutter.dev/",
+    "summary": "Official Flutter guides for Dart-based UI, widgets, tooling, and platform integrations.",
+    "verified_on": "2026-11-08"
+  },
+  {
+    "id": "numpy",
+    "name": "NumPy documentation",
+    "category": "scientific-computing",
+    "subcategory": "Numerical arrays",
+    "kind": "official-docs",
+    "url": "https://numpy.org/doc/stable/",
+    "summary": "Official reference for N-dimensional arrays and numerical operations in Python.",
+    "verified_on": "2026-11-08"
+  },
+  {
+    "id": "scipy",
+    "name": "SciPy documentation",
+    "category": "scientific-computing",
+    "subcategory": "Scientific algorithms",
+    "kind": "official-docs",
+    "url": "https://docs.scipy.org/doc/scipy/",
+    "summary": "Official reference and user guide for scientific algorithms in optimization, integration, statistics, and more.",
+    "verified_on": "2026-11-08"
+  },
+  {
+    "id": "cp-algorithms",
+    "name": "CP-Algorithms",
+    "category": "algorithms-data-structures",
+    "subcategory": "Algorithm reference",
+    "kind": "community-reference",
+    "url": "https://cp-algorithms.com/",
+    "summary": "Community reference on algorithms, data structures, number theory, graph methods, and competitive-programming techniques.",
+    "verified_on": "2026-11-08"
+  },
+  {
+    "id": "risc-v",
+    "name": "RISC-V unprivileged ISA specification",
+    "category": "computer-architecture",
+    "subcategory": "Instruction-set architecture",
+    "kind": "specification",
+    "url": "https://docs.riscv.org/reference/isa/v20260120/unpriv/unpriv-index.html",
+    "summary": "Official unprivileged RISC-V instruction-set manual for architectural behavior and extensions.",
+    "verified_on": "2026-11-08"
+  },
+  {
+    "id": "wireshark",
+    "name": "Wireshark documentation",
+    "category": "networking-distributed-systems",
+    "subcategory": "Network analysis",
+    "kind": "official-docs",
+    "url": "https://www.wireshark.org/docs/",
+    "summary": "Official Wireshark documentation and learning materials for inspecting packet captures.",
+    "verified_on": "2026-11-08"
+  },
+  {
+    "id": "owasp-cheatsheets",
+    "name": "OWASP Cheat Sheet Series",
+    "category": "cybersecurity-secure-engineering",
+    "subcategory": "Defensive application security",
+    "kind": "community-reference",
+    "url": "https://cheatsheetseries.owasp.org/",
+    "summary": "OWASP's practical references for secure application design, authentication, authorization, and other defensive topics.",
+    "verified_on": "2026-11-08"
+  },
+  {
+    "id": "docker",
+    "name": "Docker Get Started",
+    "category": "cloud-computing-devops",
+    "subcategory": "Containerization",
+    "kind": "official-guide",
+    "url": "https://docs.docker.com/get-started/",
+    "summary": "Upstream introductory documentation for building and running container images and applications.",
+    "verified_on": "2026-11-08"
+  },
+  {
+    "id": "kubernetes",
+    "name": "Kubernetes documentation",
+    "category": "cloud-computing-devops",
+    "subcategory": "Container orchestration",
+    "kind": "official-docs",
+    "url": "https://kubernetes.io/docs/",
+    "summary": "Upstream Kubernetes reference covering cluster architecture, APIs, workloads, configuration, and operations.",
+    "verified_on": "2026-11-08"
+  },
+  {
+    "id": "github-actions",
+    "name": "GitHub Actions documentation",
+    "category": "cloud-computing-devops",
+    "subcategory": "Continuous integration",
+    "kind": "official-docs",
+    "url": "https://docs.github.com/en/actions",
+    "summary": "Official GitHub documentation for event-driven workflows, jobs, runners, and automation.",
+    "verified_on": "2026-11-08"
+  },
+  {
+    "id": "open-source-guides",
+    "name": "Open Source Guides",
+    "category": "open-source-projects-communities",
+    "subcategory": "Community contribution",
+    "kind": "community-guide",
+    "url": "https://opensource.guide/",
+    "summary": "Practical guidance for starting, contributing to, and maintaining an open-source community.",
+    "verified_on": "2026-11-08"
+  }
+]
