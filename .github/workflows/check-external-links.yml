@@ -1,0 +1,28 @@
+name: Audit upstream documentation links
+
+on:
+  schedule:
+    - cron: '15 3 * * 0'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: atlas-external-links
+  cancel-in-progress: false
+
+jobs:
+  links:
+    name: Official source availability
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check upstream links and classify blocks
+        run: python3 scripts/check_external_links.py --strict
