@@ -23,6 +23,8 @@ Use ISO dates (UTC calendar date) for `verified_on`; only update after reinspect
 
 ## Maintenance
 
+Follow the [maintenance runbook](MAINTENANCE.md) to triage HTTP errors without accidentally removing resources whose servers block bots.
+
 The [validation workflow](../.github/workflows/validate.yml) checks catalog shape, duplicates, required profiles, links, and local navigation. External URL checks are a separate network-dependent workflow; HTTP denials or rate limits require human assessment, not blind deletion.
 
 A resource with an old verification date is **stale**, not necessarily broken. Prioritize checking reported failures, outdated APIs, moved documentation, and important categories. Archive or remove an entry only after understanding the cause.

@@ -14,6 +14,7 @@
 - **[Follow a learning path](guides/learning-paths.md)** — build foundations before specializing.
 - **[Compare tools thoughtfully](comparisons/README.md)** — scenario-based choices without unsupported rankings.
 - **[Contribute](CONTRIBUTING.md)** — propose a resource, correct a fact, or improve a guide.
+- **[Maintain accuracy](docs/MAINTENANCE.md)** — understand review dates and upstream-link triage.
 
 ## What makes an entry useful?
 
