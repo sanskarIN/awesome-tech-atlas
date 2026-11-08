@@ -25,12 +25,16 @@ def probe(item: dict[str, str]) -> tuple[str, str, str]:
             with urllib.request.urlopen(req, timeout=TIMEOUT) as response:
                 return item["id"], "ok", f"HTTP {response.status}; {response.url}"
         except urllib.error.HTTPError as exc:
-            if exc.code in {405, 501} and method == "HEAD":
+            # A blocked or unimplemented HEAD request does not prove GET is broken.
+            if method == "HEAD" and exc.code in {400, 403, 404, 405, 410, 501}:
                 continue
             if exc.code in {401, 403, 429, 500, 502, 503, 504}:
                 return item["id"], "review", f"HTTP {exc.code}: possible network block or temporary server error"
             return item["id"], "broken", f"HTTP {exc.code}"
         except (urllib.error.URLError, TimeoutError, OSError) as exc:
+            # Retry with GET when the server or proxy refuses HEAD.
+            if method == "HEAD":
+                continue
             return item["id"], "review", f"Network error: {exc}"
     return item["id"], "review", "Unsupported HEAD/GET response"
 
