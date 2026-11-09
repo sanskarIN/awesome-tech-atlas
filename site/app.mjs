@@ -114,10 +114,11 @@ function render(updateUrl = true) {
 
   empty.hidden = matched.length !== 0;
   status.textContent = "Showing " + matched.length + " of " + entries.length
-    + " curated resources" + (matched.length === 1 ? "." : ".");
+    + " curated resources.";
   clearButton.disabled = !(filters.query || filters.category || filters.kind);
 
-  if (updateUrl && window.history?.replaceState) {
+  // file:// snapshots cannot reliably modify history; filtering still works locally.
+  if (updateUrl && window.location.protocol !== "file:" && window.history?.replaceState) {
     const next = window.location.pathname + filtersToQuery(filters) + window.location.hash;
     window.history.replaceState(null, "", next);
   }
@@ -135,12 +136,19 @@ function restoreFromUrl() {
 
 async function initialize() {
   try {
-    const response = await fetch(new URL("../data/resources.json", import.meta.url), {
-      credentials: "omit",
-      cache: "no-store",
-    });
-    if (!response.ok) throw new Error("Catalog request returned HTTP " + response.status);
-    const data = await response.json();
+    // A generated offline snapshot embeds a validated catalog, so file:// needs no fetch.
+    // The repository version still loads the canonical JSON from the local server.
+    let data;
+    if (Array.isArray(globalThis.__ATLAS_EMBEDDED_CATALOG__)) {
+      data = globalThis.__ATLAS_EMBEDDED_CATALOG__;
+    } else {
+      const response = await fetch(new URL("../data/resources.json", document.baseURI), {
+        credentials: "omit",
+        cache: "no-store",
+      });
+      if (!response.ok) throw new Error("Catalog request returned HTTP " + response.status);
+      data = await response.json();
+    }
     if (!Array.isArray(data) || data.some((entry) => !validRecord(entry))) {
       throw new Error("Catalog shape is invalid; run the repository validator.");
     }
