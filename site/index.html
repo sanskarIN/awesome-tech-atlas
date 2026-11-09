@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A curated, evidence-minded atlas of programming languages, software engineering, AI, systems, and developer tooling.">
+  <meta name="color-scheme" content="light dark">
+  <title>Explore resources | Awesome Tech Atlas</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app.mjs"></script>
+</head>
+<body>
+  <a class="skip-link" href="#explore">Skip to resource explorer</a>
+  <div class="site-shell">
+    <header class="masthead">
+      <a class="brand" href="https://github.com/sanskarIN/awesome-tech-atlas" aria-label="Awesome Tech Atlas repository">
+        <span class="brand-symbol" aria-hidden="true">◇</span>
+        <span>Awesome Tech Atlas</span>
+      </a>
+      <nav aria-label="Main navigation" class="topnav">
+        <a href="https://github.com/sanskarIN/awesome-tech-atlas">GitHub</a>
+        <a href="https://github.com/sanskarIN/awesome-tech-atlas/blob/main/guides/learning-paths.md">Learning paths</a>
+        <a href="https://github.com/sanskarIN/awesome-tech-atlas/blob/main/CONTRIBUTING.md">Contribute</a>
+      </nav>
+    </header>
+
+    <main id="explore">
+      <section class="hero" aria-labelledby="page-title">
+        <div class="eyebrow"><span aria-hidden="true">✦</span> An open-source knowledge map</div>
+        <h1 id="page-title">Find your next<br><span>technical resource.</span></h1>
+        <p class="hero-copy">Curated references, practical starting points and honest trade-offs. Browse the catalog without an account, analytics or a third-party search service.</p>
+        <div class="stats" aria-label="Catalog statistics">
+          <div><strong id="total-count">—</strong><span>curated resources</span></div>
+          <div><strong id="category-count">—</strong><span>topic areas</span></div>
+          <div><strong>0</strong><span>tracking services</span></div>
+        </div>
+      </section>
+
+      <section class="explorer" aria-labelledby="explorer-title">
+        <div class="explorer-intro">
+          <div>
+            <p class="section-kicker">Discover / Learn / Build</p>
+            <h2 id="explorer-title">Explore the catalog</h2>
+          </div>
+          <a href="../data/resources.json" class="data-link" download>Get catalog JSON</a>
+        </div>
+
+        <div class="filters" role="group" aria-label="Catalog filters">
+          <div class="field search-field">
+            <label for="query">Search resources</label>
+            <input id="query" type="search" maxlength="120" placeholder="Try Rust, machine learning, database…" autocomplete="off" aria-describedby="search-help" disabled>
+            <small id="search-help">All words must match. Press / to focus search.</small>
+          </div>
+          <div class="field">
+            <label for="category">Topic</label>
+            <select id="category" disabled>
+              <option value="">All topics</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="kind">Resource type</label>
+            <select id="kind" disabled>
+              <option value="">All types</option>
+            </select>
+          </div>
+          <button type="button" class="reset" id="clear-filters" disabled>Clear filters</button>
+        </div>
+
+        <div class="results-bar">
+          <p id="results-status" role="status" aria-live="polite" aria-atomic="true">Loading local catalog…</p>
+          <span>Official sources, explained</span>
+        </div>
+        <div id="cards" class="card-grid" aria-label="Resource results"></div>
+        <div id="empty" class="empty-state" hidden>
+          <h3>No resources found</h3>
+          <p>Try a broader topic or clear one of the filters.</p>
+        </div>
+
+        <noscript>
+          <p class="fallback">JavaScript is disabled. The full catalog is also available as a
+            <a href="https://github.com/sanskarIN/awesome-tech-atlas/blob/main/resources/README.md">plain Markdown index</a>.
+          </p>
+        </noscript>
+      </section>
+
+      <section class="footer-banner">
+        <div>
+          <h2>Knowledge is better with context.</h2>
+          <p>Each resource links to a reviewed upstream page and a profile explaining where it fits. An inspection date is not a security audit or version guarantee.</p>
+        </div>
+        <a href="https://github.com/sanskarIN/awesome-tech-atlas/blob/main/docs/EDITORIAL_POLICY.md">Read the editorial policy</a>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>Awesome Tech Atlas · Community-curated · CC0 for original contributions</span>
+      <a href="https://github.com/sanskarIN/awesome-tech-atlas">Source on GitHub</a>
+    </footer>
+  </div>
+</body>
+</html>
