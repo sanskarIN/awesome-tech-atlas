@@ -34,6 +34,12 @@ Make the smallest evidence-backed change. If a URL redirects, update it to the c
 - Examples must be short, correct for their stated context, and safe. State required setup if any.
 - Treat AI-assisted contributions like other contributions: **verify each factual claim and link** yourself.
 
+## Pull requests and protected main
+
+The default branch `main` is protected by the active repository ruleset **Protect main**. Routine changes must use a pull request, pass the **Catalog, Markdown, and tests** status check, and resolve review threads. Force pushes and deletion of the protected branch are blocked. The current ruleset does **not** require a minimum number of approving reviews; reviewers are still encouraged for substantive changes.
+
+See the [branch-protection and recovery runbook](docs/BRANCH_PROTECTION.md) for the verified configuration, self-review limitations, and steps for handling a blocked check. GitHub settings are authoritative if the ruleset changes.
+
 ## Review process
 
 Maintainers review usefulness, correctness, evidence, readability, source licensing, and scope. Changes may be requested; acceptance is not automatic. An official link check date means **the URL and relevant documentation were reviewed**, not that all listed software has been installed, security-tested, or independently benchmarked.
