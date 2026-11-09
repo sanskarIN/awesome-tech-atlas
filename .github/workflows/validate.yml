@@ -36,4 +36,5 @@ jobs:
       - name: Test browser search and JavaScript syntax
         run: |
           node --check site/app.mjs
-          node --test tests/test_search.mjs
+          python3 scripts/build_offline.py --output "$RUNNER_TEMP/atlas-offline.html"
+          node --test tests/test_search.mjs tests/test_offline_script.mjs

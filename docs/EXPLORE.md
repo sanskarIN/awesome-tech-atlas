@@ -1,6 +1,6 @@
 # Explore the atlas locally
 
-Awesome Tech Atlas has two optional, **dependency-light** ways to browse the same curated `data/resources.json` file: a Python terminal explorer and a static HTML/CSS/JavaScript interface. Both are read-only. Neither edits the catalog, collects analytics, needs a database, or automatically deploys GitHub Pages.
+Awesome Tech Atlas has three optional, **dependency-light** ways to browse the same curated `data/resources.json` file: a Python terminal explorer, a locally served static browser, and a generated single-file offline snapshot. Both are read-only. Neither edits the catalog, collects analytics, needs a database, or automatically deploys GitHub Pages.
 
 The original [Markdown resource index](../resources/README.md) remains the primary, durable source. Every resource still needs a human-reviewed profile and an upstream reference.
 
@@ -46,6 +46,32 @@ The interface provides visible labels, a keyboard skip link, dark-mode and reduc
 
 The local search page loads only files from your own server. Clicking the **profile** opens GitHub and clicking the **official source** opens the upstream website, which require network access and have their own privacy and licensing policies. An inspection date is a documentation-review marker, **not** a runtime, performance, maintenance, or security guarantee.
 
+## Option C: Build a fully offline searchable HTML file
+
+No JavaScript package installation, database, or hosted web server is required. With Python 3.10+ available, run from the **repository root**:
+
+```bash
+python3 scripts/build_offline.py
+```
+
+On Windows, use `py -3 scripts/build_offline.py`. The command generates:
+
+```text
+dist/awesome-tech-atlas-offline.html
+```
+
+Double-click that file to open it with a modern browser. The HTML includes the catalog JSON, local search/filter code, and styles in **one file**. Search, category filters, kind filters, and a **Download snapshot JSON** button work even with your network disconnected. With JavaScript disabled, the generated page still contains an embedded list of resources and their upstream URLs.
+
+The result is a snapshot of the catalog at build time. **Rebuild it after changing resource data.** Files under `dist/` are ignored by Git and should not be committed automatically. To choose a destination:
+
+```bash
+python3 scripts/build_offline.py --output my-offline-atlas.html
+```
+
+**Offline limits:** The page is searchable without internet, but following a profile or official documentation link opens a website and still requires connectivity. Unlike the locally served version, a `file://` snapshot deliberately avoids storing filters in shareable URL query parameters. It does not install a service worker, update itself, collect usage statistics, or silently fetch new catalog entries.
+
+For a shareable or regularly updated hosted site, a separate deployment decision and testing process would be required. This builder **does not enable GitHub Pages or upload anything**.
+
 ## Tests and maintenance
 
 Before submitting a PR, run:
@@ -53,16 +79,17 @@ Before submitting a PR, run:
 ```bash
 python3 scripts/validate.py
 python3 -m unittest discover -s tests -v
-node --test tests/test_search.mjs
+node --test tests/test_search.mjs tests/test_offline_script.mjs
 node --check site/app.mjs
+python3 scripts/build_offline.py
 ```
 
 The Node-based tests require **Node.js 22+** (installed automatically in GitHub Actions). Regular Python validation and the terminal explorer do *not* require Node.
 
-The required content-validation workflow runs these checks on pull requests and `main`. Keep both interfaces in sync with changes to the catalog's identity and filter fields. The browser uses `textContent` and node creation instead of injecting resource strings into HTML, and validates official links before rendering them.
+The required content-validation workflow runs these checks on pull requests and `main`, including building and syntax-checking an offline export. Keep both interfaces in sync with changes to the catalog's identity and filter fields. The browser uses `textContent` and node creation instead of injecting resource strings into HTML, and validates official links before rendering them.
 
 ## Hosting and releases
 
-**No GitHub Pages deployment is enabled by this feature.** The site is intentionally a local/static preview. Publishing it later would be a separate opt-in decision requiring a deployment configuration, a base-path check, and deployment verification. Do not approve unknown Pages deployments simply because this folder exists.
+**No GitHub Pages deployment is enabled by this feature.** The hosted site remains a local/static preview, while the optional single-file HTML build is an offline snapshot. Publishing it later would be a separate opt-in decision requiring a deployment configuration, a base-path check, and deployment verification. Do not approve unknown Pages deployments simply because this folder exists.
 
 No GitHub release tag is required for these continuously maintained content and tooling updates.

@@ -12,6 +12,7 @@
 - **[Browse by topic](categories/README.md)** — programming, AI, systems, databases, web, security, and more.
 - **[Browse every vetted entry](resources/README.md)** — resource profiles with documented trade-offs.
 - **[Explore locally](docs/EXPLORE.md)** — search the atlas in a browser or terminal without external services.
+- **[Build a single-file offline atlas](docs/EXPLORE.md#option-c-build-a-fully-offline-searchable-html-file)** — open the searchable catalog without starting a server.
 - **[Follow a learning path](guides/learning-paths.md)** — build foundations before specializing.
 - **[Build a project](guides/project-based-tracks.md)** — five hands-on tracks with evidence and completion criteria.
 - **[Choose a technology](guides/decision-worksheet.md)** — a requirements-first worksheet for evaluating alternatives.

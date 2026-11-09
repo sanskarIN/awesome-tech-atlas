@@ -77,7 +77,11 @@ button, input, select { font: inherit; }
 .explorer-intro { display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 15px; margin-bottom: 28px; }
 .section-kicker { color: var(--accent); margin: 0 0 7px; }
 .explorer h2 { font-size: clamp(1.6rem, 2.5vw, 2.2rem); margin: 0; letter-spacing: -.04em; }
-.data-link { text-decoration: none; font-weight: 650; font-size: .9rem; }
+.data-link {
+  text-decoration: none; font-weight: 650; font-size: .9rem;
+  background: transparent; color: var(--accent); border: 0; padding: 0; cursor: pointer;
+}
+.data-link:hover { color: var(--accent-strong); text-decoration: underline; }
 .filters {
   display: grid; grid-template-columns: minmax(240px, 2fr) minmax(180px, 1fr) minmax(155px, 1fr) auto;
   gap: 14px; align-items: start;
