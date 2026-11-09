@@ -25,6 +25,14 @@ test("generated offline script is valid classic JavaScript with embedded catalog
     const resources = JSON.parse(data[1]);
     assert.equal(resources.length, 30);
     assert.ok(resources.some((r) => r.id === "rust"));
+    const profileAssignment = scripts[0][1].match(
+      /globalThis\.__ATLAS_EMBEDDED_PROFILES__ = (\{[^\n]+\});/,
+    );
+    assert.ok(profileAssignment, "expected full embedded resource profiles");
+    const profiles = JSON.parse(profileAssignment[1]);
+    assert.equal(Object.keys(profiles).length, resources.length);
+    assert.ok(profiles.rust.includes("## Worked example"));
+    assert.equal(typeof profiles.python, "string");
   } finally {
     rmSync(directory, { recursive: true, force: true });
   }

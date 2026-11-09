@@ -65,7 +65,7 @@ def verify_records(records: object) -> list[dict[str, str]]:
     return records
 
 
-def script_safe_json(records: list[dict[str, str]]) -> str:
+def script_safe_json(records: object) -> str:
     """Prevent a catalog value from terminating the embedding <script> element."""
     encoded = json.dumps(records, ensure_ascii=True, separators=(",", ":"))
     return (
@@ -77,14 +77,31 @@ def script_safe_json(records: list[dict[str, str]]) -> str:
     )
 
 
-def noscript_index(records: list[dict[str, str]]) -> str:
+def load_profiles(root: Path, records: list[dict[str, str]]) -> dict[str, str]:
+    """Read every original profile verbatim. Missing or mismatched files fail the build."""
+    profiles: dict[str, str] = {}
+    for entry in records:
+        path = root / "resources" / (entry["id"] + ".md")
+        body = path.read_text(encoding="utf-8")
+        if not body.strip() or entry["url"] not in body:
+            raise ValueError(f"Profile is empty or missing the official URL: {entry['id']}")
+        profiles[entry["id"]] = body
+    return profiles
+
+
+def noscript_index(records: list[dict[str, str]], profiles: dict[str, str]) -> str:
     items = []
     for entry in records:
         name = html.escape(entry["name"])
         summary = html.escape(entry["summary"])
         url = html.escape(entry["url"], quote=True)
-        items.append(f'            <li><strong>{name}</strong> — {summary} '
-                     f'(<a href="{url}" rel="noreferrer">official site</a>)</li>')
+        body = html.escape(profiles[entry["id"]])
+        items.append(
+            f'            <li><details><summary><strong>{name}</strong> — {summary}</summary>'
+            f'<pre>{body}</pre>'
+            f'<p><a href="{url}" rel="noreferrer">Official documentation (online)</a></p>'
+            f'</details></li>'
+        )
     return (
         '        <noscript>\n'
         '          <section class="fallback" aria-labelledby="offline-fallback">\n'
@@ -101,6 +118,7 @@ def build_offline_html(root: Path = ROOT, records: object | None = None) -> str:
     if records is None:
         records = json.loads((root / "data/resources.json").read_text(encoding="utf-8"))
     catalog = verify_records(records)
+    profiles = load_profiles(root, catalog)
 
     page = (root / "site/index.html").read_text(encoding="utf-8")
     styles = (root / "site/styles.css").read_text(encoding="utf-8")
@@ -123,6 +141,7 @@ def build_offline_html(root: Path = ROOT, records: object | None = None) -> str:
     code = (
         '"use strict";\n'
         f'globalThis.__ATLAS_EMBEDDED_CATALOG__ = {script_safe_json(catalog)};\n'
+        f'globalThis.__ATLAS_EMBEDDED_PROFILES__ = {script_safe_json(profiles)};\n'
         + combined + "\n" + DOWNLOAD_SCRIPT
     )
     page = replace_exactly_once(page, HTML_STYLES, "<style>\n" + styles + "\n</style>")
@@ -136,7 +155,7 @@ def build_offline_html(root: Path = ROOT, records: object | None = None) -> str:
         page, "<title>Explore resources | Awesome Tech Atlas</title>",
         "<title>Offline explorer | Awesome Tech Atlas</title>",
     )
-    page, count = re.subn(r"<noscript>[\s\S]*?</noscript>", noscript_index(catalog), page)
+    page, count = re.subn(r"<noscript>[\s\S]*?</noscript>", lambda match: noscript_index(catalog, profiles), page)
     if count != 1:
         raise ValueError("Expected exactly one noscript fallback.")
     page = replace_exactly_once(

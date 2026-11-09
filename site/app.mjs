@@ -35,6 +35,37 @@ const empty = document.querySelector("#empty");
 const totalCount = document.querySelector("#total-count");
 const categoryCount = document.querySelector("#category-count");
 let entries = [];
+const offlineProfiles = globalThis.__ATLAS_EMBEDDED_PROFILES__;
+
+function hasOfflineProfile(id) {
+  return offlineProfiles !== null
+    && typeof offlineProfiles === "object"
+    && Object.hasOwn(offlineProfiles, id)
+    && typeof offlineProfiles[id] === "string";
+}
+
+function openOfflineProfile(record) {
+  if (!hasOfflineProfile(record.id)) return;
+  const dialog = document.querySelector("#offline-profile-dialog");
+  const heading = document.querySelector("#offline-profile-title");
+  const markdown = document.querySelector("#offline-profile-markdown");
+  const githubLink = document.querySelector("#offline-profile-github");
+  const download = document.querySelector("#download-profile-markdown");
+
+  heading.textContent = record.name;
+  markdown.textContent = offlineProfiles[record.id];
+  githubLink.href = GITHUB_PROFILES + encodeURIComponent(record.id) + ".md";
+  download.onclick = () => {
+    const blob = new Blob([offlineProfiles[record.id]], { type: "text/markdown;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = record.id + ".md";
+    anchor.click();
+    setTimeout(() => URL.revokeObjectURL(url), 0);
+  };
+  dialog.showModal();
+}
 
 function labelFor(key) {
   return CATEGORIES[key] ?? key.replaceAll("-", " ");
@@ -64,9 +95,16 @@ function validRecord(record) {
 function resourceCard(record) {
   const article = el("article", "resource-card");
   const heading = el("h3", "card-title");
-  const profileLink = el("a", "profile-link", record.name);
-  profileLink.href = GITHUB_PROFILES + encodeURIComponent(record.id) + ".md";
-  heading.append(profileLink);
+  if (hasOfflineProfile(record.id)) {
+    const profileButton = el("button", "profile-link offline-profile-trigger", record.name);
+    profileButton.type = "button";
+    profileButton.addEventListener("click", () => openOfflineProfile(record));
+    heading.append(profileButton);
+  } else {
+    const profileLink = el("a", "profile-link", record.name);
+    profileLink.href = GITHUB_PROFILES + encodeURIComponent(record.id) + ".md";
+    heading.append(profileLink);
+  }
 
   const meta = el("div", "card-meta");
   meta.append(
@@ -172,6 +210,9 @@ async function initialize() {
       kindInput.value = "";
       render();
       queryInput.focus();
+    });
+    document.querySelector("#offline-profile-close").addEventListener("click", () => {
+      document.querySelector("#offline-profile-dialog").close();
     });
     window.addEventListener("popstate", restoreFromUrl);
     document.addEventListener("keydown", (event) => {

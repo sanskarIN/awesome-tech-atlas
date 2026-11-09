@@ -92,6 +92,22 @@
       </section>
     </main>
 
+    <dialog id="offline-profile-dialog" class="offline-profile-dialog" aria-labelledby="offline-profile-title">
+      <div class="offline-dialog-header">
+        <div>
+          <p class="section-kicker">Included in your offline snapshot</p>
+          <h2 id="offline-profile-title">Resource profile</h2>
+          <p class="reader-note">Complete curated Markdown, shown as text to preserve original code blocks and references. Upstream URLs may need internet access.</p>
+        </div>
+        <button type="button" id="offline-profile-close" class="reader-close" aria-label="Close offline profile">Close</button>
+      </div>
+      <pre id="offline-profile-markdown" class="offline-markdown" tabindex="0"></pre>
+      <div class="offline-dialog-footer">
+        <button type="button" id="download-profile-markdown" class="reader-download">Download Markdown</button>
+        <a id="offline-profile-github" href="https://github.com/sanskarIN/awesome-tech-atlas" target="_blank" rel="noopener noreferrer">View on GitHub ↗</a>
+      </div>
+    </dialog>
+
     <footer class="footer">
       <span>Awesome Tech Atlas · Community-curated · CC0 for original contributions</span>
       <a href="https://github.com/sanskarIN/awesome-tech-atlas">Source on GitHub</a>
