@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import html
 import json
 import re
 import sys
@@ -130,6 +131,89 @@ def resolve_local_link(source: Path, target: str, root: Path) -> Path | None:
     return (source.parent / local).resolve()
 
 
+FENCE_RE = re.compile(r"^ {0,3}(\x60{3,}|~{3,})")
+HEADING_RE = re.compile(r"^ {0,3}#{1,6}(?:\s+|$)(.*?)\s*#*\s*$")
+INLINE_CODE_RE = re.compile(r"(\x60+)(.*?)\1")
+
+
+def active_markdown_lines(content: str):
+    """Yield Markdown prose lines, excluding fenced code blocks."""
+    fence_char = None
+    fence_length = 0
+    for line in content.splitlines():
+        match = FENCE_RE.match(line)
+        if fence_char is None:
+            if match:
+                fence_char, fence_length = match.group(1)[0], len(match.group(1))
+                continue
+            yield line
+        elif match and match.group(1)[0] == fence_char and len(match.group(1)) >= fence_length:
+            fence_char = None
+
+
+def github_heading_anchors(content: str) -> set[str]:
+    """Generate GitHub-style IDs for ATX headings used in this repository."""
+    counts: dict[str, int] = {}
+    anchors: set[str] = set()
+    for line in active_markdown_lines(content):
+        match = HEADING_RE.match(line)
+        if not match:
+            continue
+        heading = match.group(1)
+        heading = re.sub(r"!?\[([^\]\n]+)\]\([^\)\n]+\)", r"\1", heading)
+        heading = html.unescape(re.sub(r"<[^>]*>", "", heading))
+        heading = re.sub(r"[\x60*_~]", "", heading)
+        base = re.sub(r"[^\w\- ]", "", heading.lower()).replace(" ", "-")
+        if not base:
+            continue
+        n = counts.get(base, 0)
+        counts[base] = n + 1
+        anchors.add(base if n == 0 else f"{base}-{n}")
+    return anchors
+
+
+def validate_markdown_links(root: Path) -> list[str]:
+    """Check local Markdown paths and fragments without network requests."""
+    errors: list[str] = []
+    anchor_cache: dict[Path, set[str]] = {}
+    root = root.resolve()
+    for md in sorted(root.rglob("*.md")):
+        if ".git" in md.relative_to(root).parts:
+            continue
+        content = md.read_text(encoding="utf-8")
+        for line in active_markdown_lines(content):
+            prose = INLINE_CODE_RE.sub("", line)
+            for match in LINK_RE.finditer(prose):
+                target = match.group(1)
+                href = target.strip().split(" ", 1)[0].strip("<>")
+                parsed = urlsplit(href)
+                if parsed.scheme or parsed.netloc or href.startswith(("mailto:", "tel:")):
+                    continue
+                resolved = md if not parsed.path else resolve_local_link(md, target, root)
+                if resolved is None:
+                    continue
+                try:
+                    rel_target = resolved.relative_to(root)
+                except ValueError:
+                    errors.append(f"{md.relative_to(root)}: link escapes repository: {target}")
+                    continue
+                if not resolved.exists():
+                    errors.append(f"{md.relative_to(root)}: broken local link: {target}")
+                    continue
+                if parsed.fragment and resolved.suffix.lower() == ".md":
+                    anchors = anchor_cache.get(resolved)
+                    if anchors is None:
+                        anchors = github_heading_anchors(resolved.read_text(encoding="utf-8"))
+                        anchor_cache[resolved] = anchors
+                    fragment = unquote(parsed.fragment)
+                    if fragment not in anchors:
+                        errors.append(
+                            f"{md.relative_to(root)}: missing Markdown anchor "
+                            f"#{fragment} in {rel_target}"
+                        )
+    return errors
+
+
 def validate_repository(root: Path = ROOT) -> list[str]:
     errors: list[str] = []
     for name in sorted(REQUIRED_FILES):
@@ -231,23 +315,7 @@ def validate_repository(root: Path = ROOT) -> list[str]:
         if not (root / "categories" / f"{category}.md").is_file():
             errors.append(f"Missing category page: {category}.md")
 
-    # Test links without network: external links are handled separately.
-    for md in sorted(root.rglob("*.md")):
-        if ".git" in md.parts:
-            continue
-        text = md.read_text(encoding="utf-8")
-        for match in LINK_RE.finditer(text):
-            target = match.group(1)
-            resolved = resolve_local_link(md, target, root)
-            if resolved is None:
-                continue
-            try:
-                resolved.relative_to(root.resolve())
-            except ValueError:
-                errors.append(f"{md.relative_to(root)}: link escapes repository: {target}")
-                continue
-            if not resolved.exists():
-                errors.append(f"{md.relative_to(root)}: broken local link: {target}")
+    errors.extend(validate_markdown_links(root))
 
     return errors
 
@@ -260,7 +328,7 @@ def main() -> int:
         print(f"FAILED with {len(problems)} error(s).", file=sys.stderr)
         return 1
     count = len(json.loads((ROOT / "data/resources.json").read_text(encoding="utf-8")))
-    print(f"PASS: {count} catalog entries; {len(CATEGORIES)} categories; local Markdown links valid.")
+    print(f"PASS: {count} catalog entries; {len(CATEGORIES)} categories; local Markdown links and anchors valid.")
     return 0
 
 

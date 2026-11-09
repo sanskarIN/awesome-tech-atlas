@@ -1,6 +1,7 @@
 """Regression tests for catalog and Markdown quality gates."""
 
 import unittest
+import tempfile
 from datetime import date
 from pathlib import Path
 
@@ -52,6 +53,52 @@ class ValidatorTests(unittest.TestCase):
             ),
             ["### Troubleshooting"],
         )
+
+    def test_markdown_heading_ids(self):
+        content = (
+            "# Intro: Start\n"
+            "## Repeat\n"
+            "## Repeat\n"
+            "## **Bold** and \x60Code\x60\n"
+            "~~~markdown\n"
+            "## Fenced example is not a heading\n"
+            "~~~\n"
+        )
+        self.assertEqual(
+            validate.github_heading_anchors(content),
+            {"intro-start", "repeat", "repeat-1", "bold-and-code"},
+        )
+
+    def test_markdown_link_anchors_and_code_fences(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            (root / "guides").mkdir()
+            (root / "guides" / "topic.md").write_text(
+                "# Topic\n## Repeat\n## Repeat\n", encoding="utf-8"
+            )
+            (root / "README.md").write_text(
+                "# Start\n"
+                "[same-page](#start)\n"
+                "[relative](guides/topic.md#repeat-1)\n"
+                "\x60[ignored inline](#does-not-exist)\x60\n"
+                "~~~markdown\n"
+                "[ignored fenced](#does-not-exist)\n"
+                "~~~\n",
+                encoding="utf-8",
+            )
+            self.assertEqual(validate.validate_markdown_links(root), [])
+
+            (root / "README.md").write_text(
+                "[bad fragment](guides/topic.md#missing)\n"
+                "[bad path](guides/nope.md)\n"
+                "[escape](../outside.md)\n",
+                encoding="utf-8",
+            )
+            problems = validate.validate_markdown_links(root)
+            self.assertEqual(len(problems), 3)
+            self.assertTrue(any("missing Markdown anchor #missing" in p for p in problems))
+            self.assertTrue(any("broken local link" in p for p in problems))
+            self.assertTrue(any("link escapes repository" in p for p in problems))
 
     def test_local_link_resolution(self):
         root = Path("/tmp/atlas-test")
