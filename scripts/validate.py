@@ -64,6 +64,22 @@ HEADINGS = (
     "## Try it",
     "## Where to go next",
 )
+WORKED_EXAMPLE_HEADINGS = (
+    "### Prerequisites",
+    "### Steps",
+    "### Expected result",
+    "### Troubleshooting",
+    "### Evidence and execution status",
+)
+
+
+def missing_worked_example_headings(content: str) -> list[str]:
+    """Require reproducibility context when a profile opts into a worked example."""
+    if "## Worked example" not in content:
+        return []
+    return [heading for heading in WORKED_EXAMPLE_HEADINGS if heading not in content]
+
+
 LINK_RE = re.compile(r"!?(?:\[[^\]\n]*\])\(([^)\n]+)\)")
 SLUG_RE = re.compile(r"^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$")
 
@@ -191,6 +207,8 @@ def validate_repository(root: Path = ROOT) -> list[str]:
         for heading in HEADINGS:
             if heading not in content:
                 errors.append(f"{resource_id}: missing profile heading {heading}")
+        for heading in missing_worked_example_headings(content):
+            errors.append(f"{resource_id}: worked example missing {heading}")
         if url not in content:
             errors.append(f"{resource_id}: official URL missing from profile")
         if record["verified_on"] not in content:

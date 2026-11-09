@@ -27,6 +27,28 @@ Two or three sentences describing the real capability and audience.
 
 A concrete, low-risk first step or short original example, with prerequisites if any.
 
+## Worked example: descriptive title (optional for substantial profiles)
+
+### Prerequisites
+
+Exact tool versions or minimum requirements, and where the sample runs.
+
+### Steps
+
+One original, self-contained snippet and the commands needed to reproduce it.
+
+### Expected result
+
+Concrete observable output or interaction, without unsupported performance claims.
+
+### Troubleshooting
+
+Likely errors, limitations, and safety caveats.
+
+### Evidence and execution status
+
+Link the specific official reference, give the actual review date, and distinguish "executed" from "documentation-reviewed."
+
 ## Where to go next
 
 - Authoritative starting section

@@ -36,6 +36,23 @@ class ValidatorTests(unittest.TestCase):
         self.assertFalse(validate.valid_inspection_date("2026-13-01", today))
         self.assertFalse(validate.valid_inspection_date("11/08/2026", today))
 
+    def test_optional_worked_example_headings(self):
+        self.assertEqual(validate.missing_worked_example_headings("## Try it"), [])
+        self.assertEqual(
+            validate.missing_worked_example_headings("## Worked example: incomplete"),
+            list(validate.WORKED_EXAMPLE_HEADINGS),
+        )
+        complete = "## Worked example: example\n" + "\n".join(
+            validate.WORKED_EXAMPLE_HEADINGS
+        )
+        self.assertEqual(validate.missing_worked_example_headings(complete), [])
+        self.assertEqual(
+            validate.missing_worked_example_headings(
+                complete.replace("### Troubleshooting", "")
+            ),
+            ["### Troubleshooting"],
+        )
+
     def test_local_link_resolution(self):
         root = Path("/tmp/atlas-test")
         source = root / "categories" / "programming-languages.md"
