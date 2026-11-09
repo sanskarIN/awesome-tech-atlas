@@ -1,6 +1,6 @@
 # Learning paths
 
-A learning path is an **editable sequence**, not a universal curriculum. Pick one according to your goals; treat linked resources as references rather than homework to complete in full.
+A learning path is an **editable sequence**, not a universal curriculum. Pick one according to your goals; treat linked resources as references rather than homework to complete in full. When ready to build, follow the [project-based tracks](project-based-tracks.md) and record what you actually tested.
 
 ## Path A: New to software development
 
@@ -29,5 +29,27 @@ A learning path is an **editable sequence**, not a universal curriculum. Pick on
 4. Containerize a toy service with [Docker](../resources/docker.md), then learn why [Kubernetes](../resources/kubernetes.md) exists for orchestration.
 
 **Outcome:** explain how a program is compiled, runs on an OS, and is deployed.
+
+## Path D: Web development and interface accessibility
+
+1. Learn HTML semantics, CSS layout, JavaScript, and keyboard interaction in [MDN Learn](../resources/mdn-learn.md).
+2. Make a simple interactive page with browser APIs and write down the state and event-handling decisions.
+3. Learn [React](../resources/react.md) components, props, lists, and state; rebuild only the relevant behavior in a configured React environment.
+4. Test keyboard use, visible focus, labels, updates, and empty states. Avoid claiming complete accessibility from a single test.
+5. Keep a short README with browser versions, test results, and what happens on refresh.
+
+**Outcome:** explain the trade-offs between a browser-native implementation and a component library, with a documented interaction test.
+
+## Path E: Open-source maintenance
+
+1. Learn branch-based collaboration with [Git](../resources/git.md) and the practical guidance in [Open Source Guides](../resources/open-source-guides.md).
+2. Read a project's contribution policy and inspect an existing issue or documentation gap before proposing a change.
+3. Review the [GitHub Actions](../resources/github-actions.md) workflow used to validate proposed changes.
+4. Contribute one original, evidence-backed improvement via a PR without copying upstream material or exposing sensitive data.
+5. Capture the tests, source references, and limitations in your PR description.
+
+**Outcome:** submit a reviewable, reproducible documentation or tooling improvement.
+
+See also the [decision worksheet](decision-worksheet.md) for evaluating tools for a specific use case, and the [five project tracks](project-based-tracks.md) for concrete milestones.
 
 Avoid starting with everything at once. Verify new tools against the upstream documentation for your environment.
