@@ -5,11 +5,13 @@ Awesome Tech Atlas is continuously updated through reviewed changes on `main`. *
 ## Routine content checks
 
 1. Review new correction issues first. A reported broken upstream URL or misleading fact is more urgent than adding an unrelated entry.
-2. Run `python3 scripts/validate.py` locally. This validates metadata, unique identifiers and official URLs, required narrative sections, and internal Markdown navigation without network requests.
+2. Run `python3 scripts/validate.py` locally. This validates metadata, unique identifiers and official URLs, required narrative sections, and internal Markdown file/heading navigation without network requests.
 3. Run `python3 -m unittest discover -s tests -v` to check the validator and link-checker regression tests.
 4. For upstream link health, run `python3 scripts/check_external_links.py --strict` when network access is available. The scheduled [external-link workflow](../.github/workflows/check-external-links.yml) performs the same check weekly.
 
 The external check tests only the main official URL in each catalog record. A successful HTTP response does not prove that every nested link, feature claim, or release status remains accurate.
+
+Local links to Markdown headings are validated against the target page's GitHub-style heading IDs (including repeated headings). Code fences and inline code samples are ignored. The checker supports standard ATX headings and ordinary inline Markdown links; if a document relies on custom HTML anchors or complex Markdown constructs, verify that navigation manually.
 
 ## Triage a failed upstream check
 
