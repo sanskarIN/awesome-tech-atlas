@@ -12,6 +12,8 @@
 - **[Browse by topic](categories/README.md)** — programming, AI, systems, databases, web, security, and more.
 - **[Browse every vetted entry](resources/README.md)** — resource profiles with documented trade-offs.
 - **[Follow a learning path](guides/learning-paths.md)** — build foundations before specializing.
+- **[Build a project](guides/project-based-tracks.md)** — five hands-on tracks with evidence and completion criteria.
+- **[Choose a technology](guides/decision-worksheet.md)** — a requirements-first worksheet for evaluating alternatives.
 - **[Compare tools thoughtfully](comparisons/README.md)** — scenario-based choices without unsupported rankings.
 - **[Contribute](CONTRIBUTING.md)** — propose a resource, correct a fact, or improve a guide.
 - **[Maintain accuracy](docs/MAINTENANCE.md)** — understand review dates and upstream-link triage.

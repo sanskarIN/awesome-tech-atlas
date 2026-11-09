@@ -29,3 +29,29 @@ They are **not interchangeable** replacements: the learning and deployment costs
 ## Docker vs Kubernetes
 
 [Docker](../resources/docker.md) introduces image/container packaging; [Kubernetes](../resources/kubernetes.md) is an orchestration platform that coordinates containerized workloads across infrastructure. A small service does not inherently need Kubernetes.
+
+## NumPy vs SciPy vs scikit-learn
+
+These tools often complement each other rather than compete:
+
+| Primary task | Start by studying | Boundary to understand |
+| --- | --- | --- |
+| N-dimensional arrays and array operations | [NumPy](../resources/numpy.md) | Arrays alone do not provide a complete model-evaluation workflow |
+| Numerical algorithms such as optimization and scientific routines | [SciPy](../resources/scipy.md) | Understand input arrays and numerical assumptions before interpreting output |
+| Standard estimators, preprocessing, and model selection | [scikit-learn](../resources/scikit-learn.md) | Leakage controls, splits, and metrics matter more than the choice of package name |
+
+**Official references:** [NumPy manual](https://numpy.org/doc/stable/), [SciPy documentation](https://docs.scipy.org/doc/scipy/), and [scikit-learn documentation](https://scikit-learn.org/stable/). Read the relevant API pages for your installed versions, rather than assuming "latest" matches a frozen environment.
+
+## React vs browser APIs
+
+| Project need | Consider | Check before choosing |
+| --- | --- | --- |
+| Small page with a few event handlers | [MDN web platform guides](../resources/mdn-learn.md) | Component abstractions may not be necessary; still test state and accessibility |
+| UI made of reusable stateful components | [React Learn](../resources/react.md) | Setup, data flow, deployment, and state ownership add decisions |
+| Existing established team codebase | Its current framework or browser APIs | Migration cost and maintainers' familiarity matter; avoid rewriting without a demonstrated need |
+
+**Official references:** [React's component and state guide](https://react.dev/learn) and [MDN's web curriculum](https://developer.mozilla.org/en-US/docs/Learn_web_development). A shared sample task and keyboard test are more informative than an unsubstantiated "faster" claim.
+
+## From a comparison to an actual decision
+
+Use the [technology decision worksheet](../guides/decision-worksheet.md) to record hard constraints, source evidence, one differentiating prototype, and a reason to revisit the choice. For guided practice, choose a [project-based track](../guides/project-based-tracks.md). These choices are context-dependent and may change with requirements.
