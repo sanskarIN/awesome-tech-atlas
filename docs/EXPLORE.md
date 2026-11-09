@@ -1,6 +1,6 @@
 # Explore the atlas locally
 
-Awesome Tech Atlas has three optional, **dependency-light** ways to browse the same curated `data/resources.json` file: a Python terminal explorer, a locally served static browser, and a generated single-file offline snapshot. Both are read-only. Neither edits the catalog, collects analytics, needs a database, or automatically deploys GitHub Pages.
+Awesome Tech Atlas has three optional, **dependency-light** ways to browse the same curated `data/resources.json` file: a Python terminal explorer, a locally served static browser, and a generated single-file offline snapshot. All three are read-only: none edits the catalog, collects analytics, needs a database, or automatically deploys GitHub Pages.
 
 The original [Markdown resource index](../resources/README.md) remains the primary, durable source. Every resource still needs a human-reviewed profile and an upstream reference.
 
@@ -60,7 +60,14 @@ On Windows, use `py -3 scripts/build_offline.py`. The command generates:
 dist/awesome-tech-atlas-offline.html
 ```
 
-Double-click that file to open it with a modern browser. The HTML includes the catalog JSON, local search/filter code, and styles in **one file**. Search, category filters, kind filters, and a **Download snapshot JSON** button work even with your network disconnected. With JavaScript disabled, the generated page still contains an embedded list of resources and their upstream URLs.
+Double-click that file to open it with a modern browser. The HTML includes the catalog JSON, **all 30 original curated resource profiles**, local search/filter code, and styles in **one file**. Search, category filters, kind filters, and a **Download snapshot JSON** button work even with your network disconnected.
+
+- Select a resource title to open its complete profile in an offline dialog. The profile is deliberately displayed as **plain Markdown text**, preserving examples, links, headings, and code exactly rather than attempting an incomplete or unsafe Markdown renderer.
+- Use **Download Markdown** in the dialog to save the original profile locally. Press **Escape** or **Close** to return to the search results.
+- The **View on GitHub** and **Official source** links still open external websites if network access is available.
+- With JavaScript disabled, the generated HTML contains an offline expandable resource index with each complete profile as escaped plain text, not just a summary.
+
+The exporter fails if a catalog profile is missing or its official URL disagrees with the catalog. Catalog data and Markdown profiles are embedded without creating new editorial content or updating source inspection dates.
 
 The result is a snapshot of the catalog at build time. **Rebuild it after changing resource data.** Files under `dist/` are ignored by Git and should not be committed automatically. To choose a destination:
 
@@ -68,7 +75,7 @@ The result is a snapshot of the catalog at build time. **Rebuild it after changi
 python3 scripts/build_offline.py --output my-offline-atlas.html
 ```
 
-**Offline limits:** The page is searchable without internet, but following a profile or official documentation link opens a website and still requires connectivity. Unlike the locally served version, a `file://` snapshot deliberately avoids storing filters in shareable URL query parameters. It does not install a service worker, update itself, collect usage statistics, or silently fetch new catalog entries.
+**Offline limits:** The embedded curated profiles can be read, searched by catalog metadata, and saved without internet. Links to GitHub, official upstream manuals, and other external pages still need connectivity. Profile text is shown as Markdown source rather than formatted HTML; snippets are documentation, not executable programs. Unlike the locally served version, a `file://` snapshot deliberately avoids storing filters in shareable URL query parameters. It does not install a service worker, update itself, collect usage statistics, or silently fetch new catalog entries.
 
 For a shareable or regularly updated hosted site, a separate deployment decision and testing process would be required. This builder **does not enable GitHub Pages or upload anything**.
 
@@ -91,5 +98,7 @@ The required content-validation workflow runs these checks on pull requests and 
 ## Hosting and releases
 
 **No GitHub Pages deployment is enabled by this feature.** The hosted site remains a local/static preview, while the optional single-file HTML build is an offline snapshot. Publishing it later would be a separate opt-in decision requiring a deployment configuration, a base-path check, and deployment verification. Do not approve unknown Pages deployments simply because this folder exists.
+
+The offline export contains the original profiles stored in this repository, which are covered by its CC0 contribution policy. It does **not** bundle upstream manuals, third-party logos, images, or downloaded documentation.
 
 No GitHub release tag is required for these continuously maintained content and tooling updates.
