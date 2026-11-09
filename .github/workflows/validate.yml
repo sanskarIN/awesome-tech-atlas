@@ -29,3 +29,11 @@ jobs:
         run: python3 scripts/validate.py
       - name: Run regression tests
         run: python3 -m unittest discover -s tests -v
+      - name: Set up Node.js for browser search tests
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test browser search and JavaScript syntax
+        run: |
+          node --check site/app.mjs
+          node --test tests/test_search.mjs
