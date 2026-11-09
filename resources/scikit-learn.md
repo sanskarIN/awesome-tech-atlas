@@ -30,11 +30,11 @@ Follow the getting-started example and evaluate a simple estimator on a held-out
 ### Prerequisites
 
 - Python 3.10+ and a compatible scikit-learn installation in a virtual environment (follow the [official installation guide](https://scikit-learn.org/stable/install.html)).
-- Save the original script below as \`iris_split.py\`. It uses a dataset bundled with scikit-learn; no downloaded dataset is needed.
+- Save the original script below as `iris_split.py`. It uses a dataset bundled with scikit-learn; no downloaded dataset is needed.
 
 ### Steps
 
-Run \`python iris_split.py\`:
+Run `python iris_split.py`:
 
 ~~~python
 from sklearn.datasets import load_iris
@@ -56,7 +56,7 @@ print(f"train: {len(y_train)}, test: {len(y_test)}")
 print("confusion matrix shape:", confusion_matrix(y_test, predictions).shape)
 ~~~
 
-Notice that \`StandardScaler\` is fitted **inside** the pipeline using training data only. The held-out test set is used for prediction after fitting.
+Notice that `StandardScaler` is fitted **inside** the pipeline using training data only. The held-out test set is used for prediction after fitting.
 
 ### Expected result
 
@@ -69,7 +69,7 @@ These are dataset sizes and matrix dimensions—not an accuracy guarantee or ben
 
 ### Troubleshooting
 
-- If \`sklearn\` cannot be imported, install it in the same Python environment used to run the script.
+- If `sklearn` cannot be imported, install it in the same Python environment used to run the script.
 - If a solver or numerical dependency fails, compare your Python and scikit-learn versions with the supported versions in the upstream installation guide.
 - For real data, handle missing values, class imbalance, repeated entities, and leakage before interpreting metrics.
 

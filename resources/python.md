@@ -30,11 +30,11 @@ Install Python from python.org, then run `python -c "print(sum([2, 3]))"` (or `p
 ### Prerequisites
 
 - Python 3.10 or later, with no third-party packages.
-- Save this original example as \`status_summary.py\`. All sample records are in memory.
+- Save this original example as `status_summary.py`. All sample records are in memory.
 
 ### Steps
 
-Run the following program with \`python status_summary.py\` (or \`python3\` on systems where that is the Python command):
+Run the following program with `python status_summary.py` (or `python3` on systems where that is the Python command):
 
 ~~~python
 import csv
@@ -48,7 +48,7 @@ for status in sorted(counts):
     print(f"{status}: {counts[status]}")
 ~~~
 
-Change one \`pending\` value to \`done\`, rerun, and observe that the summary changes.
+Change one `pending` value to `done`, rerun, and observe that the summary changes.
 
 ### Expected result
 
@@ -59,12 +59,12 @@ pending: 1
 
 ### Troubleshooting
 
-- If \`python\` is not found, check the installed interpreter and try \`python3\`.
-- If the dictionary key raises \`KeyError\`, confirm the CSV header is exactly \`status\`. Real datasets also need explicit handling of missing values, encodings, and dialects.
+- If `python` is not found, check the installed interpreter and try `python3`.
+- If the dictionary key raises `KeyError`, confirm the CSV header is exactly `status`. Real datasets also need explicit handling of missing values, encodings, and dialects.
 
 ### Evidence and execution status
 
-- **Primary references:** [Python's \`csv.DictReader\` API](https://docs.python.org/3/library/csv.html) and [\`collections.Counter\`](https://docs.python.org/3/library/collections.html#collections.Counter).
+- **Primary references:** [Python's `csv.DictReader` API](https://docs.python.org/3/library/csv.html) and [`collections.Counter`](https://docs.python.org/3/library/collections.html#collections.Counter).
 - **Reviewed:** 2026-11-09 (example-specific documentation). **Executed locally:** Python 3.13.5, with the output shown above.
 - This toy dataset is not a performance or data-quality test, and the catalog's earlier official-source inspection date remains unchanged.
 

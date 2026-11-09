@@ -34,8 +34,8 @@ Install Rust using the official setup instructions, then try `cargo new hello_at
 
 ### Steps
 
-1. Create a Cargo binary with \`cargo new atlas-log-count\` and open its directory.
-2. Replace \`src/main.rs\` with this original program:
+1. Create a Cargo binary with `cargo new atlas-log-count` and open its directory.
+2. Replace `src/main.rs` with this original program:
 
 ~~~rust
 use std::{env, error::Error, fs};
@@ -58,7 +58,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 }
 ~~~
 
-3. Create \`sample.log\` next to \`Cargo.toml\` containing exactly:
+3. Create `sample.log` next to `Cargo.toml` containing exactly:
 
 ~~~text
 INFO: ready
@@ -66,7 +66,7 @@ WARN: slow query
 WARN: retry
 ~~~
 
-4. From that directory run \`cargo run -- sample.log\`.
+4. From that directory run `cargo run -- sample.log`.
 
 ### Expected result
 
@@ -77,7 +77,7 @@ warnings: 2
 
 ### Troubleshooting
 
-- If Cargo cannot find \`sample.log\`, check that the working directory is the project root.
+- If Cargo cannot find `sample.log`, check that the working directory is the project root.
 - If a file-reading error is shown, verify its path, encoding (UTF-8), and file permissions.
 - This is a case-sensitive line-prefix match, not a general log parser. It assumes trusted, local UTF-8 test data.
 

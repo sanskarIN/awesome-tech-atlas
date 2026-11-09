@@ -30,11 +30,11 @@ Read the Authentication and Access Control cheat sheets; compare recommendations
 ### Prerequisites
 
 - Python 3.10+ (standard library only).
-- A local editor; save this original *educational policy test* as \`test_document_policy.py\`. It makes no HTTP requests.
+- A local editor; save this original *educational policy test* as `test_document_policy.py`. It makes no HTTP requests.
 
 ### Steps
 
-Run \`python -m unittest -v test_document_policy.py\` from the containing directory:
+Run `python -m unittest -v test_document_policy.py` from the containing directory:
 
 ~~~python
 import unittest
@@ -61,7 +61,7 @@ if __name__ == "__main__":
 
 ### Expected result
 
-The runner reports three passing tests and finishes with \`OK\`. In particular, an unrelated or missing user identity does not gain access.
+The runner reports three passing tests and finishes with `OK`. In particular, an unrelated or missing user identity does not gain access.
 
 ### Troubleshooting
 
@@ -72,7 +72,7 @@ The runner reports three passing tests and finishes with \`OK\`. In particular, 
 ### Evidence and execution status
 
 - **Primary reference:** [OWASP Authorization Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html), especially deny-by-default, per-request checks, and authorization unit tests.
-- **Reviewed:** 2026-11-09 (example-specific documentation). **Executed locally:** Python 3.13.5, with three passing \`unittest\` cases.
+- **Reviewed:** 2026-11-09 (example-specific documentation). **Executed locally:** Python 3.13.5, with three passing `unittest` cases.
 - A small passing test suite cannot establish that a deployed application is secure. The catalog's earlier official-source inspection date remains unchanged.
 
 ## Where to go next

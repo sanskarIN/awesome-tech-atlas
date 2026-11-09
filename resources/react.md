@@ -29,12 +29,12 @@ Follow Quick Start and build a component that displays a list from props.
 
 ### Prerequisites
 
-- A working React project that supports JSX and the \`useState\` Hook. Start from the [official installation guidance](https://react.dev/learn/installation) if you do not already have one.
-- An existing app entry point that renders \`App\`; in many React starter projects the component lives in \`src/App.jsx\`.
+- A working React project that supports JSX and the `useState` Hook. Start from the [official installation guidance](https://react.dev/learn/installation) if you do not already have one.
+- An existing app entry point that renders `App`; in many React starter projects the component lives in `src/App.jsx`.
 
 ### Steps
 
-Replace your project's \`App\` component with this original JSX (adjust the path for your starter project):
+Replace your project's `App` component with this original JSX (adjust the path for your starter project):
 
 ~~~jsx
 import { useState } from "react";
@@ -86,7 +86,7 @@ The page first announces **0 of 1 complete**. Checking the task updates it to **
 ### Troubleshooting
 
 - JSX must run through a configured React build tool; pasting it into an unconfigured plain JavaScript file will not work.
-- If the page never updates, confirm the app renders your \`App\` and the checkbox \`onChange\` handler is connected.
+- If the page never updates, confirm the app renders your `App` and the checkbox `onChange` handler is connected.
 - State is in memory only; reloading the page resets the checklist. There is no storage or synchronization.
 
 ### Evidence and execution status
