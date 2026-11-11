@@ -42,7 +42,7 @@ The browser interface lives under `site/`. It has no npm install step, no framew
 
 The interface provides visible labels, a keyboard skip link, dark-mode and reduced-motion support, and a live result count. Press **/** (outside form fields) to focus search; press **Escape** while typing in search to clear it. Filter state is stored only in the page URL query parameters so it can be shared. No cookies, local-storage history, third-party fonts, trackers, account login, or service worker are used.
 
-**With JavaScript disabled or JSON loading blocked**, follow the Markdown catalog link on the page. The interactive interface is an enhancement, not the only way to discover resources.
+**When JavaScript is disabled**, use the Markdown catalog link on the page. **When catalog loading fails**, the explorer reveals a direct link to the local Markdown resource index, which can also be opened from disk. The interactive interface is an enhancement, not the only way to discover resources.
 
 The local search page loads only files from your own server. Clicking the **profile** opens GitHub and clicking the **official source** opens the upstream website, which require network access and have their own privacy and licensing policies. An inspection date is a documentation-review marker, **not** a runtime, performance, maintenance, or security guarantee.
 
@@ -86,7 +86,7 @@ Before submitting a PR, run:
 ```bash
 python3 scripts/validate.py
 python3 -m unittest discover -s tests -v
-node --test tests/test_search.mjs tests/test_offline_script.mjs
+node --test tests/test_search.mjs tests/test_offline_script.mjs tests/test_app_fallback.mjs
 node --check site/app.mjs
 python3 scripts/build_offline.py
 ```

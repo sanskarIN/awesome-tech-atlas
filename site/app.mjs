@@ -32,6 +32,7 @@ const clearButton = document.querySelector("#clear-filters");
 const status = document.querySelector("#results-status");
 const cards = document.querySelector("#cards");
 const empty = document.querySelector("#empty");
+const loadFallback = document.querySelector("#load-fallback");
 const totalCount = document.querySelector("#total-count");
 const categoryCount = document.querySelector("#category-count");
 let entries = [];
@@ -195,6 +196,7 @@ async function initialize() {
     }
 
     entries = data;
+    loadFallback.hidden = true;
     totalCount.textContent = String(entries.length);
     categoryCount.textContent = String(new Set(entries.map((r) => r.category)).size);
     populateSelect(categoryInput, countBy(entries, "category"), labelFor);
@@ -230,6 +232,7 @@ async function initialize() {
     });
     restoreFromUrl();
   } catch (error) {
+    loadFallback.hidden = false;
     status.textContent = "Could not load the local JSON catalog. Run a local HTTP server from the repository root, then open /site/. "
       + (error instanceof Error ? error.message : "");
     cards.replaceChildren();

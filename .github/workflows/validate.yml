@@ -37,4 +37,4 @@ jobs:
         run: |
           node --check site/app.mjs
           python3 scripts/build_offline.py --output "$RUNNER_TEMP/atlas-offline.html"
-          node --test tests/test_search.mjs tests/test_offline_script.mjs
+          node --test tests/test_search.mjs tests/test_offline_script.mjs tests/test_app_fallback.mjs
