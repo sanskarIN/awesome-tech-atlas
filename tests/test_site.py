@@ -37,6 +37,7 @@ class SiteTests(unittest.TestCase):
             self.assertIn(field, parser.labels)
         self.assertIn("results-status", parser.ids)
         self.assertIn("load-fallback", parser.ids)
+        self.assertIn("export-results", parser.ids)
         self.assertIn("offline-profile-dialog", parser.ids)
         self.assertIn("offline-profile-title", parser.ids)
         self.assertIn("offline-profile-markdown", parser.ids)
