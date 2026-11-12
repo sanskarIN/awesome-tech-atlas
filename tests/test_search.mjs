@@ -63,7 +63,7 @@ test("search never changes the source dataset", () => {
 });
 
 test("CSV export keeps ranking, deterministic field order and matching subset", () => {
-  const selected = searchResources(records, { category: "programming-languages" });
+  const selected = searchResources(records, { query: "programming", category: "programming-languages" });
   const csv = resourcesToCsv(selected);
   const lines = csv.trimEnd().split("\r\n");
   assert.equal(lines.length, 3);
