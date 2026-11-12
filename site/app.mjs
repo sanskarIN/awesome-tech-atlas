@@ -1,5 +1,5 @@
 import {
-  countBy, filtersToQuery, parseFilters, searchResources,
+  countBy, filtersToQuery, parseFilters, resourcesToCsv, searchResources,
 } from "./search.mjs";
 
 const GITHUB_PROFILES = "https://github.com/sanskarIN/awesome-tech-atlas/blob/main/resources/";
@@ -29,6 +29,7 @@ const queryInput = document.querySelector("#query");
 const categoryInput = document.querySelector("#category");
 const kindInput = document.querySelector("#kind");
 const clearButton = document.querySelector("#clear-filters");
+const exportButton = document.querySelector("#export-results");
 const status = document.querySelector("#results-status");
 const cards = document.querySelector("#cards");
 const empty = document.querySelector("#empty");
@@ -155,6 +156,7 @@ function render(updateUrl = true) {
   status.textContent = "Showing " + matched.length + " of " + entries.length
     + " curated resources.";
   clearButton.disabled = !(filters.query || filters.category || filters.kind);
+  exportButton.disabled = matched.length === 0;
 
   // file:// snapshots cannot reliably modify history; filtering still works locally.
   if (updateUrl && window.location.protocol !== "file:" && window.history?.replaceState) {
@@ -212,6 +214,19 @@ async function initialize() {
       kindInput.value = "";
       render();
       queryInput.focus();
+    });
+    exportButton.addEventListener("click", () => {
+      const matched = searchResources(entries, currentFilters());
+      if (matched.length === 0) return;
+      const blob = new Blob(["\uFEFF", resourcesToCsv(matched)], {
+        type: "text/csv;charset=utf-8",
+      });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = "awesome-tech-atlas-results.csv";
+      anchor.click();
+      setTimeout(() => URL.revokeObjectURL(url), 0);
     });
     document.querySelector("#offline-profile-close").addEventListener("click", () => {
       document.querySelector("#offline-profile-dialog").close();
