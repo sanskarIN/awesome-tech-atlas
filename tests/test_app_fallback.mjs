@@ -16,6 +16,7 @@ test("unavailable catalog reveals a useful local Markdown fallback", async () =>
     "#category": { disabled: true },
     "#kind": { disabled: true },
     "#clear-filters": { disabled: true },
+    "#export-results": { disabled: true },
     "#results-status": status,
     "#cards": { replaceChildren() { cardsCleared = true; } },
     "#empty": { hidden: true },
@@ -43,6 +44,7 @@ test("unavailable catalog reveals a useful local Markdown fallback", async () =>
     assert.match(status.textContent, /simulated offline request/);
     assert.equal(cardsCleared, true);
     assert.equal(controls["#query"].disabled, true);
+    assert.equal(controls["#export-results"].disabled, true);
   } finally {
     globalThis.document = previous.document;
     globalThis.fetch = previous.fetch;

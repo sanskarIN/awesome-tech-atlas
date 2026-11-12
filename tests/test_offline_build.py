@@ -44,6 +44,7 @@ class OfflineBuilderTests(unittest.TestCase):
         self.assertEqual(parser.stylesheets, [])
         self.assertEqual(parser.fallbacks, 1)
         self.assertIn("download-catalog", parser.buttons)
+        self.assertIn("export-results", parser.buttons)
         self.assertNotIn('src="./app.mjs"', document)
         self.assertNotIn('href="./styles.css"', document)
         self.assertNotIn("import.meta", document)

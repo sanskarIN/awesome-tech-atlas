@@ -63,6 +63,27 @@ export function filtersToQuery(filters) {
   return result ? "?" + result : "";
 }
 
+const CSV_COLUMNS = [
+  "id", "name", "category", "subcategory", "kind", "summary", "url", "verified_on",
+];
+
+function csvCell(value) {
+  let text = String(value ?? "");
+  // Neutralize formula-like data before it is opened by spreadsheet software,
+  // including leading whitespace before a formula marker.
+  if (/^[\s\u0000-\u001f]*[=+\-@]/u.test(text)) text = "'" + text;
+  return '"' + text.replaceAll('"', '""') + '"';
+}
+
+/** Export the supplied matches in their existing search/display order. */
+export function resourcesToCsv(records) {
+  const rows = [CSV_COLUMNS.map(csvCell).join(",")];
+  for (const record of records) {
+    rows.push(CSV_COLUMNS.map((field) => csvCell(record[field])).join(","));
+  }
+  return rows.join("\r\n") + "\r\n";
+}
+
 export function countBy(records, field) {
   return [...records.reduce((counts, item) => {
     const value = item[field];

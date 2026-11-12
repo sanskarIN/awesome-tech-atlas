@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {
-  normalizeText, searchResources, parseFilters, filtersToQuery, countBy,
+  normalizeText, searchResources, parseFilters, filtersToQuery, countBy, resourcesToCsv,
 } from "../site/search.mjs";
 
 const records = [
@@ -60,4 +60,30 @@ test("search never changes the source dataset", () => {
   const before = JSON.stringify(records);
   searchResources(records, { query: "rust" });
   assert.equal(JSON.stringify(records), before);
+});
+
+test("CSV export keeps ranking, deterministic field order and matching subset", () => {
+  const selected = searchResources(records, { query: "programming", category: "programming-languages" });
+  const csv = resourcesToCsv(selected);
+  const lines = csv.trimEnd().split("\r\n");
+  assert.equal(lines.length, 3);
+  assert.equal(lines[0], '"id","name","category","subcategory","kind","summary","url","verified_on"');
+  assert.ok(lines[1].startsWith('"rust",'));
+  assert.ok(lines[2].startsWith('"python",'));
+  assert.equal(resourcesToCsv(selected), csv);
+  assert.equal(resourcesToCsv([]).trimEnd().split("\r\n").length, 1);
+});
+
+test("CSV export escapes quotes and neutralizes spreadsheet formulas", () => {
+  const risky = {
+    id: "example", name: '=HYPERLINK("https://example.org")',
+    category: "web-development", subcategory: 'A "quoted", section',
+    kind: "official-docs", summary: "\t+SUM(1,2)",
+    url: "https://example.org", verified_on: "2026-11-08",
+  };
+  const csv = resourcesToCsv([risky]);
+  assert.ok(csv.includes('"\'=HYPERLINK(""https://example.org"")"'));
+  assert.ok(csv.includes('"A ""quoted"", section"'));
+  assert.ok(csv.includes("\"'\t+SUM(1,2)\""));
+  assert.ok(csv.endsWith("\r\n"));
 });
