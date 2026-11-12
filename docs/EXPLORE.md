@@ -40,7 +40,7 @@ The browser interface lives under `site/`. It has no npm install step, no framew
 
 **Important:** Do not double-click `site/index.html` using a `file://` URL. Browsers commonly prevent `fetch` of the neighboring JSON file in that context. Start the local server from the **repository root**, not from `site/`, so `../data/resources.json` resolves correctly. Stop the server with Ctrl+C when finished.
 
-The interface provides visible labels, a keyboard skip link, dark-mode and reduced-motion support, and a live result count. Press **/** (outside form fields) to focus search; press **Escape** while typing in search to clear it. Filter state is stored only in the page URL query parameters so it can be shared. No cookies, local-storage history, third-party fonts, trackers, account login, or service worker are used.
+The interface provides visible labels, a keyboard skip link, dark-mode and reduced-motion support, and a live result count. **Download matching results CSV** saves only the current search/filter matches, in display order, with titles, topics, official URLs, and inspection dates; it makes no network request. CSV fields are quoted, and formula-like values are prefixed to prevent spreadsheet interpretation. Press **/** (outside form fields) to focus search; press **Escape** while typing in search to clear it. Filter state is stored only in the page URL query parameters so it can be shared. No cookies, local-storage history, third-party fonts, trackers, account login, or service worker are used.
 
 **When JavaScript is disabled**, use the Markdown catalog link on the page. **When catalog loading fails**, the explorer reveals a direct link to the local Markdown resource index, which can also be opened from disk. The interactive interface is an enhancement, not the only way to discover resources.
 
@@ -60,7 +60,7 @@ On Windows, use `py -3 scripts/build_offline.py`. The command generates:
 dist/awesome-tech-atlas-offline.html
 ```
 
-Double-click that file to open it with a modern browser. The HTML includes the catalog JSON, **all 30 original curated resource profiles**, local search/filter code, and styles in **one file**. Search, category filters, kind filters, and a **Download snapshot JSON** button work even with your network disconnected.
+Double-click that file to open it with a modern browser. The HTML includes the catalog JSON, **all 30 original curated resource profiles**, local search/filter code, and styles in **one file**. Search, category filters, kind filters, a **Download snapshot JSON** button, and **Download matching results CSV** work even with your network disconnected.
 
 - Select a resource title to open its complete profile in an offline dialog. The profile is deliberately displayed as **plain Markdown text**, preserving examples, links, headings, and code exactly rather than attempting an incomplete or unsafe Markdown renderer.
 - Use **Download Markdown** in the dialog to save the original profile locally. Press **Escape** or **Close** to return to the search results.
