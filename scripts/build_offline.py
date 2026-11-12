@@ -19,7 +19,7 @@ HTML_SCRIPT = '<script type="module" src="./app.mjs"></script>'
 HTML_STYLES = '<link rel="stylesheet" href="./styles.css">'
 HTML_DOWNLOAD = '<a href="../data/resources.json" class="data-link" download>Get catalog JSON</a>'
 APP_IMPORT = '''import {
-  countBy, filtersToQuery, parseFilters, searchResources,
+  countBy, filtersToQuery, parseFilters, resourcesToCsv, searchResources,
 } from "./search.mjs";
 '''
 REQUIRED = ("id", "name", "category", "kind", "subcategory", "summary", "url", "verified_on")
