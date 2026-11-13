@@ -5,6 +5,8 @@ from __future__ import annotations
 
 import argparse
 from collections import Counter
+import csv
+from io import StringIO
 import json
 from pathlib import Path
 import re
@@ -14,6 +16,8 @@ import unicodedata
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CATALOG = ROOT / "data" / "resources.json"
 SLUG = re.compile(r"^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$")
+CSV_COLUMNS = ("id", "name", "category", "subcategory", "kind", "summary", "url", "verified_on")
+FORMULA_PREFIX = re.compile(r"^[\s\x00-\x1f]*[=+\-@]")
 
 
 class CatalogError(ValueError):
@@ -84,6 +88,23 @@ def search_records(
     return results[:limit] if limit is not None else results
 
 
+def resources_to_csv(records: list[dict[str, str]]) -> str:
+    """Serialize search results with the same columns and formula protections as the browser.
+
+    Return a header even for zero matches. QUOTE_ALL and CRLF mirror site/search.mjs.
+    Data is written, never evaluated; formulas are neutralized before spreadsheet import.
+    """
+    output = StringIO(newline="")
+    writer = csv.writer(output, quoting=csv.QUOTE_ALL, lineterminator="\r\n")
+    writer.writerow(CSV_COLUMNS)
+    for entry in records:
+        writer.writerow([
+            "'" + entry[field] if FORMULA_PREFIX.match(entry[field]) else entry[field]
+            for field in CSV_COLUMNS
+        ])
+    return output.getvalue()
+
+
 def positive_integer(value: str) -> int:
     try:
         number = int(value)
@@ -109,7 +130,9 @@ def make_parser() -> argparse.ArgumentParser:
     search.add_argument("--category", default="", help="Exact category slug")
     search.add_argument("--kind", default="", help="Exact resource kind")
     search.add_argument("--limit", type=positive_integer, default=30)
-    search.add_argument("--json", action="store_true", help="Machine-readable results")
+    output_format = search.add_mutually_exclusive_group()
+    output_format.add_argument("--json", action="store_true", help="Machine-readable JSON results")
+    output_format.add_argument("--csv", action="store_true", help="Formula-safe CSV (quoted UTF-8, CRLF)")
 
     show = commands.add_parser("show", help="Inspect one resource by exact ID")
     show.add_argument("id", help="Example: scikit-learn")
@@ -137,6 +160,13 @@ def main(argv: list[str] | None = None) -> int:
         output = search_records(catalog, args.query, args.category, args.kind, args.limit)
         if args.json:
             print(json.dumps(output, ensure_ascii=False, indent=2))
+        elif args.csv:
+            csv_text = resources_to_csv(output)
+            # Writing UTF-8 bytes avoids Windows text-mode CRLF doubling in redirected CSV.
+            if hasattr(sys.stdout, "buffer"):
+                sys.stdout.buffer.write(csv_text.encode("utf-8"))
+            else:
+                sys.stdout.write(csv_text)
         elif not output:
             print("No matching resources. Try another query or filter.")
         else:
