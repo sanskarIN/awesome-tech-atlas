@@ -28,7 +28,7 @@ Follow the Handbook's first steps, create a tiny `.ts` file, and run the type ch
 
 ### Prerequisites
 
-- TypeScript compiler (`tsc`) and Node.js installed following the [TypeScript setup guide](https://www.typescriptlang.org/docs/handbook/2/basic-types.html). The example was checked with TypeScript 5.8.3 and Node.js 22.16.0.
+- TypeScript compiler (`tsc`) and Node.js installed following the [TypeScript installation guide](https://www.typescriptlang.org/download/). The example was checked with TypeScript 5.8.3 and Node.js 22.16.0.
 - A new empty directory; save this original example as `count.ts`. No libraries or network calls are used by the code.
 
 ### Steps
