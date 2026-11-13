@@ -103,7 +103,7 @@ class AtlasExplorerTests(unittest.TestCase):
     def test_cli_csv_respects_search_and_outputs_header_for_no_results(self):
         buffer = StringIO()
         with contextlib.redirect_stdout(buffer):
-            status = atlas.main(["search", "rust", "--limit", "1", "--csv"])
+            status = atlas.main(["search", "rust", "--category", "programming-languages", "--limit", "1", "--csv"])
         self.assertEqual(status, 0)
         rows = list(csv.DictReader(StringIO(buffer.getvalue())))
         self.assertEqual(len(rows), 1)
