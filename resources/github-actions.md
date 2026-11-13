@@ -70,7 +70,7 @@ In the practice repository's pull-request checks, **Check README / readme** shou
 
 ### Evidence and execution status
 
-- **Primary references:** [GitHub workflow syntax](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax) and [automatic token permissions](https://docs.github.com/en/actions/security-for-github-actions/security-guides/automatic-token-authentication).
+- **Primary references:** [GitHub workflow syntax](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax) and [automatic token permissions](https://docs.github.com/en/actions/tutorials/authenticate-with-github_token).
 - **Reviewed:** 2026-11-13 (example-specific documentation). **Not runtime-tested here:** this illustrative workflow was not installed or triggered in a practice GitHub repository.
 - Do not interpret this example as a recommended replacement for Awesome Tech Atlas's existing validation workflow. It does not change the catalog's earlier official-page inspection date.
 
