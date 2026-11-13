@@ -11,6 +11,11 @@ import unittest
 ROOT = Path(__file__).resolve().parents[1]
 EXAMPLES = {
     "python": "python",
+    "typescript": "typescript",
+    "git": "sh",
+    "postgresql": "sql",
+    "mdn-learn": "html",
+    "github-actions": "yaml",
     "scikit-learn": "python",
     "rust": "rust",
     "react": "jsx",
@@ -70,6 +75,12 @@ class WorkedExampleTests(unittest.TestCase):
                     "**Executed locally:**" in section
                     or "**Not runtime-tested here:**" in section
                 )
+
+    def test_example_index_points_to_all_reviewed_profiles(self):
+        index = (ROOT / "docs" / "EXAMPLES.md").read_text(encoding="utf-8")
+        for resource_id in EXAMPLES:
+            with self.subTest(resource=resource_id):
+                self.assertIn(f"../resources/{resource_id}.md#worked-example-", index)
 
     def test_python_snippets_parse_without_execution(self):
         for resource_id, language in EXAMPLES.items():
