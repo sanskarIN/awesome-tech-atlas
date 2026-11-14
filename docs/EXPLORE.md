@@ -62,7 +62,7 @@ On Windows, use `py -3 scripts/build_offline.py`. The command generates:
 dist/awesome-tech-atlas-offline.html
 ```
 
-Double-click that file to open it with a modern browser. The HTML includes the catalog JSON, **all 30 original curated resource profiles**, local search/filter code, and styles in **one file**. Search, category filters, kind filters, a **Download snapshot JSON** button, and **Download matching results CSV** work even with your network disconnected.
+Double-click that file to open it with a modern browser. The HTML includes the catalog JSON, **all currently curated original resource profiles**, local search/filter code, and styles in **one file**. Search, category filters, kind filters, a **Download snapshot JSON** button, and **Download matching results CSV** work even with your network disconnected.
 
 - Select a resource title to open its complete profile in an offline dialog. The profile is deliberately displayed as **plain Markdown text**, preserving examples, links, headings, and code exactly rather than attempting an incomplete or unsafe Markdown renderer.
 - Use **Download Markdown** in the dialog to save the original profile locally. Press **Escape** or **Close** to return to the search results.
