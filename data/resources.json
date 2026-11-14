@@ -298,5 +298,45 @@
     "url": "https://opensource.guide/",
     "summary": "Practical guidance for starting, contributing to, and maintaining an open-source community.",
     "verified_on": "2026-11-08"
+  },
+  {
+    "id": "crafting-interpreters",
+    "name": "Crafting Interpreters",
+    "category": "compiler-development",
+    "subcategory": "Language implementation",
+    "kind": "learning-guide",
+    "url": "https://craftinginterpreters.com/",
+    "summary": "Author-published, step-by-step book that builds a tree-walk interpreter and a bytecode virtual machine for the Lox language.",
+    "verified_on": "2026-11-14"
+  },
+  {
+    "id": "gdb",
+    "name": "GNU GDB documentation",
+    "category": "developer-tools",
+    "subcategory": "Source-level debugging",
+    "kind": "official-docs",
+    "url": "https://www.gnu.org/software/gdb/documentation/",
+    "summary": "Official manuals for GNU GDB covering breakpoints, program execution, inspection of state, and debugging workflows.",
+    "verified_on": "2026-11-14"
+  },
+  {
+    "id": "wai-tutorials",
+    "name": "W3C WAI Web Accessibility Tutorials",
+    "category": "web-development",
+    "subcategory": "Accessible web interfaces",
+    "kind": "learning-guide",
+    "url": "https://www.w3.org/WAI/tutorials/",
+    "summary": "W3C Web Accessibility Initiative tutorials on accessible page structure, images, forms, tables, menus, and carousels.",
+    "verified_on": "2026-11-14"
+  },
+  {
+    "id": "opentelemetry",
+    "name": "OpenTelemetry documentation",
+    "category": "networking-distributed-systems",
+    "subcategory": "Application observability",
+    "kind": "official-docs",
+    "url": "https://opentelemetry.io/docs/",
+    "summary": "Upstream documentation for vendor-neutral instrumentation, traces, metrics, logs, and telemetry collection in distributed applications.",
+    "verified_on": "2026-11-14"
   }
 ]

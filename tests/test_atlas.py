@@ -64,7 +64,7 @@ class AtlasExplorerTests(unittest.TestCase):
             result = atlas.main(["stats", "--json"])
         self.assertEqual(result, 0)
         stats = json.loads(output.getvalue())
-        self.assertEqual(stats["resources"], 30)
+        self.assertEqual(stats["resources"], 34)
         self.assertEqual(stats["categories"], 19)
 
         error = StringIO()
