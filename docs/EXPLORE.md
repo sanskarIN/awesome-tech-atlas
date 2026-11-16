@@ -119,7 +119,8 @@ server on a temporary port, exercises the locally served catalog, then shuts
 the server down. It checks catalog rendering, search and filters, clear,
 shareable URLs, keyboard shortcuts, visible skip-link focus, viewport
 overflow, filtering after disconnecting the browser from the network, the
-local no-JavaScript fallback, and the explanatory `file://` failure state.
+local no-JavaScript fallback, and browser-dependent `file://` behavior: either
+successful local loading or an explanation that a server is required.
 It reports the tested OS and browser version. It does not click external
 upstream links or publish the site.
 
@@ -131,7 +132,9 @@ Firefox testing, screen-reader announcements, touch-device behavior,
 visual inspection, and the complete manual checklist
 still belong to [issue #10](https://github.com/sanskarIN/awesome-tech-atlas/issues/10).
 The no-JavaScript fallback links to the **local** Markdown index so it can
-work without internet access once repository files are available.
+work without internet access once repository files are available. Local
+`file://` behavior differs between browsers; use a loopback HTTP server for
+the most predictable experience.
 
 ## Hosting and releases
 

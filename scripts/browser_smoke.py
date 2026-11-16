@@ -141,13 +141,17 @@ def run_checks(browser_name: str = "chromium") -> None:
 
             file_context = browser.new_context()
             file_page = file_context.new_page()
-            file_page.goto((ROOT / "site/index.html").as_uri())
-            expect(file_page.locator("#results-status")).to_be_visible()
-            expect(file_page.locator("#results-status")).to_contain_text(
-                "Run a local HTTP server"
-            )
+            file_page.goto((ROOT / "site/index.html").as_uri(), wait_until="networkidle")
+            status = file_page.locator("#results-status")
+            expect(status).to_be_visible()
+            status_text = status.inner_text()
+            # Firefox may load neighboring file:// modules; Chromium may block them.
+            if status_text == f"Showing {total} of {total} curated resources.":
+                expect(file_page.locator("#cards article")).to_have_count(total)
+            else:
+                assert "Run a local HTTP server" in status_text, status_text
             file_context.close()
-            passed.append("raw file:// access shows a local-server explanation")
+            passed.append("file:// either loads fully or explains local-server recovery")
         finally:
             browser.close()
 
