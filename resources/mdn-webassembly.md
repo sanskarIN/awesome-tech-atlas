@@ -24,7 +24,7 @@ MDN provides learning material and references, **not** the normative core WebAss
 
 ## Try it
 
-Read [WebAssembly concepts](https://developer.mozilla.org/en-US/docs/WebAssembly/Guides/Concepts). Draw four boxes labelled **compiled module**, **instance**, **linear memory**, and **JavaScript caller**, then trace a hypothetical arithmetic input and output across that boundary. Consult the [WebAssembly JavaScript API guide](https://developer.mozilla.org/en-US/docs/WebAssembly/Guides/Using_the_WebAssembly_JavaScript_API) to connect the drawing to its named browser interfaces. This is a reasoning exercise; no binary was compiled or executed.
+Read [WebAssembly concepts](https://developer.mozilla.org/en-US/docs/WebAssembly/Guides/Concepts). Draw four boxes labelled **compiled module**, **instance**, **linear memory**, and **JavaScript caller**, then trace a hypothetical arithmetic input and output across that boundary. Consult the [WebAssembly JavaScript API guide](https://developer.mozilla.org/en-US/docs/WebAssembly/Guides/Using_the_JavaScript_API) to connect the drawing to its named browser interfaces. This is a reasoning exercise; no binary was compiled or executed.
 
 ## Where to go next
 
