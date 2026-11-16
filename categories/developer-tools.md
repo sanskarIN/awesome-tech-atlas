@@ -8,4 +8,6 @@ These are starting points, not an exhaustive list. Explore each profile for a pr
 
 - **[GNU GDB documentation](../resources/gdb.md):** Official manuals for GNU GDB covering breakpoints, program execution, inspection of state, and debugging workflows.
 
+- **[CMake Tutorial](../resources/cmake-tutorial.md):** Official tutorial on configuring C/C++ builds, targets, dependencies and tests.
+
 [Browse all categories](README.md) · [Contribute a resource](../CONTRIBUTING.md)

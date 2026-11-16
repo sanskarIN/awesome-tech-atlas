@@ -6,4 +6,6 @@ These are starting points, not an exhaustive list. Explore each profile for a pr
 
 - **[OWASP Cheat Sheet Series](../resources/owasp-cheatsheets.md):** OWASP's practical references for secure application design, authentication, authorization, and other defensive topics.
 
+- **[OpenSSF Scorecard](../resources/openssf-scorecard.md):** OpenSSF's descriptions of automated open-source repository security-practice checks.
+
 [Browse all categories](README.md) · [Contribute a resource](../CONTRIBUTING.md)

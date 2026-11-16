@@ -9,4 +9,6 @@ These are starting points, not an exhaustive list. Explore each profile for a pr
 
 - **[W3C WAI Web Accessibility Tutorials](../resources/wai-tutorials.md):** W3C Web Accessibility Initiative tutorials on accessible page structure, images, forms, tables, menus, and carousels.
 
+- **[MDN WebAssembly guides](../resources/mdn-webassembly.md):** Guide to WebAssembly concepts, the text format and JavaScript integration.
+
 [Browse all categories](README.md) · [Contribute a resource](../CONTRIBUTING.md)

@@ -25,7 +25,7 @@ A learning path is an **editable sequence**, not a universal curriculum. Pick on
 
 1. Learn [Rust](../resources/rust.md) or a systems language and understand pointers, memory layout, error handling, and I/O.
 2. Consult [Linux Kernel documentation](../resources/linux-kernel-docs.md) to understand processes and kernel interfaces.
-3. Learn the compiler pipeline through [LLVM](../resources/llvm.md).
+3. Learn the compiler pipeline through [LLVM](../resources/llvm.md). For native C/C++ builds, follow the [CMake Tutorial](../resources/cmake-tutorial.md) to understand configuration and targets.
 4. Containerize a toy service with [Docker](../resources/docker.md), then learn why [Kubernetes](../resources/kubernetes.md) exists for orchestration.
 
 **Outcome:** explain how a program is compiled, runs on an OS, and is deployed.
@@ -35,8 +35,9 @@ A learning path is an **editable sequence**, not a universal curriculum. Pick on
 1. Learn HTML semantics, CSS layout, JavaScript, and keyboard interaction in [MDN Learn](../resources/mdn-learn.md).
 2. Make a simple interactive page with browser APIs and write down the state and event-handling decisions.
 3. Learn [React](../resources/react.md) components, props, lists, and state; rebuild only the relevant behavior in a configured React environment.
-4. Test keyboard use, visible focus, labels, updates, and empty states. Avoid claiming complete accessibility from a single test.
-5. Keep a short README with browser versions, test results, and what happens on refresh.
+4. Optionally read [MDN's WebAssembly guides](../resources/mdn-webassembly.md) to learn how compiled modules cooperate with JavaScript; a small interactive site normally does not need Wasm.
+5. Test keyboard use, visible focus, labels, updates, and empty states. Avoid claiming complete accessibility from a single test.
+6. Keep a short README with browser versions, test results, and what happens on refresh.
 
 **Outcome:** explain the trade-offs between a browser-native implementation and a component library, with a documented interaction test.
 
@@ -46,7 +47,8 @@ A learning path is an **editable sequence**, not a universal curriculum. Pick on
 2. Read a project's contribution policy and inspect an existing issue or documentation gap before proposing a change.
 3. Review the [GitHub Actions](../resources/github-actions.md) workflow used to validate proposed changes.
 4. Contribute one original, evidence-backed improvement via a PR without copying upstream material or exposing sensitive data.
-5. Capture the tests, source references, and limitations in your PR description.
+5. Use [OpenSSF Scorecard](../resources/openssf-scorecard.md) as a set of security-practice questions, not as a trust certificate. Check relevant repository evidence separately.
+6. Capture the tests, source references, and limitations in your PR description.
 
 **Outcome:** submit a reviewable, reproducible documentation or tooling improvement.
 

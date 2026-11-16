@@ -52,6 +52,12 @@ These tools often complement each other rather than compete:
 
 **Official references:** [React's component and state guide](https://react.dev/learn) and [MDN's web curriculum](https://developer.mozilla.org/en-US/docs/Learn_web_development). A shared sample task and keyboard test are more informative than an unsubstantiated "faster" claim.
 
+## JavaScript and WebAssembly: complementary roles
+
+WebAssembly is not a blanket replacement for JavaScript. [MDN JavaScript](../resources/javascript-mdn.md) remains a first stop for browser UI logic and DOM interaction. [MDN WebAssembly guides](../resources/mdn-webassembly.md) explain how compiled modules can expose functions to JavaScript when an existing native component or a specific computational task justifies extra integration work. Before choosing Wasm, consider compiler and runtime requirements, data-transfer boundaries, debugging and browser compatibility. Measure any performance benefit on the actual workload.
+
+**Official reference:** [MDN WebAssembly concepts](https://developer.mozilla.org/en-US/docs/WebAssembly/Guides/Concepts). This is a design distinction, not a benchmark or browser-support guarantee.
+
 ## From a comparison to an actual decision
 
 Use the [technology decision worksheet](../guides/decision-worksheet.md) to record hard constraints, source evidence, one differentiating prototype, and a reason to revisit the choice. For guided practice, choose a [project-based track](../guides/project-based-tracks.md). These choices are context-dependent and may change with requirements.

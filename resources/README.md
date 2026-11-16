@@ -1,6 +1,6 @@
 # Resource index
 
-This is the maintained directory of **34 upstream-inspected starter resources**. Every entry links to an explanatory profile, not merely an external URL. Each catalog record has its own upstream inspection date; see the [editorial policy](../docs/EDITORIAL_POLICY.md) for the limits of verification.
+This is the maintained directory of **37 upstream-inspected starter resources**. Every entry links to an explanatory profile, not merely an external URL. Each catalog record has its own upstream inspection date; see the [editorial policy](../docs/EDITORIAL_POLICY.md) for the limits of verification.
 
 | Resource | Subject | Category |
 | --- | --- | --- |
@@ -22,9 +22,11 @@ This is the maintained directory of **34 upstream-inspected starter resources**.
 | [SQLite documentation](sqlite.md) | Embedded relational database | [Databases & storage systems](../categories/databases-storage.md) |
 | [Visual Studio Code documentation](vscode.md) | Code editor | [Developer tools](../categories/developer-tools.md) |
 | [GNU GDB documentation](gdb.md) | Source-level debugging | [Developer tools](../categories/developer-tools.md) |
+| [CMake Tutorial](cmake-tutorial.md) | Native C and C++ build configuration | [Developer tools](../categories/developer-tools.md) |
 | [MDN Learn web development](mdn-learn.md) | Web fundamentals | [Web development](../categories/web-development.md) |
 | [W3C WAI Web Accessibility Tutorials](wai-tutorials.md) | Accessible web interfaces | [Web development](../categories/web-development.md) |
 | [React Learn](react.md) | UI library | [Web development](../categories/web-development.md) |
+| [MDN WebAssembly guides](mdn-webassembly.md) | WebAssembly web integration | [Web development](../categories/web-development.md) |
 | [Android Developers documentation](android-dev.md) | Android applications | [Mobile & desktop development](../categories/mobile-desktop-development.md) |
 | [Flutter documentation](flutter.md) | Multi-platform UI toolkit | [Mobile & desktop development](../categories/mobile-desktop-development.md) |
 | [NumPy documentation](numpy.md) | Numerical arrays | [Scientific computing](../categories/scientific-computing.md) |
@@ -34,6 +36,7 @@ This is the maintained directory of **34 upstream-inspected starter resources**.
 | [Wireshark documentation](wireshark.md) | Network analysis | [Networking & distributed systems](../categories/networking-distributed-systems.md) |
 | [OpenTelemetry documentation](opentelemetry.md) | Application observability | [Networking & distributed systems](../categories/networking-distributed-systems.md) |
 | [OWASP Cheat Sheet Series](owasp-cheatsheets.md) | Defensive application security | [Cybersecurity & secure engineering](../categories/cybersecurity-secure-engineering.md) |
+| [OpenSSF Scorecard](openssf-scorecard.md) | Open-source security practices | [Cybersecurity & secure engineering](../categories/cybersecurity-secure-engineering.md) |
 | [Docker Get Started](docker.md) | Containerization | [Cloud computing & DevOps](../categories/cloud-computing-devops.md) |
 | [Kubernetes documentation](kubernetes.md) | Container orchestration | [Cloud computing & DevOps](../categories/cloud-computing-devops.md) |
 | [GitHub Actions documentation](github-actions.md) | Continuous integration | [Cloud computing & DevOps](../categories/cloud-computing-devops.md) |
