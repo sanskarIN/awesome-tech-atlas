@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
-"""Optional real-Chromium smoke checks for the local-first Atlas explorer.
+"""Optional real-browser smoke checks for the local-first Atlas explorer.
 
 Install with: python -m pip install playwright==1.57.0
-              python -m playwright install chromium
-Run from any directory: python scripts/browser_smoke.py
+              python -m playwright install chromium firefox
+Run: python scripts/browser_smoke.py --browser chromium
+     python scripts/browser_smoke.py --browser firefox
 
-This is automated Chromium coverage, not a screen-reader or Firefox audit.
+This is automated Chromium/Firefox coverage, not a human accessibility audit.
 """
 
 from __future__ import annotations
 
+import argparse
 from contextlib import contextmanager
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
@@ -45,16 +47,16 @@ def local_server():
         thread.join(timeout=5)
 
 
-def run_checks() -> None:
+def run_checks(browser_name: str = "chromium") -> None:
     total = len(json.loads((ROOT / "data/resources.json").read_text(encoding="utf-8")))
     assert total > 0, "expected a non-empty catalog"
     passed: list[str] = []
 
     with local_server() as base, sync_playwright() as playwright:
-        browser = playwright.chromium.launch(headless=True)
+        browser = getattr(playwright, browser_name).launch(headless=True)
         print(f"Platform: {platform.platform()}")
-        print(f"Chromium: {browser.version}")
-        print("Automated tests: Chromium only; no manual or screen-reader certification.")
+        print(f"{browser_name.title()}: {browser.version}")
+        print("Automated tests only; no manual or screen-reader certification.")
         try:
             desktop = browser.new_context(viewport={"width": 1440, "height": 900})
             page = desktop.new_page()
@@ -151,8 +153,14 @@ def run_checks() -> None:
 
     for name in passed:
         print(f"PASS: {name}")
-    print(f"PASS: {len(passed)} automated Chromium smoke checks")
+    print(f"PASS: {len(passed)} automated {browser_name.title()} smoke checks")
 
 
 if __name__ == "__main__":
-    run_checks()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--browser", choices=("chromium", "firefox"), default="chromium",
+        help="Browser engine to test (default: chromium)",
+    )
+    args = parser.parse_args()
+    run_checks(args.browser)
