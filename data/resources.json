@@ -160,6 +160,16 @@
     "verified_on": "2026-11-08"
   },
   {
+    "id": "cmake-tutorial",
+    "name": "CMake Tutorial",
+    "category": "developer-tools",
+    "subcategory": "Native C and C++ build configuration",
+    "kind": "official-guide",
+    "url": "https://cmake.org/cmake/help/latest/guide/tutorial/index.html",
+    "summary": "Official step-by-step CMake exercises for configuring projects, defining build targets, and learning build-system concepts.",
+    "verified_on": "2026-11-16"
+  },
+  {
     "id": "mdn-learn",
     "name": "MDN Learn web development",
     "category": "web-development",
@@ -178,6 +188,16 @@
     "url": "https://react.dev/learn",
     "summary": "Upstream React guide for components, props, state, rendering, and UI interactions.",
     "verified_on": "2026-11-08"
+  },
+  {
+    "id": "mdn-webassembly",
+    "name": "MDN WebAssembly guides",
+    "category": "web-development",
+    "subcategory": "WebAssembly web integration",
+    "kind": "learning-guide",
+    "url": "https://developer.mozilla.org/en-US/docs/WebAssembly/Guides",
+    "summary": "MDN guides explaining WebAssembly modules, JavaScript integration, the text format, and compiling from source languages.",
+    "verified_on": "2026-11-16"
   },
   {
     "id": "android-dev",
@@ -258,6 +278,16 @@
     "url": "https://cheatsheetseries.owasp.org/",
     "summary": "OWASP's practical references for secure application design, authentication, authorization, and other defensive topics.",
     "verified_on": "2026-11-08"
+  },
+  {
+    "id": "openssf-scorecard",
+    "name": "OpenSSF Scorecard",
+    "category": "cybersecurity-secure-engineering",
+    "subcategory": "Open-source security practices",
+    "kind": "official-guide",
+    "url": "https://scorecard.dev/",
+    "summary": "OpenSSF's project documentation for assessing repository security practices with automated, interpretable checks.",
+    "verified_on": "2026-11-16"
   },
   {
     "id": "docker",
