@@ -2,6 +2,7 @@
 
 import unittest
 import tempfile
+import json
 from datetime import date
 from pathlib import Path
 
@@ -11,6 +12,48 @@ from scripts import validate
 class ValidatorTests(unittest.TestCase):
     def test_current_repository_is_valid(self):
         self.assertEqual(validate.validate_repository(validate.ROOT), [])
+
+    def test_malformed_catalog_field_types_produce_diagnostics(self):
+        """Reject untrusted JSON types without crashing the validation command."""
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            (root / "data").mkdir()
+            (root / "resources").mkdir()
+            (root / "resources" / "test-resource.md").write_text(
+                "# Test resource\n"
+                + "\n".join(validate.HEADINGS)
+                + "\nhttps://example.org/docs\n2026-11-08\n",
+                encoding="utf-8",
+            )
+            original = {
+                "id": "test-resource",
+                "name": "Test resource",
+                "category": "programming-languages",
+                "subcategory": "A real subcategory",
+                "kind": "official-docs",
+                "url": "https://example.org/docs",
+                "summary": "A detailed and descriptive resource summary for validation testing.",
+                "verified_on": "2026-11-08",
+            }
+            malformed = (
+                ("category", [], "unknown category"),
+                ("category", {"slug": "programming-languages"}, "unknown category"),
+                ("kind", [], "unknown kind"),
+                ("url", [], "URL must be an HTTPS official page"),
+                ("url", {"href": "https://example.org/docs"}, "URL must be an HTTPS official page"),
+                ("verified_on", [], "invalid or future inspection date"),
+                ("verified_on", {"day": "2026-11-08"}, "invalid or future inspection date"),
+            )
+            for field, value, expected in malformed:
+                with self.subTest(field=field, value=value):
+                    item = {**original, field: value}
+                    (root / "data" / "resources.json").write_text(
+                        json.dumps([item]), encoding="utf-8"
+                    )
+                    problems = validate.validate_repository(root)
+                    self.assertTrue(
+                        any(expected in problem for problem in problems), problems
+                    )
 
     def test_slug_rules(self):
         self.assertTrue(validate.is_valid_slug("scikit-learn"))
