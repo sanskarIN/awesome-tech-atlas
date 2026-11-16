@@ -101,6 +101,36 @@ The Node-based tests require **Node.js 22+** (installed automatically in GitHub 
 
 The required content-validation workflow runs these checks on pull requests and `main`, including building and syntax-checking an offline export. Keep both interfaces in sync with changes to the catalog's identity and filter fields. The browser uses `textContent` and node creation instead of injecting resource strings into HTML, and validates official links before rendering them.
 
+## Optional real-browser smoke checks
+
+The core Atlas is still dependency-free. For **optional automated Chromium QA**, install
+Playwright in a separate Python environment and download its browser once:
+
+```bash
+python3 -m pip install playwright==1.57.0
+python3 -m playwright install chromium
+python3 scripts/browser_smoke.py
+```
+
+On Windows, use `py -3 -m pip`, `py -3 -m playwright`, and
+`py -3 scripts/browser_smoke.py`. The smoke script starts a loopback-only
+server on a temporary port, exercises the locally served catalog, then shuts
+the server down. It checks catalog rendering, search and filters, clear,
+shareable URLs, keyboard shortcuts, visible skip-link focus, viewport
+overflow, filtering after disconnecting the browser from the network, the
+local no-JavaScript fallback, and the explanatory `file://` failure state.
+It reports the tested OS and browser version. It does not click external
+upstream links or publish the site.
+
+The [optional Chromium workflow](../.github/workflows/browser-smoke.yml)
+runs when browser-facing files change in pull requests and can also be
+started manually. It is a **real browser automation check**, not a claim
+of a human accessibility audit. Firefox testing, screen-reader announcements,
+touch-device behavior, visual inspection, and the complete manual checklist
+still belong to [issue #10](https://github.com/sanskarIN/awesome-tech-atlas/issues/10).
+The no-JavaScript fallback links to the **local** Markdown index so it can
+work without internet access once repository files are available.
+
 ## Hosting and releases
 
 **No GitHub Pages deployment is enabled by this feature.** The hosted site remains a local/static preview, while the optional single-file HTML build is an offline snapshot. Publishing it later would be a separate opt-in decision requiring a deployment configuration, a base-path check, and deployment verification. Do not approve unknown Pages deployments simply because this folder exists.
