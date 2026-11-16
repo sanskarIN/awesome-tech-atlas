@@ -19,7 +19,7 @@
 - **[Choose a technology](guides/decision-worksheet.md)** — a requirements-first worksheet for evaluating alternatives.
 - **[Compare tools thoughtfully](comparisons/README.md)** — scenario-based choices without unsupported rankings.
 - **[Contribute](CONTRIBUTING.md)** — propose a resource, correct a fact, or improve a guide.
-- **[Maintain accuracy](docs/MAINTENANCE.md)** — understand review dates and upstream-link triage.
+- **[Maintain accuracy](docs/MAINTENANCE.md)** — prioritize older source inspections with a read-only review queue and triage upstream links.
 
 ## What makes an entry useful?
 
