@@ -47,6 +47,14 @@ class SiteTests(unittest.TestCase):
         for asset in ("site/app.mjs", "site/search.mjs", "site/styles.css"):
             self.assertTrue((ROOT / asset).is_file(), asset)
 
+    def test_no_script_fallback_uses_local_markdown(self):
+        content = (ROOT / "site/index.html").read_text(encoding="utf-8")
+        self.assertEqual(content.count("<noscript>"), 1)
+        fallback = content.split("<noscript>", 1)[1].split("</noscript>", 1)[0]
+        self.assertIn('href="../resources/README.md"', fallback)
+        self.assertNotIn("https://github.com/", fallback)
+        self.assertTrue((ROOT / "resources/README.md").is_file())
+
     def test_client_renders_untrusted_catalog_as_text(self):
         app = (ROOT / "site/app.mjs").read_text(encoding="utf-8")
         self.assertIn("textContent", app)
