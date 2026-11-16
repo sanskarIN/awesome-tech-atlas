@@ -140,7 +140,7 @@ def run_checks() -> None:
             file_context = browser.new_context()
             file_page = file_context.new_page()
             file_page.goto((ROOT / "site/index.html").as_uri())
-            expect(file_page.locator("#load-fallback")).to_be_visible()
+            expect(file_page.locator("#results-status")).to_be_visible()
             expect(file_page.locator("#results-status")).to_contain_text(
                 "Run a local HTTP server"
             )

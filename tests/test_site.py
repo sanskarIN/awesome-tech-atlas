@@ -55,6 +55,11 @@ class SiteTests(unittest.TestCase):
         self.assertNotIn("https://github.com/", fallback)
         self.assertTrue((ROOT / "resources/README.md").is_file())
 
+    def test_initial_page_explains_file_url_loading_failure(self):
+        content = (ROOT / "site/index.html").read_text(encoding="utf-8")
+        self.assertIn("Run a local HTTP server", content)
+        self.assertIn("file://", content)
+
     def test_client_renders_untrusted_catalog_as_text(self):
         app = (ROOT / "site/app.mjs").read_text(encoding="utf-8")
         self.assertIn("textContent", app)
