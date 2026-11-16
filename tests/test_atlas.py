@@ -2,6 +2,7 @@
 
 import contextlib
 import csv
+from datetime import date
 from io import StringIO
 import json
 from pathlib import Path
@@ -120,6 +121,80 @@ class AtlasExplorerTests(unittest.TestCase):
         with contextlib.redirect_stderr(StringIO()), self.assertRaises(SystemExit) as raised:
             atlas.make_parser().parse_args(["search", "rust", "--csv", "--json"])
         self.assertEqual(raised.exception.code, 2)
+
+    def test_review_queue_is_inclusive_sorted_and_filterable(self):
+        entries = [
+            record("b", "Bravo"), record("a", "Alpha"),
+            record("c", "Current"), record("d", "Oldest"),
+        ]
+        entries[0]["verified_on"] = "2026-08-18"  # exactly 90 days
+        entries[1]["verified_on"] = "2026-08-18"
+        entries[2]["verified_on"] = "2026-08-19"  # only 89 days
+        entries[3]["verified_on"] = "2026-07-01"
+        entries[3]["category"] = "web-development"
+
+        original = json.dumps(entries)
+        all_due = atlas.inspection_queue(entries, date(2026, 11, 16), 90)
+        self.assertEqual([item["id"] for item in all_due], ["d", "a", "b"])
+        self.assertEqual(all_due[0]["profile"], "resources/d.md")
+        self.assertEqual(all_due[1]["age_days"], 90)
+        self.assertEqual(
+            [item["id"] for item in atlas.inspection_queue(
+                entries, date(2026, 11, 16), 90, category="programming-languages"
+            )], ["a", "b"],
+        )
+        self.assertEqual(
+            atlas.inspection_queue(entries, date(2026, 11, 16), 90, kind="reference"),
+            [],
+        )
+        self.assertEqual(json.dumps(entries), original)
+
+    def test_review_queue_dates_reject_invalid_input(self):
+        for invalid in ("2026-02-30", "2026-2-03", "yesterday"):
+            with self.subTest(date=invalid):
+                with self.assertRaises(Exception):
+                    atlas.iso_date(invalid)
+        for invalid in ("-1", "no"):
+            with self.subTest(days=invalid):
+                with self.assertRaises(Exception):
+                    atlas.nonnegative_integer(invalid)
+        self.assertEqual(atlas.nonnegative_integer("0"), 0)
+
+        item = record("invalid", "Invalid")
+        item["verified_on"] = "2026-02-30"
+        with self.assertRaises(atlas.CatalogError):
+            atlas.inspection_queue([item], date(2026, 11, 16))
+
+    def test_review_queue_cli_json_reports_total_before_limit(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "resources.json"
+            entries = [record("a", "Alpha"), record("b", "Beta")]
+            for entry in entries:
+                entry["verified_on"] = "2026-08-01"
+            path.write_text(json.dumps(entries), encoding="utf-8")
+            output = StringIO()
+            with contextlib.redirect_stdout(output):
+                result = atlas.main([
+                    "--catalog", str(path), "review-queue",
+                    "--as-of", "2026-11-16", "--days", "90",
+                    "--limit", "1", "--json",
+                ])
+            self.assertEqual(result, 0)
+            report = json.loads(output.getvalue())
+            self.assertEqual(report["as_of"], "2026-11-16")
+            self.assertEqual(report["matching_resources"], 2)
+            self.assertEqual(report["shown_resources"], 1)
+            self.assertEqual(report["resources"][0]["id"], "a")
+
+            output = StringIO()
+            with contextlib.redirect_stdout(output):
+                result = atlas.main([
+                    "--catalog", str(path), "review-queue",
+                    "--as-of", "2026-11-16", "--days", "200",
+                ])
+            self.assertEqual(result, 0)
+            self.assertIn("0 resource(s)", output.getvalue())
+            self.assertIn("not proof of a broken link", output.getvalue())
 
     def test_positive_integer(self):
         for invalid in ("0", "-1", "hello"):

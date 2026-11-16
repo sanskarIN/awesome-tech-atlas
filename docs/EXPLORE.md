@@ -18,11 +18,15 @@ python3 scripts/atlas.py search database --category databases-storage --json
 python3 scripts/atlas.py search rust --csv > rust-resources.csv
 python3 scripts/atlas.py search "machine learning" --limit 8 --csv > ml-resources.csv
 python3 scripts/atlas.py show scikit-learn
+python3 scripts/atlas.py review-queue --days 90
+python3 scripts/atlas.py review-queue --days 180 --category compiler-development --json
 ```
 
 On Windows, use `py -3` instead of `python3` if that is your configured launcher.
 
 Search uses **AND** semantics for words, ignores case and most accents, and ranks title matches over summary matches. Category and kind filters use exact catalog identifiers (see `categories` and `kinds`). `--json` emits an array of complete catalog records for `search`, or the selected record for `show`. For `search`, `--csv` emits the **same columns and match order as the browser's CSV exporter**, with quoted UTF-8 cells, CRLF rows, and a leading apostrophe on formula-like values to prevent spreadsheet evaluation. Use either `--json` or `--csv`, not both. `--csv` prints a header even when there are zero matches, so pipelines can handle empty results consistently. The CLI writes raw UTF-8 without a byte-order mark; the browser adds a UTF-8 BOM to its downloaded CSV for spreadsheet compatibility. Treat formula safety as a defensive export measure, not a substitute for reviewing untrusted source data. No results is not a command error; unknown resource IDs produce a nonzero exit status.
+
+To prioritize editorial reinspection, `review-queue` sorts entries by their `verified_on` date (oldest first) and selects those at least `--days` old, with an inclusive threshold. The default is 90 days as of the current **UTC** date; `--as-of YYYY-MM-DD` allows deterministic reports, and `--category`, `--kind`, `--limit`, and `--json` control the output. The JSON report includes total matches **before** the display limit. This is a read-only planning aid: an old inspection date does not mean an entry is broken. See the [maintenance runbook](MAINTENANCE.md#inspection-age-queue).
 
 To test against a different JSON file, put `--catalog path/to/resources.json` *before* the command. The complete catalog is still validated by `python3 scripts/validate.py` before contributions are merged.
 

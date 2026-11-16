@@ -6,12 +6,25 @@ Awesome Tech Atlas is continuously updated through reviewed changes on `main`. *
 
 1. Review new correction issues first. A reported broken upstream URL or misleading fact is more urgent than adding an unrelated entry.
 2. Run `python3 scripts/validate.py` locally. This validates metadata, unique identifiers and official URLs, required narrative sections, and internal Markdown file/heading navigation without network requests.
-3. Run `python3 -m unittest discover -s tests -v` to check the validator and link-checker regression tests.
-4. For upstream link health, run `python3 scripts/check_external_links.py --strict` when network access is available. The scheduled [external-link workflow](../.github/workflows/check-external-links.yml) performs the same check weekly.
+3. Run `python3 scripts/atlas.py review-queue --days 90` to prioritize entries whose source was last inspected at least 90 days ago. Use `--category` or `--kind` to narrow the queue, and `--json` for machine-readable planning. This does **not** make HTTP requests, change metadata, or prove a link is broken.
+4. Run `python3 -m unittest discover -s tests -v` to check the validator and link-checker regression tests.
+5. For upstream link health, run `python3 scripts/check_external_links.py --strict` when network access is available. The scheduled [external-link workflow](../.github/workflows/check-external-links.yml) performs the same check weekly.
 
 The external check tests only the main official URL in each catalog record. A successful HTTP response does not prove that every nested link, feature claim, or release status remains accurate.
 
 Local links to Markdown headings are validated against the target page's GitHub-style heading IDs (including repeated headings). Code fences and inline code samples are ignored. The checker supports standard ATX headings and ordinary inline Markdown links; if a document relies on custom HTML anchors or complex Markdown constructs, verify that navigation manually.
+
+## Inspection-age queue
+
+The review queue calculates days since each catalog `verified_on` date, using the current UTC date by default. A resource exactly at the threshold is included; records are sorted by oldest inspection first, then by name and ID. A `--limit` of 30 applies **after** sorting, and JSON reports the total due before the display limit.
+
+```bash
+python3 scripts/atlas.py review-queue --days 90
+python3 scripts/atlas.py review-queue --days 180 --category compiler-development --json
+python3 scripts/atlas.py review-queue --as-of 2026-11-16 --days 0 --limit 5
+```
+
+The `--as-of YYYY-MM-DD` option makes reports reproducible for a chosen UTC calendar date. A date after the chosen `--as-of` date is not due yet. Date thresholds are **editorial reminders, not a guarantee of freshness, link health, or security**. An entry's inspection date must only be updated after a human actually checks its upstream source and relevant claims.
 
 ## Triage a failed upstream check
 

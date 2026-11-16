@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 from collections import Counter
 import csv
+from datetime import date, datetime, timezone
 from io import StringIO
 import json
 from pathlib import Path
@@ -115,6 +116,69 @@ def positive_integer(value: str) -> int:
     return number
 
 
+def nonnegative_integer(value: str) -> int:
+    """Parse a non-negative inspection-age threshold."""
+    try:
+        number = int(value)
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError("days must be a non-negative integer") from exc
+    if number < 0:
+        raise argparse.ArgumentTypeError("days must be a non-negative integer")
+    return number
+
+
+def iso_date(value: str) -> date:
+    """Parse a strict ISO calendar date for reproducible inspection reports."""
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", value):
+        raise argparse.ArgumentTypeError("date must use YYYY-MM-DD")
+    try:
+        return date.fromisoformat(value)
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError("date must be a valid YYYY-MM-DD day") from exc
+
+
+def inspection_queue(
+    records: list[dict[str, str]],
+    as_of: date,
+    minimum_age_days: int = 90,
+    category: str = "",
+    kind: str = "",
+) -> list[dict[str, str | int]]:
+    """Oldest-inspected entries first; age is not evidence of a broken resource."""
+    if minimum_age_days < 0:
+        raise ValueError("minimum_age_days must not be negative")
+    due: list[dict[str, str | int]] = []
+    for entry in records:
+        if category and entry["category"] != category:
+            continue
+        if kind and entry["kind"] != kind:
+            continue
+        inspected_value = entry["verified_on"]
+        if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", inspected_value):
+            raise CatalogError(f"{entry['id']}: invalid inspection date {inspected_value!r}")
+        try:
+            inspected_on = date.fromisoformat(inspected_value)
+        except ValueError as exc:
+            raise CatalogError(
+                f"{entry['id']}: invalid inspection date {inspected_value!r}"
+            ) from exc
+        age_days = (as_of - inspected_on).days
+        if age_days >= minimum_age_days:
+            due.append({
+                "id": entry["id"],
+                "name": entry["name"],
+                "category": entry["category"],
+                "kind": entry["kind"],
+                "verified_on": inspected_value,
+                "age_days": age_days,
+                "profile": f"resources/{entry['id']}.md",
+            })
+    due.sort(key=lambda item: (
+        -item["age_days"], str(item["name"]).casefold(), str(item["id"]),
+    ))
+    return due
+
+
 def make_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Search, inspect and summarize the local Awesome Tech Atlas catalog."
@@ -145,6 +209,21 @@ def make_parser() -> argparse.ArgumentParser:
     ):
         command = commands.add_parser(name, help=description)
         command.add_argument("--json", action="store_true")
+    review = commands.add_parser(
+        "review-queue", help="List resources due for human editorial reinspection"
+    )
+    review.add_argument(
+        "--days", type=nonnegative_integer, default=90,
+        help="Minimum days since last inspection (inclusive; default: 90)",
+    )
+    review.add_argument(
+        "--as-of", type=iso_date, default=datetime.now(timezone.utc).date(),
+        help="UTC calendar date for calculating age (YYYY-MM-DD; default: today UTC)",
+    )
+    review.add_argument("--category", default="", help="Exact category slug")
+    review.add_argument("--kind", default="", help="Exact resource kind")
+    review.add_argument("--limit", type=positive_integer, default=30)
+    review.add_argument("--json", action="store_true", help="Machine-readable report")
     return parser
 
 
@@ -187,6 +266,37 @@ def main(argv: list[str] | None = None) -> int:
             for field, value in entry.items():
                 print(f"{field}: {value}")
             print(f"profile: resources/{entry['id']}.md")
+        return 0
+
+    if args.command == "review-queue":
+        try:
+            due = inspection_queue(
+                catalog, args.as_of, args.days, args.category, args.kind,
+            )
+        except CatalogError as exc:
+            print(f"Error: {exc}", file=sys.stderr)
+            return 2
+        selected = due[:args.limit]
+        if args.json:
+            print(json.dumps({
+                "as_of": args.as_of.isoformat(),
+                "minimum_age_days": args.days,
+                "matching_resources": len(due),
+                "shown_resources": len(selected),
+                "resources": selected,
+            }, ensure_ascii=False, indent=2))
+        else:
+            print(
+                f"As of {args.as_of.isoformat()}: {len(due)} resource(s) last "
+                f"inspected at least {args.days} day(s) ago "
+                f"(showing {len(selected)})."
+            )
+            for item in selected:
+                print(
+                    f"  {item['age_days']:>4}d  {item['name']} "
+                    f"[{item['category']}]  {item['verified_on']}  {item['profile']}"
+                )
+            print("Inspection age is a review priority, not proof of a broken link.")
         return 0
 
     if args.command == "stats":
