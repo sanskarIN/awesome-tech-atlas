@@ -263,9 +263,9 @@ def validate_repository(root: Path = ROOT) -> list[str]:
                 errors.append(f"Duplicate resource name: {name}")
             names.add(folded)
 
-        if record["category"] not in CATEGORIES:
+        if not isinstance(record["category"], str) or record["category"] not in CATEGORIES:
             errors.append(f"{resource_id}: unknown category: {record['category']!r}")
-        if record["kind"] not in KINDS:
+        if not isinstance(record["kind"], str) or record["kind"] not in KINDS:
             errors.append(f"{resource_id}: unknown kind: {record['kind']!r}")
         for field in ("subcategory", "summary"):
             value = record[field]
@@ -293,17 +293,18 @@ def validate_repository(root: Path = ROOT) -> list[str]:
                 errors.append(f"{resource_id}: missing profile heading {heading}")
         for heading in missing_worked_example_headings(content):
             errors.append(f"{resource_id}: worked example missing {heading}")
-        if url not in content:
+        if not isinstance(url, str) or url not in content:
             errors.append(f"{resource_id}: official URL missing from profile")
-        if record["verified_on"] not in content:
+        if not isinstance(record["verified_on"], str) or record["verified_on"] not in content:
             errors.append(f"{resource_id}: inspection date missing from profile")
 
         category = record["category"]
-        catpath = root / "categories" / f"{category}.md"
-        if not catpath.is_file():
-            errors.append(f"{resource_id}: category page missing: {category}.md")
-        elif f"../resources/{resource_id}.md" not in catpath.read_text(encoding="utf-8"):
-            errors.append(f"{resource_id}: missing category page backlink")
+        if isinstance(category, str) and category in CATEGORIES:
+            catpath = root / "categories" / f"{category}.md"
+            if not catpath.is_file():
+                errors.append(f"{resource_id}: category page missing: {category}.md")
+            elif f"../resources/{resource_id}.md" not in catpath.read_text(encoding="utf-8"):
+                errors.append(f"{resource_id}: missing category page backlink")
 
     index = (root / "resources/README.md")
     if index.is_file():
