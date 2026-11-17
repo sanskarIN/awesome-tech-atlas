@@ -152,5 +152,81 @@ class ValidatorTests(unittest.TestCase):
         self.assertIsNone(validate.resolve_local_link(source, "#overview", root))
 
 
+    def test_index_totals_match_catalog_and_reject_drift(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            (root / "categories").mkdir()
+            (root / "resources").mkdir()
+            records = [
+                {"category": "compiler-development"},
+                {"category": "compiler-development"},
+                {"category": "developer-tools"},
+            ]
+            counts = {slug: 0 for slug in validate.CATEGORIES}
+            for record in records:
+                counts[record["category"]] += 1
+            table = "\n".join(
+                ["# Categories", "| Category | Starting entries |", "| --- | ---: |"]
+                + [
+                    f"| [Topic]({slug}.md) | {counts[slug]} |"
+                    for slug in sorted(validate.CATEGORIES)
+                ]
+            ) + "\n"
+            category_index = root / "categories/README.md"
+            resource_index = root / "resources/README.md"
+            category_index.write_text(table, encoding="utf-8")
+            resource_index.write_text(
+                "Directory of **3 upstream-inspected starter resources**.\n",
+                encoding="utf-8",
+            )
+            self.assertEqual(validate.validate_index_counts(root, records), [])
+
+            category_index.write_text(
+                table.replace("(compiler-development.md) | 2 |", 
+                              "(compiler-development.md) | 1 |"),
+                encoding="utf-8",
+            )
+            problems = validate.validate_index_counts(root, records)
+            self.assertTrue(
+                any("count mismatch for compiler-development" in p for p in problems),
+                problems,
+            )
+
+            category_index.write_text(
+                table + "| [Duplicate](compiler-development.md) | 2 |\n",
+                encoding="utf-8",
+            )
+            problems = validate.validate_index_counts(root, records)
+            self.assertTrue(
+                any("duplicates category: compiler-development" in p for p in problems),
+                problems,
+            )
+
+            category_index.write_text(table, encoding="utf-8")
+            resource_index.write_text(
+                "Directory of **2 upstream-inspected starter resources**.\n",
+                encoding="utf-8",
+            )
+            problems = validate.validate_index_counts(root, records)
+            self.assertTrue(
+                any("Resource index count mismatch" in p for p in problems),
+                problems,
+            )
+
+            resource_index.write_text(
+                "Directory of **3 upstream-inspected starter resources**.\n",
+                encoding="utf-8",
+            )
+            category_index.write_text(
+                table.replace("| [Topic](compiler-development.md) | 2 |\n", ""),
+                encoding="utf-8",
+            )
+            problems = validate.validate_index_counts(root, records)
+            self.assertTrue(
+                any("missing category: compiler-development" in p for p in problems),
+                problems,
+            )
+
+
 if __name__ == "__main__":
     unittest.main()

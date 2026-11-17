@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+from collections import Counter
 import html
 import json
 import re
@@ -214,6 +215,66 @@ def validate_markdown_links(root: Path) -> list[str]:
     return errors
 
 
+
+CATEGORY_INDEX_ROW_RE = re.compile(
+    r"^\|\s*\[[^]\n]+\]\((?P<slug>[a-z0-9-]+)\.md\)\s*\|\s*(?P<count>\d+)\s*\|$"
+)
+RESOURCE_COUNT_RE = re.compile(r"\*\*(\d+) upstream-inspected starter resources\*\*")
+
+
+def validate_index_counts(root: Path, records: list[object]) -> list[str]:
+    """Ensure static category and resource totals agree with the catalog.
+
+    Only valid category strings contribute to individual category counts;
+    other malformed records are reported by the main catalog validator.
+    """
+    errors: list[str] = []
+    category_counts = Counter(
+        record["category"]
+        for record in records
+        if isinstance(record, dict)
+        and isinstance(record.get("category"), str)
+        and record["category"] in CATEGORIES
+    )
+    category_index = root / "categories/README.md"
+    if category_index.is_file():
+        displayed: dict[str, int] = {}
+        for line in category_index.read_text(encoding="utf-8").splitlines():
+            if not line.startswith("| ["):
+                continue
+            match = CATEGORY_INDEX_ROW_RE.fullmatch(line.strip())
+            if match is None:
+                errors.append(f"Category index has malformed row: {line}")
+                continue
+            slug = match.group("slug")
+            if slug not in CATEGORIES:
+                errors.append(f"Category index lists unknown category: {slug}")
+            elif slug in displayed:
+                errors.append(f"Category index duplicates category: {slug}")
+            else:
+                displayed[slug] = int(match.group("count"))
+        for slug in sorted(CATEGORIES):
+            if slug not in displayed:
+                errors.append(f"Category index missing category: {slug}")
+            elif displayed[slug] != category_counts[slug]:
+                errors.append(
+                    f"Category index count mismatch for {slug}: "
+                    f"shows {displayed[slug]}, catalog has {category_counts[slug]}"
+                )
+
+    resource_index = root / "resources/README.md"
+    if resource_index.is_file():
+        match = RESOURCE_COUNT_RE.search(resource_index.read_text(encoding="utf-8"))
+        if match is None:
+            errors.append("Resource index missing its declared resource total.")
+        elif int(match.group(1)) != len(records):
+            errors.append(
+                f"Resource index count mismatch: "
+                f"shows {match.group(1)}, catalog has {len(records)}"
+            )
+    return errors
+
+
 def validate_repository(root: Path = ROOT) -> list[str]:
     errors: list[str] = []
     for name in sorted(REQUIRED_FILES):
@@ -316,6 +377,7 @@ def validate_repository(root: Path = ROOT) -> list[str]:
         if not (root / "categories" / f"{category}.md").is_file():
             errors.append(f"Missing category page: {category}.md")
 
+    errors.extend(validate_index_counts(root, records))
     errors.extend(validate_markdown_links(root))
 
     return errors
