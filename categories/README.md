@@ -10,17 +10,17 @@ Choose a field to find a small, editorially reviewed starting collection. Catego
 | [Deep learning & neural networks](deep-learning-neural-networks.md) | 2 |
 | [Software engineering](software-engineering.md) | 1 |
 | [Systems programming](systems-programming.md) | 1 |
-| [Compiler development](compiler-development.md) | 1 |
+| [Compiler development](compiler-development.md) | 2 |
 | [Operating systems](operating-systems.md) | 1 |
 | [Databases & storage systems](databases-storage.md) | 2 |
-| [Developer tools](developer-tools.md) | 1 |
-| [Web development](web-development.md) | 2 |
+| [Developer tools](developer-tools.md) | 3 |
+| [Web development](web-development.md) | 4 |
 | [Mobile & desktop development](mobile-desktop-development.md) | 2 |
 | [Scientific computing](scientific-computing.md) | 2 |
 | [Algorithms & data structures](algorithms-data-structures.md) | 1 |
 | [Computer architecture](computer-architecture.md) | 1 |
-| [Networking & distributed systems](networking-distributed-systems.md) | 1 |
-| [Cybersecurity & secure engineering](cybersecurity-secure-engineering.md) | 1 |
+| [Networking & distributed systems](networking-distributed-systems.md) | 2 |
+| [Cybersecurity & secure engineering](cybersecurity-secure-engineering.md) | 2 |
 | [Cloud computing & DevOps](cloud-computing-devops.md) | 3 |
 | [Open source & communities](open-source-projects-communities.md) | 1 |
 

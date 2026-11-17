@@ -5,7 +5,7 @@ Awesome Tech Atlas is continuously updated through reviewed changes on `main`. *
 ## Routine content checks
 
 1. Review new correction issues first. A reported broken upstream URL or misleading fact is more urgent than adding an unrelated entry.
-2. Run `python3 scripts/validate.py` locally. This validates metadata, unique identifiers and official URLs, required narrative sections, and internal Markdown file/heading navigation without network requests.
+2. Run `python3 scripts/validate.py` locally. This validates metadata, unique identifiers and official URLs, required narrative sections, category and resource index counts against the JSON catalog, and internal Markdown file/heading navigation without network requests. When a resource is added, update its category index count and the overall resource total in `resources/README.md`.
 3. Run `python3 scripts/atlas.py review-queue --days 90` to prioritize entries whose source was last inspected at least 90 days ago. Use `--category` or `--kind` to narrow the queue, and `--json` for machine-readable planning. This does **not** make HTTP requests, change metadata, or prove a link is broken.
 4. Run `python3 -m unittest discover -s tests -v` to check the validator and link-checker regression tests.
 5. For upstream link health, run `python3 scripts/check_external_links.py --strict` when network access is available. The scheduled [external-link workflow](../.github/workflows/check-external-links.yml) performs the same check weekly.
