@@ -341,7 +341,7 @@ def main(argv: list[str] | None = None) -> int:
                 f"in either: {report['linked_in_either']}."
             )
             print(
-                f"  Not linked by these documents: {report['unlinked_total']} "
+                f"  Unlinked from these documents: {report['unlinked_total']} "
                 f"(showing {len(selected)})."
             )
             for item in selected:
