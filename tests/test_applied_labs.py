@@ -88,7 +88,7 @@ class AppliedLabsTests(unittest.TestCase):
         compile(snippets[0], "documented_scanner.py", "exec")
         self.assertIn("unexpected character", snippets[0])
         self.assertIn("match.start()", snippets[0])
-        self.assertIn('kind == "LET"', snippets[0].replace('kind = "LET"', 'kind == "LET"'))
+        self.assertIn('kind = "LET"', snippets[0])
 
     def test_typescript_example_has_runtime_checks_not_only_type_casts(self):
         section = labs()["Lab 1: Validate untrusted records with TypeScript"]
