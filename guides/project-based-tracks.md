@@ -2,7 +2,7 @@
 
 These projects turn curated references into **small, inspectable artifacts**. Start with a track that fits your skill level, work entirely with sample or non-sensitive data, and change the scope to suit your available tools. A passing toy example is not proof of production readiness.
 
-Each track names prerequisites, an incremental plan, a definition of done, evidence to retain, and a sensible stretch goal. For minimal examples to try first, consult the linked resource profiles.
+Each track names prerequisites, an incremental plan, a definition of done, evidence to retain, and a sensible stretch goal. For minimal examples to try first, consult the linked resource profiles. For shorter focused practice before committing to a full project, see the [four applied engineering labs](applied-engineering-labs.md): TypeScript validation, native debugging, form accessibility and tokenizer design.
 
 ## Track 1: Python command-line data summary
 
@@ -128,4 +128,4 @@ For any track, keep a short Markdown record like this:
 | Known limitations | Untested platforms, edge cases, and scope exclusions |
 | Next investigation | One question that justifies further work |
 
-A completed project card is better than an unsupported claim that a tool is *production-ready*. The [decision worksheet](decision-worksheet.md) can help choose between multiple viable approaches.
+A completed project card is better than an unsupported claim that a tool is *production-ready*. The [decision worksheet](decision-worksheet.md) can help choose between multiple viable approaches. The [applied engineering labs](applied-engineering-labs.md) use the same evidence-before-claims method on smaller tasks, and their expected results should be verified locally before being reported as observations.
