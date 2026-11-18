@@ -78,6 +78,7 @@ class ProfileQualityTests(unittest.TestCase):
             "**Official source:** https://example.org/docs",
             "**Official source:** https://example.org/old"
         )
+        content += "\nThe canonical URL https://example.org/docs also occurs in prose.\n"
         self.assertIn("https://example.org/docs", content)
         self.assert_problem(content, "source URL mismatch")
 
