@@ -14,6 +14,11 @@ import re
 import sys
 import unicodedata
 
+if __package__:
+    from .navigation_audit import NavigationAuditError, navigation_report
+else:
+    from navigation_audit import NavigationAuditError, navigation_report
+
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CATALOG = ROOT / "data" / "resources.json"
 SLUG = re.compile(r"^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$")
@@ -224,6 +229,19 @@ def make_parser() -> argparse.ArgumentParser:
     review.add_argument("--kind", default="", help="Exact resource kind")
     review.add_argument("--limit", type=positive_integer, default=30)
     review.add_argument("--json", action="store_true", help="Machine-readable report")
+    audit = commands.add_parser(
+        "navigation-audit",
+        help="Report which curated profiles are linked from guides and comparisons",
+    )
+    audit.add_argument(
+        "--root", type=Path, default=ROOT,
+        help="Repository root containing guides/, comparisons/ and resources/",
+    )
+    audit.add_argument("--category", default="", help="Exact category slug to report")
+    audit.add_argument("--limit", type=positive_integer, default=30,
+                       help="Maximum unlinked resources to display (default: 30)")
+    audit.add_argument("--json", action="store_true",
+                       help="Machine-readable full per-resource navigation coverage")
     return parser
 
 
@@ -297,6 +315,43 @@ def main(argv: list[str] | None = None) -> int:
                     f"[{item['category']}]  {item['verified_on']}  {item['profile']}"
                 )
             print("Inspection age is a review priority, not proof of a broken link.")
+        return 0
+
+    if args.command == "navigation-audit":
+        try:
+            report = navigation_report(catalog, args.root, args.category)
+        except NavigationAuditError as exc:
+            print(f"Error: {exc}", file=sys.stderr)
+            return 2
+        selected = report["unlinked_resources"][:args.limit]
+        report["shown_unlinked"] = len(selected)
+        report["unlinked_resources"] = selected
+        if args.json:
+            print(json.dumps(report, ensure_ascii=False, indent=2))
+        else:
+            docs = report["source_documents"]
+            print(
+                f"Navigation audit: {docs['guides']} guide document(s), "
+                f"{docs['comparisons']} comparison document(s), "
+                f"{report['catalog_resources']} catalog resource(s)."
+            )
+            print(
+                f"  In guides: {report['linked_in_guides']}; "
+                f"in comparisons: {report['linked_in_comparisons']}; "
+                f"in either: {report['linked_in_either']}."
+            )
+            print(
+                f"  Not linked by these documents: {report['unlinked_total']} "
+                f"(showing {len(selected)})."
+            )
+            for item in selected:
+                print(f"  - {item['name']} [{item['category']}] {item['profile']}")
+            untracked = report["untracked_profile_links"]
+            if untracked:
+                print(f"  Untracked profile link(s): {len(untracked)}")
+                for link in untracked:
+                    print(f"  - {link['source']} -> {link['profile']}")
+            print("Editorial link coverage is not a quality or verification score.")
         return 0
 
     if args.command == "stats":
