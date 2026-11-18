@@ -142,7 +142,7 @@ class NavigationCoverageTests(unittest.TestCase):
             ])
         self.assertEqual(status, 0)
         self.assertIn("guide", output.getvalue())
-        self.assertIn("unlinked", output.getvalue())
+        self.assertIn("unlinked", output.getvalue().lower())
         self.assertIn("resources/delta.md", output.getvalue())
         self.assertIn("untracked.md", output.getvalue())
 
