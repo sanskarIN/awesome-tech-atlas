@@ -82,7 +82,7 @@ class ResourceTemplateContractTests(unittest.TestCase):
             "verified_on": REPLACEMENTS["verified_on"],
         }
         tests = [
-            ("**Official source:**", "**Official documentation:**", "source metadata"),
+            ("**Official source:**", "**Official documentation:**", "expected exactly one source metadata line"),
             ("**Type:**", "**Kind:**", "missing profile metadata: Type"),
             ("## Strength and trade-off", "## Trade-offs", "missing narrative heading"),
             ("**Last official-page inspection:**", "**Last source inspection:**",
