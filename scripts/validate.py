@@ -275,6 +275,115 @@ def validate_index_counts(root: Path, records: list[object]) -> list[str]:
     return errors
 
 
+RESOURCE_INDEX_ENTRY_RE = re.compile(
+    r"^\|\s*\[(?P<name>[^\]\n]+)\]\((?P<id>[a-z0-9-]+)\.md\)\s*"
+    r"\|\s*(?P<subcategory>[^|\n]+?)\s*"
+    r"\|\s*\[[^\]\n]+\]\(\.\./categories/(?P<category>[a-z0-9-]+)\.md\)\s*\|\s*$"
+)
+CATEGORY_RESOURCE_ENTRY_RE = re.compile(
+    r"^\s*-\s+\*\*\[(?P<name>[^\]\n]+)\]"
+    r"\(\.\./resources/(?P<id>[a-z0-9-]+)\.md\):\*\*\s+.+$"
+)
+
+
+def validate_index_membership(root: Path, records: list[object]) -> list[str]:
+    """Check both directions of catalog, indexes and profile membership.
+
+    A category's prose may deliberately differ from a catalog summary, but
+    resource identity and placement must not drift. Malformed records are
+    diagnosed by validate_repository; exclude them here to avoid crashing.
+    """
+    errors: list[str] = []
+    catalog = {
+        record["id"]: record
+        for record in records
+        if isinstance(record, dict)
+        and is_valid_slug(record.get("id"))
+        and all(
+            isinstance(record.get(field), str)
+            for field in ("name", "subcategory", "category")
+        )
+        and record["category"] in CATEGORIES
+    }
+
+    index = root / "resources" / "README.md"
+    if index.is_file():
+        seen: Counter[str] = Counter()
+        for line in active_markdown_lines(index.read_text(encoding="utf-8")):
+            if not line.startswith("| ["):
+                continue
+            match = RESOURCE_INDEX_ENTRY_RE.fullmatch(line.strip())
+            if match is None:
+                errors.append(f"Resource index has malformed entry row: {line}")
+                continue
+            ident = match.group("id")
+            seen[ident] += 1
+            record = catalog.get(ident)
+            if record is None:
+                errors.append(f"Resource index lists unknown resource: {ident}")
+                continue
+            for field in ("name", "subcategory", "category"):
+                actual = match.group(field).strip()
+                if actual != record[field]:
+                    errors.append(
+                        f"Resource index {ident}: {field} mismatch "
+                        f"(index {actual!r}, catalog {record[field]!r})"
+                    )
+        for ident in sorted(catalog):
+            if not seen[ident]:
+                errors.append(f"Resource index missing catalog entry: {ident}")
+        for ident, count in sorted(seen.items()):
+            if count > 1:
+                errors.append(f"Resource index duplicates resource: {ident} ({count} rows)")
+
+    resources = root / "resources"
+    if resources.is_dir():
+        for path in sorted(resources.glob("*.md")):
+            if path.name != "README.md" and path.stem not in catalog:
+                errors.append(f"Uncataloged resource profile: resources/{path.name}")
+
+    categories = root / "categories"
+    if categories.is_dir():
+        for path in sorted(categories.glob("*.md")):
+            if path.name != "README.md" and path.stem not in CATEGORIES:
+                errors.append(f"Unrecognized category page: categories/{path.name}")
+
+    for category in sorted(CATEGORIES):
+        page = categories / f"{category}.md"
+        if not page.is_file():
+            continue  # Already reported by the required-category file check.
+        seen: Counter[str] = Counter()
+        for line in active_markdown_lines(page.read_text(encoding="utf-8")):
+            if not line.lstrip().startswith("- **["):
+                continue
+            match = CATEGORY_RESOURCE_ENTRY_RE.fullmatch(line)
+            if match is None:
+                errors.append(f"Category {category}: malformed resource row: {line}")
+                continue
+            ident = match.group("id")
+            seen[ident] += 1
+            record = catalog.get(ident)
+            if record is None:
+                errors.append(f"Category {category}: unknown resource: {ident}")
+                continue
+            if record["category"] != category:
+                errors.append(
+                    f"Category {category}: misplaced resource {ident}; "
+                    f"catalog assigns it to {record['category']}"
+                )
+            if match.group("name") != record["name"]:
+                errors.append(f"Category {category}: name mismatch for {ident}")
+        for ident, record in sorted(catalog.items()):
+            if record["category"] == category and not seen[ident]:
+                errors.append(f"Category {category}: missing catalog resource {ident}")
+        for ident, count in sorted(seen.items()):
+            if count > 1:
+                errors.append(
+                    f"Category {category}: duplicate resource {ident} ({count} rows)"
+                )
+    return errors
+
+
 def validate_repository(root: Path = ROOT) -> list[str]:
     errors: list[str] = []
     for name in sorted(REQUIRED_FILES):
@@ -378,6 +487,7 @@ def validate_repository(root: Path = ROOT) -> list[str]:
             errors.append(f"Missing category page: {category}.md")
 
     errors.extend(validate_index_counts(root, records))
+    errors.extend(validate_index_membership(root, records))
     errors.extend(validate_markdown_links(root))
 
     return errors
