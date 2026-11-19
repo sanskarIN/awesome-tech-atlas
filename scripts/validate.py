@@ -13,6 +13,11 @@ from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
 if __package__:
+    from .reference_links import scan_reference_links
+else:
+    from reference_links import scan_reference_links
+
+if __package__:
     from .profile_quality import validate_profile_content
 else:
     from profile_quality import validate_profile_content
@@ -179,46 +184,69 @@ def github_heading_anchors(content: str) -> set[str]:
 
 
 def validate_markdown_links(root: Path) -> list[str]:
-    """Check local Markdown paths and fragments without network requests."""
+    """Validate ordinary inline and explicit reference-style local Markdown links.
+
+    Link-definition labels are case-insensitive, and references can precede
+    their definitions. This is a static check; external hosts are not fetched.
+    """
     errors: list[str] = []
     anchor_cache: dict[Path, set[str]] = {}
     root = root.resolve()
+
     for md in sorted(root.rglob("*.md")):
         if ".git" in md.relative_to(root).parts:
             continue
         content = md.read_text(encoding="utf-8")
+        relative = md.relative_to(root)
+
+        def check_target(target: str, context: str = "") -> None:
+            href = target.strip()
+            if href.startswith("<") and href.endswith(">"):
+                href = href[1:-1]
+            else:
+                href = href.split(" ", 1)[0].strip("<>")
+            parsed = urlsplit(href)
+            if parsed.scheme or parsed.netloc or href.startswith(("mailto:", "tel:")):
+                return
+            resolved = md if not parsed.path else resolve_local_link(md, href, root)
+            if resolved is None:
+                return
+            prefix = f"{relative}{context}"
+            try:
+                rel_target = resolved.relative_to(root)
+            except ValueError:
+                errors.append(f"{prefix}: link escapes repository: {target}")
+                return
+            if not resolved.exists():
+                errors.append(f"{prefix}: broken local link: {target}")
+                return
+            if parsed.fragment and resolved.suffix.lower() == ".md":
+                anchors = anchor_cache.get(resolved)
+                if anchors is None:
+                    anchors = github_heading_anchors(resolved.read_text(encoding="utf-8"))
+                    anchor_cache[resolved] = anchors
+                fragment = unquote(parsed.fragment)
+                if fragment not in anchors:
+                    errors.append(
+                        f"{prefix}: missing Markdown anchor "
+                        f"#{fragment} in {rel_target}"
+                    )
+
         for line in active_markdown_lines(content):
             prose = INLINE_CODE_RE.sub("", line)
             for match in LINK_RE.finditer(prose):
-                target = match.group(1)
-                href = target.strip().split(" ", 1)[0].strip("<>")
-                parsed = urlsplit(href)
-                if parsed.scheme or parsed.netloc or href.startswith(("mailto:", "tel:")):
-                    continue
-                resolved = md if not parsed.path else resolve_local_link(md, target, root)
-                if resolved is None:
-                    continue
-                try:
-                    rel_target = resolved.relative_to(root)
-                except ValueError:
-                    errors.append(f"{md.relative_to(root)}: link escapes repository: {target}")
-                    continue
-                if not resolved.exists():
-                    errors.append(f"{md.relative_to(root)}: broken local link: {target}")
-                    continue
-                if parsed.fragment and resolved.suffix.lower() == ".md":
-                    anchors = anchor_cache.get(resolved)
-                    if anchors is None:
-                        anchors = github_heading_anchors(resolved.read_text(encoding="utf-8"))
-                        anchor_cache[resolved] = anchors
-                    fragment = unquote(parsed.fragment)
-                    if fragment not in anchors:
-                        errors.append(
-                            f"{md.relative_to(root)}: missing Markdown anchor "
-                            f"#{fragment} in {rel_target}"
-                        )
-    return errors
+                check_target(match.group(1))
 
+        definitions, usages, syntax_errors = scan_reference_links(content)
+        errors.extend(f"{relative}: {problem}" for problem in syntax_errors)
+        for definition in definitions.values():
+            check_target(definition.destination, f":{definition.line}")
+        for usage in usages:
+            if usage.label not in definitions:
+                errors.append(
+                    f"{relative}:{usage.line}: undefined reference [{usage.label}]"
+                )
+    return errors
 
 
 CATEGORY_INDEX_ROW_RE = re.compile(

@@ -12,7 +12,7 @@ Awesome Tech Atlas is continuously updated through reviewed changes on `main`. *
 
 The external check tests only the main official URL in each catalog record. A successful HTTP response does not prove that every nested link, feature claim, or release status remains accurate.
 
-Local links to Markdown headings are validated against the target page's GitHub-style heading IDs (including repeated headings). Code fences and inline code samples are ignored. The checker supports standard ATX headings and ordinary inline Markdown links; if a document relies on custom HTML anchors or complex Markdown constructs, verify that navigation manually.
+Local links to Markdown headings are validated against the target page's GitHub-style heading IDs (including repeated headings). Code fences and inline code samples are ignored. The checker supports standard ATX headings, ordinary inline Markdown links, and explicit or collapsed reference-style links (`[text][label]`, `[label][]`, with `[label]: destination` definitions). It catches missing or duplicate reference definitions and checks local reference targets and heading fragments. Fenced examples, inline code, indented code and HTML comments do not supply reference definitions. Shortcut `[label]` links, custom HTML anchors, and complex Markdown extensions still need manual review.
 
 ## Inspection-age queue
 
