@@ -16,8 +16,8 @@ Thank you for making this atlas more accurate and useful. Contributions of **cor
 ## Add a resource
 
 1. Add one record to [`data/resources.json`](data/resources.json). Use a unique lowercase hyphenated `id`, an existing `category`, the canonical official `url`, a concise `summary`, and `verified_on` (YYYY-MM-DD) **only after checking that page**.
-2. Create `resources/<id>.md` based on [the profile template](docs/RESOURCE_TEMPLATE.md) with **Why it matters**, **Good fit**, **Trade-offs**, **Try it**, and **Where to go next**.
-3. The category index is built from the catalog. If creating a new category, explain the need in an issue first, then update [the category index](categories/README.md) and the validation script's allowed-category set.
+2. Create `resources/<id>.md` using [the validator-aligned profile template](docs/RESOURCE_TEMPLATE.md). The resource name, canonical source URL, type, category/subcategory and inspection date must match the JSON record. Write the five required sections (**Why it matters**, **Good fit**, **Strength and trade-off**, **Try it**, **Where to go next**), include both labeled strengths and limitations, and state the dated verification scope.
+3. **Update the maintained indexes manually:** add one correctly named profile link to `resources/README.md` and the matching `categories/<category>.md` page; adjust the overall resource total and that category's displayed count in `categories/README.md`. These pages are not regenerated automatically from JSON, and CI checks the two-way membership. If proposing a new category, explain the need in an issue first, then update the category index and the validator's allowed-category set.
 4. Run `python3 scripts/validate.py` (Python 3.10+; no packages needed). When available, also check external links with `python3 scripts/check_external_links.py`. Fix real failures; explain network false positives.
 5. Open a PR with a short summary, the official source used, what was actually checked, and any unresolved uncertainty.
 
