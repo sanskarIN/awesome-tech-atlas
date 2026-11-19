@@ -12,6 +12,11 @@ from datetime import date
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
+if __package__:
+    from .profile_quality import validate_profile_content
+else:
+    from profile_quality import validate_profile_content
+
 ROOT = Path(__file__).resolve().parents[1]
 CATEGORIES = {
     "programming-languages",
@@ -458,6 +463,10 @@ def validate_repository(root: Path = ROOT) -> list[str]:
             errors.append(f"{resource_id}: profile missing at {profile.relative_to(root)}")
             continue
         content = profile.read_text(encoding="utf-8")
+        errors.extend(
+            f"{resource_id}: {problem}"
+            for problem in validate_profile_content(record, content)
+        )
         for heading in HEADINGS:
             if heading not in content:
                 errors.append(f"{resource_id}: missing profile heading {heading}")
@@ -501,7 +510,7 @@ def main() -> int:
         print(f"FAILED with {len(problems)} error(s).", file=sys.stderr)
         return 1
     count = len(json.loads((ROOT / "data/resources.json").read_text(encoding="utf-8")))
-    print(f"PASS: {count} catalog entries; {len(CATEGORIES)} categories; local Markdown links and anchors valid.")
+    print(f"PASS: {count} entries; {len(CATEGORIES)} categories; indexes, profile metadata, editorial structure and local links valid.")
     return 0
 
 
