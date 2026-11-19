@@ -15,6 +15,7 @@
 - **[Build a single-file offline atlas](docs/EXPLORE.md#option-c-build-a-fully-offline-searchable-html-file)** — browse, read and save curated profiles without a server.
 - **[Try a hands-on example](docs/EXAMPLES.md)** — twelve compact, evidence-linked walkthroughs across major topics.
 - **[Follow a learning path](guides/learning-paths.md)** — build foundations before specializing.
+- **[Explore a specialization](guides/specialization-paths.md)** — six evidence-led choices across mobile, AI, algorithms, systems, observability, and security.
 - **[Build a project](guides/project-based-tracks.md)** — five hands-on tracks with evidence and completion criteria.
 - **[Practice focused engineering labs](guides/applied-engineering-labs.md)** — four original exercises in TypeScript data validation, native debugging, web accessibility, and tokenizer design.
 - **[Choose a technology](guides/decision-worksheet.md)** — a requirements-first worksheet for evaluating alternatives.

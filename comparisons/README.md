@@ -60,4 +60,4 @@ WebAssembly is not a blanket replacement for JavaScript. [MDN JavaScript](../res
 
 ## From a comparison to an actual decision
 
-Use the [technology decision worksheet](../guides/decision-worksheet.md) to record hard constraints, source evidence, one differentiating prototype, and a reason to revisit the choice. For guided practice, choose a [project-based track](../guides/project-based-tracks.md). These choices are context-dependent and may change with requirements.
+Use the [technology decision worksheet](../guides/decision-worksheet.md) to record hard constraints, source evidence, one differentiating prototype, and a reason to revisit the choice. For guided practice, choose a [project-based track](../guides/project-based-tracks.md) or a [specialization path](../guides/specialization-paths.md) that collects decision evidence across tools and domains. These choices are context-dependent and may change with requirements.

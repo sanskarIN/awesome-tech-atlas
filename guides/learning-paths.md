@@ -1,6 +1,6 @@
 # Learning paths
 
-A learning path is an **editable sequence**, not a universal curriculum. Pick one according to your goals; treat linked resources as references rather than homework to complete in full. When ready to build, follow the [project-based tracks](project-based-tracks.md) and record what you actually tested.
+A learning path is an **editable sequence**, not a universal curriculum. Pick one according to your goals; treat linked resources as references rather than homework to complete in full. When ready to build, follow the [project-based tracks](project-based-tracks.md) and record what you actually tested. For focused cross-domain decisions, use the [six evidence-led specialization paths](specialization-paths.md).
 
 ## Path A: New to software development
 
