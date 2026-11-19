@@ -13,9 +13,11 @@ from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
 if __package__:
-    from .reference_links import scan_reference_links
+    from .reference_links import scan_reference_links, prose_lines
+    from .inline_links import scan_inline_links
 else:
-    from reference_links import scan_reference_links
+    from reference_links import scan_reference_links, prose_lines
+    from inline_links import scan_inline_links
 
 if __package__:
     from .profile_quality import validate_profile_content
@@ -92,7 +94,7 @@ def missing_worked_example_headings(content: str) -> list[str]:
     return [heading for heading in WORKED_EXAMPLE_HEADINGS if heading not in content]
 
 
-LINK_RE = re.compile(r"!?(?:\[[^\]\n]*\])\(([^)\n]+)\)")
+# Inline Markdown destinations are parsed in scripts/inline_links.py.
 SLUG_RE = re.compile(r"^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$")
 
 
@@ -127,7 +129,7 @@ def valid_inspection_date(value: object, today: date | None = None) -> bool:
 
 def resolve_local_link(source: Path, target: str, root: Path) -> Path | None:
     """Return resolved local path; None for external links and same-page anchors."""
-    href = target.strip().split(" ", 1)[0].strip("<>")
+    href = target.strip().strip("<>")
     if href.startswith(("#", "mailto:", "tel:")):
         return None
     parsed = urlsplit(href)
@@ -203,15 +205,20 @@ def validate_markdown_links(root: Path) -> list[str]:
             href = target.strip()
             if href.startswith("<") and href.endswith(">"):
                 href = href[1:-1]
-            else:
-                href = href.split(" ", 1)[0].strip("<>")
             parsed = urlsplit(href)
             if parsed.scheme or parsed.netloc or href.startswith(("mailto:", "tel:")):
                 return
-            resolved = md if not parsed.path else resolve_local_link(md, href, root)
+            prefix = f"{relative}{context}"
+            if "\x00" in unquote(parsed.path):
+                errors.append(f"{prefix}: invalid local path (NUL byte): {target}")
+                return
+            try:
+                resolved = md if not parsed.path else resolve_local_link(md, href, root)
+            except (ValueError, OSError) as exc:
+                errors.append(f"{prefix}: invalid local path {target}: {exc}")
+                return
             if resolved is None:
                 return
-            prefix = f"{relative}{context}"
             try:
                 rel_target = resolved.relative_to(root)
             except ValueError:
@@ -232,10 +239,9 @@ def validate_markdown_links(root: Path) -> list[str]:
                         f"#{fragment} in {rel_target}"
                     )
 
-        for line in active_markdown_lines(content):
-            prose = INLINE_CODE_RE.sub("", line)
-            for match in LINK_RE.finditer(prose):
-                check_target(match.group(1))
+        for line_number, prose in prose_lines(content):
+            for link in scan_inline_links(prose):
+                check_target(link.destination, f":{line_number}")
 
         definitions, usages, syntax_errors = scan_reference_links(content)
         errors.extend(f"{relative}: {problem}" for problem in syntax_errors)
