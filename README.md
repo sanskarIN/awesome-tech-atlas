@@ -16,6 +16,7 @@
 - **[Try a hands-on example](docs/EXAMPLES.md)** — twelve compact, evidence-linked walkthroughs across major topics.
 - **[Follow a learning path](guides/learning-paths.md)** — build foundations before specializing.
 - **[Build a project](guides/project-based-tracks.md)** — five hands-on tracks with evidence and completion criteria.
+- **[Practice focused engineering labs](guides/applied-engineering-labs.md)** — four original exercises in TypeScript data validation, native debugging, web accessibility, and tokenizer design.
 - **[Choose a technology](guides/decision-worksheet.md)** — a requirements-first worksheet for evaluating alternatives.
 - **[Compare tools thoughtfully](comparisons/README.md)** — scenario-based choices without unsupported rankings.
 - **[Contribute](CONTRIBUTING.md)** — propose a resource, correct a fact, or improve a guide.

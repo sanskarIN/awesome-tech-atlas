@@ -11,6 +11,8 @@ A learning path is an **editable sequence**, not a universal curriculum. Pick on
 
 **Outcome:** write, run, explain, and version-control a small program.
 
+**Optional next step:** after learning JavaScript functions and objects, work through [Lab 1: runtime input validation with TypeScript](applied-engineering-labs.md#lab-1-validate-untrusted-records-with-typescript). Check actual input values rather than treating a type annotation as validation.
+
 ## Path B: Data and machine learning
 
 1. Work with Python values, functions, files, and virtual environments.
@@ -30,6 +32,8 @@ A learning path is an **editable sequence**, not a universal curriculum. Pick on
 
 **Outcome:** explain how a program is compiled, runs on an OS, and is deployed.
 
+**Optional next steps:** use [Lab 2: trace a C logic bug with CMake and GDB](applied-engineering-labs.md#lab-2-trace-a-c-logic-defect-with-cmake-and-gdb) to inspect real intermediate values. For language implementation foundations, first study the author-maintained [Crafting Interpreters](../resources/crafting-interpreters.md) and try [Lab 4: build a tiny tokenizer](applied-engineering-labs.md#lab-4-scan-a-tiny-language-with-python) before attempting a full compiler.
+
 ## Path D: Web development and interface accessibility
 
 1. Learn HTML semantics, CSS layout, JavaScript, and keyboard interaction in [MDN Learn](../resources/mdn-learn.md).
@@ -40,6 +44,8 @@ A learning path is an **editable sequence**, not a universal curriculum. Pick on
 6. Keep a short README with browser versions, test results, and what happens on refresh.
 
 **Outcome:** explain the trade-offs between a browser-native implementation and a component library, with a documented interaction test.
+
+**Optional next step:** follow the [W3C WAI accessibility tutorials](../resources/wai-tutorials.md) and [Lab 3: review a labeled local form](applied-engineering-labs.md#lab-3-review-a-local-form-for-accessible-interaction) to record actual keyboard and label checks. This is a learning exercise, not an accessibility certification.
 
 ## Path E: Open-source maintenance
 
