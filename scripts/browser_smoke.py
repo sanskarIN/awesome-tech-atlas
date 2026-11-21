@@ -89,6 +89,29 @@ def run_checks(browser_name: str = "chromium") -> None:
             passed.append("shareable URL filter restoration")
 
             page.goto(base + "/site/")
+            page.locator('[data-compare-id="rust"]').click()
+            page.locator('[data-compare-id="python"]').click()
+            expect(page.locator("#compare-panel")).to_be_visible()
+            expect(page.locator("#comparison-table thead th")).to_have_count(3)
+            expect(page.locator("#compare-status")).to_have_text(
+                "2 of 3 resources selected for comparison."
+            )
+            assert "compare=rust%2Cpython" in page.url, page.url
+            page.locator("#query").fill("javascript")
+            expect(page.locator("#compare-status")).to_have_text(
+                "2 of 3 resources selected for comparison."
+            )
+            page.goto(base + "/site/?compare=rust,python,rust,missing")
+            expect(page.locator("#comparison-table thead th")).to_have_count(3)
+            expect(page.locator('[data-compare-id="rust"]')).to_have_attribute(
+                "aria-pressed", "true"
+            )
+            page.locator("#clear-comparison").click()
+            expect(page.locator("#compare-panel")).to_be_hidden()
+            assert "compare=" not in page.url
+            passed.append("comparison selection, URL restoration and clear")
+
+            page.goto(base + "/site/")
             expect(page.locator("#cards article")).to_have_count(total)
             page.keyboard.press("Tab")
             assert page.evaluate(
