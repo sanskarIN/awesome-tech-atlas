@@ -23,6 +23,10 @@ test("unavailable catalog reveals a useful local Markdown fallback", async () =>
     "#load-fallback": fallback,
     "#total-count": { textContent: "" },
     "#category-count": { textContent: "" },
+    "#compare-status": { textContent: "" },
+    "#compare-panel": { hidden: true },
+    "#comparison-table": { replaceChildren() {} },
+    "#clear-comparison": { disabled: true },
   };
   try {
     globalThis.document = {
