@@ -19,7 +19,10 @@ import json
 from pathlib import Path
 import platform
 import threading
+from tempfile import TemporaryDirectory
 from urllib.parse import urlsplit
+
+from build_offline import build_offline_html
 
 from playwright.sync_api import expect, sync_playwright
 
@@ -149,6 +152,15 @@ def run_checks(browser_name: str = "chromium") -> None:
                 )
                 assert mobile.locator("#query").is_visible()
                 assert mobile.locator("#clear-filters").is_visible()
+                mobile.locator('[data-compare-id="rust"]').click()
+                mobile.locator('[data-compare-id="python"]').click()
+                compare_measures = mobile.evaluate("""() => ({
+                    viewport: document.documentElement.clientWidth,
+                    scrollWidth: document.documentElement.scrollWidth,
+                })""")
+                assert compare_measures["scrollWidth"] <= compare_measures["viewport"] + 1, (
+                    f"comparison overflow at {width}x{height}: {compare_measures}"
+                )
                 context.close()
             passed.append("360px, 390px and 768px layouts without horizontal overflow")
 
@@ -175,6 +187,23 @@ def run_checks(browser_name: str = "chromium") -> None:
                 assert "Run a local HTTP server" in status_text, status_text
             file_context.close()
             passed.append("file:// either loads fully or explains local-server recovery")
+
+            with TemporaryDirectory(prefix="atlas-smoke-offline-") as directory:
+                snapshot_path = Path(directory) / "atlas.html"
+                snapshot_path.write_text(build_offline_html(), encoding="utf-8")
+                offline_context = browser.new_context()
+                offline_page = offline_context.new_page()
+                offline_page.goto(snapshot_path.as_uri(), wait_until="load")
+                expect(offline_page.locator("#cards article")).to_have_count(total)
+                offline_page.locator('[data-compare-id="rust"]').click()
+                offline_page.locator('[data-compare-id="python"]').click()
+                expect(offline_page.locator("#comparison-table thead th")).to_have_count(3)
+                expect(offline_page.locator(".comparison-profile")).to_have_count(2)
+                offline_page.locator(".comparison-profile").first.click()
+                expect(offline_page.locator("#offline-profile-dialog")).to_be_visible()
+                expect(offline_page.locator("#offline-profile-markdown")).not_to_be_empty()
+                offline_context.close()
+            passed.append("standalone file:// comparison and embedded profile reader")
         finally:
             browser.close()
 
