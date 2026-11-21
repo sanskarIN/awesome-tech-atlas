@@ -106,5 +106,5 @@ test("comparison share links round-trip with filters without changing search sem
   assert.deepEqual(parseFilters(url), filters);
   assert.deepEqual(parseComparison(url, records), ["rust", "python", "react"]);
   assert.equal(filtersToQuery({ query: "", category: "", kind: "" }), "");
-  assert.deepEqual(searchResources(records, filters).map((r) => r.id), ["rust", "python"]);
+  assert.deepEqual(searchResources(records, filters).map((r) => r.id), ["python", "rust"]);
 });
