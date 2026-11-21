@@ -108,6 +108,38 @@ button, input, select { font: inherit; }
 .reset:disabled { opacity: .5; cursor: default; }
 .results-bar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin: 30px 0 14px; font-size: .86rem; color: var(--muted); }
 .results-bar p { margin: 0; font-weight: 650; color: var(--text); }
+.comparison-actions {
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;
+  gap: 12px; margin: 4px 0 18px; color: var(--muted); font-size: .87rem;
+}
+.comparison-actions p { margin: 0; }
+.comparison-actions button, .compare-toggle, .comparison-remove, .comparison-profile {
+  font: inherit; cursor: pointer; border: 1px solid var(--border);
+  background: var(--surface); color: var(--text); border-radius: 9px;
+  padding: 7px 12px;
+}
+.comparison-actions button:disabled, .compare-toggle:disabled { opacity: .52; cursor: not-allowed; }
+.comparison-actions button:hover:not(:disabled), .compare-toggle:hover:not(:disabled),
+.comparison-remove:hover, .comparison-profile:hover { border-color: var(--accent); }
+.compare-toggle { align-self: flex-start; margin-top: 16px; font-size: .8rem; font-weight: 720; }
+.compare-toggle[aria-pressed="true"] { background: var(--accent); color: var(--panel); border-color: var(--accent); }
+.compare-panel {
+  margin: 0 0 26px; padding: 20px; border: 1px solid var(--border);
+  border-radius: 16px; background: var(--panel); box-shadow: var(--shadow);
+}
+.comparison-intro { margin-bottom: 16px; }
+.comparison-intro h3 { margin: 0 0 5px; font-size: 1.2rem; }
+.comparison-intro p { margin: 0; color: var(--muted); font-size: .84rem; }
+.comparison-scroll { max-width: 100%; overflow-x: auto; border-radius: 10px; }
+#comparison-table { width: 100%; border-collapse: collapse; text-align: left; min-width: 570px; }
+#comparison-table caption { text-align: left; font-size: .75rem; color: var(--muted); padding: 0 0 10px; }
+#comparison-table :is(th, td) { padding: 12px; vertical-align: top; border: 1px solid var(--border); overflow-wrap: anywhere; }
+#comparison-table thead th { background: var(--surface); min-width: 160px; }
+#comparison-table thead th:first-child { min-width: 120px; }
+#comparison-table tbody th { width: 130px; font-size: .81rem; }
+#comparison-table tbody td { font-size: .84rem; }
+.comparison-name { display: block; margin-bottom: 9px; }
+.comparison-remove, .comparison-profile { font-size: .77rem; }
 .card-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 17px; }
 .resource-card {
   min-width: 0; background: var(--panel); border: 1px solid var(--border);

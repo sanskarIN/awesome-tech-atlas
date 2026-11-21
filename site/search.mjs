@@ -54,11 +54,15 @@ export function parseFilters(search) {
   };
 }
 
-export function filtersToQuery(filters) {
+export function filtersToQuery(filters, comparisonIds = []) {
   const params = new URLSearchParams();
   if (filters.query?.trim()) params.set("q", filters.query.trim());
   if (filters.category) params.set("category", filters.category);
   if (filters.kind) params.set("kind", filters.kind);
+  const selection = [...new Set(comparisonIds)]
+    .filter((id) => typeof id === "string" && /^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$/.test(id))
+    .slice(0, 3);
+  if (selection.length) params.set("compare", selection.join(","));
   const result = params.toString();
   return result ? "?" + result : "";
 }
@@ -82,6 +86,27 @@ export function resourcesToCsv(records) {
     rows.push(CSV_COLUMNS.map((field) => csvCell(record[field])).join(","));
   }
   return rows.join("\r\n") + "\r\n";
+}
+
+/**
+ * Sanitize user-selected IDs against the active catalog. Ordering is intentional:
+ * a comparison is a reader's shortlist, not a curated ranking.
+ */
+export function sanitizeComparisonIds(ids, records, limit = 3) {
+  const available = new Set(records.map((record) => record.id));
+  const selected = [];
+  for (const id of ids) {
+    if (typeof id !== "string" || !/^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$/.test(id)) continue;
+    if (available.has(id) && !selected.includes(id)) selected.push(id);
+    if (selected.length >= limit) break;
+  }
+  return selected;
+}
+
+/** Ignore unknown, duplicate, or excessive IDs supplied by an untrusted URL. */
+export function parseComparison(search, records) {
+  const raw = new URLSearchParams(search).get("compare") ?? "";
+  return sanitizeComparisonIds(raw.slice(0, 2048).split(","), records);
 }
 
 export function countBy(records, field) {

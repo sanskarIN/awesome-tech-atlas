@@ -73,6 +73,21 @@
         <div id="load-fallback" class="fallback" hidden>
           <p>The interactive catalog is unavailable. <a href="../resources/README.md">Browse the local Markdown resource index</a> instead.</p>
         </div>
+        <div class="comparison-actions">
+          <p id="compare-status" role="status" aria-live="polite" aria-atomic="true" tabindex="-1">0 of 3 resources selected for comparison.</p>
+          <button type="button" id="clear-comparison" disabled>Clear comparison</button>
+        </div>
+        <section id="compare-panel" class="compare-panel" aria-labelledby="compare-title" hidden>
+          <div class="comparison-intro">
+            <h3 id="compare-title">Compare selected resources</h3>
+            <p>Catalog facts, not scores or recommendations. Choose up to three; your shortlist remains when you filter results.</p>
+          </div>
+          <div class="comparison-scroll" role="region" aria-label="Scrollable resource comparison" tabindex="0">
+            <table id="comparison-table">
+              <caption>Compare topics, summaries, references and recorded inspection dates.</caption>
+            </table>
+          </div>
+        </section>
         <div id="cards" class="card-grid" aria-label="Resource results"></div>
         <div id="empty" class="empty-state" hidden>
           <h3>No resources found</h3>
