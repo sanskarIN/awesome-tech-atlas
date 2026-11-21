@@ -28,6 +28,9 @@ test("generated offline script is valid classic JavaScript with embedded catalog
       assert.ok(resources.some((entry) => entry.id === id), `missing ${id}`);
     }
     assert.ok(resources.some((r) => r.id === "rust"));
+    assert.match(html, /id="comparison-table"/);
+    assert.match(scripts[0][1], /function parseComparison\(/);
+    assert.match(scripts[0][1], /function renderComparison\(/);
     const profileAssignment = scripts[0][1].match(
       /globalThis\.__ATLAS_EMBEDDED_PROFILES__ = (\{[^\n]+\});/,
     );
