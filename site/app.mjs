@@ -223,7 +223,10 @@ function renderComparison() {
     }
     body.append(tr);
   }
-  compareTable.append(head, body);
+  compareTable.append(
+    el("caption", "", "Compare existing catalog metadata; this is not a ranked evaluation."),
+    head, body,
+  );
 }
 
 function saveViewUrl() {
