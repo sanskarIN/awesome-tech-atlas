@@ -1,5 +1,6 @@
 import {
-  countBy, filtersToQuery, parseFilters, resourcesToCsv, searchResources,
+  countBy, filtersToQuery, parseComparison, parseFilters, resourcesToCsv,
+  sanitizeComparisonIds, searchResources,
 } from "./search.mjs";
 
 const GITHUB_PROFILES = "https://github.com/sanskarIN/awesome-tech-atlas/blob/main/resources/";
@@ -36,7 +37,12 @@ const empty = document.querySelector("#empty");
 const loadFallback = document.querySelector("#load-fallback");
 const totalCount = document.querySelector("#total-count");
 const categoryCount = document.querySelector("#category-count");
+const compareStatus = document.querySelector("#compare-status");
+const comparePanel = document.querySelector("#compare-panel");
+const compareTable = document.querySelector("#comparison-table");
+const clearComparison = document.querySelector("#clear-comparison");
 let entries = [];
+let selectedIds = [];
 const offlineProfiles = globalThis.__ATLAS_EMBEDDED_PROFILES__;
 
 function hasOfflineProfile(id) {
@@ -124,8 +130,119 @@ function resourceCard(record) {
 
   const inspected = el("span", "inspected", "Source checked: " + record.verified_on);
   footer.append(upstream, inspected);
-  article.append(heading, meta, description, footer);
+  const compare = el("button", "compare-toggle");
+  compare.type = "button";
+  compare.dataset.compareId = record.id;
+  compare.addEventListener("click", () => toggleComparison(record.id));
+  article.append(heading, meta, description, footer, compare);
   return article;
+}
+
+
+function updateComparisonControls() {
+  const full = selectedIds.length === 3;
+  for (const button of cards.querySelectorAll(".compare-toggle")) {
+    const id = button.dataset.compareId;
+    const chosen = selectedIds.includes(id);
+    const record = entries.find((item) => item.id === id);
+    button.disabled = full && !chosen;
+    button.setAttribute("aria-pressed", String(chosen));
+    button.textContent = chosen ? "Remove from comparison" : "Add to comparison";
+    button.setAttribute("aria-label", (chosen ? "Remove " : "Compare ") + record.name);
+    button.title = full && !chosen ? "Remove one of the three selected resources first" : "";
+  }
+}
+
+function renderComparison() {
+  const chosen = selectedIds.map((id) => entries.find((record) => record.id === id));
+  compareStatus.textContent = selectedIds.length + " of 3 resources selected for comparison.";
+  clearComparison.disabled = selectedIds.length === 0;
+  comparePanel.hidden = selectedIds.length === 0;
+  compareTable.replaceChildren();
+  if (!chosen.length) return;
+
+  const head = el("thead");
+  const headerRow = el("tr");
+  const corner = el("th", "", "Attribute");
+  corner.scope = "col";
+  headerRow.append(corner);
+  for (const record of chosen) {
+    const cell = el("th");
+    cell.scope = "col";
+    cell.append(el("span", "comparison-name", record.name));
+    const remove = el("button", "comparison-remove", "Remove");
+    remove.type = "button";
+    remove.setAttribute("aria-label", "Remove " + record.name + " from comparison");
+    remove.addEventListener("click", () => {
+      toggleComparison(record.id);
+      compareStatus.focus();
+    });
+    cell.append(remove);
+    headerRow.append(cell);
+  }
+  head.append(headerRow);
+
+  const body = el("tbody");
+  const fields = [
+    ["Topic", (record) => labelFor(record.category)],
+    ["Subcategory", (record) => record.subcategory],
+    ["Resource type", (record) => record.kind.replaceAll("-", " ")],
+    ["Curated summary", (record) => record.summary],
+    ["Official source", (record) => {
+      const link = el("a", "", "Open upstream source");
+      link.href = record.url;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.referrerPolicy = "no-referrer";
+      return link;
+    }],
+    ["Last source inspection", (record) => record.verified_on],
+    ["Curated profile", (record) => {
+      if (hasOfflineProfile(record.id)) {
+        const button = el("button", "comparison-profile", "Read offline profile");
+        button.type = "button";
+        button.addEventListener("click", () => openOfflineProfile(record));
+        return button;
+      }
+      const link = el("a", "", "Read full profile");
+      link.href = GITHUB_PROFILES + encodeURIComponent(record.id) + ".md";
+      return link;
+    }],
+  ];
+  for (const [label, getValue] of fields) {
+    const tr = el("tr");
+    const th = el("th", "comparison-row-heading", label);
+    th.scope = "row";
+    tr.append(th);
+    for (const record of chosen) {
+      const td = el("td");
+      const value = getValue(record);
+      if (typeof value === "string") td.textContent = value;
+      else td.append(value);
+      tr.append(td);
+    }
+    body.append(tr);
+  }
+  compareTable.append(head, body);
+}
+
+function saveViewUrl() {
+  // Standalone snapshots support comparisons without writing file:// history.
+  if (window.location.protocol === "file:" || !window.history?.replaceState) return;
+  const next = window.location.pathname
+    + filtersToQuery(currentFilters(), selectedIds) + window.location.hash;
+  window.history.replaceState(null, "", next);
+}
+
+function toggleComparison(id) {
+  if (selectedIds.includes(id)) {
+    selectedIds = selectedIds.filter((item) => item !== id);
+  } else if (selectedIds.length < 3) {
+    selectedIds = sanitizeComparisonIds([...selectedIds, id], entries);
+  }
+  updateComparisonControls();
+  renderComparison();
+  saveViewUrl();
 }
 
 function populateSelect(select, counts, transform) {
@@ -157,16 +274,15 @@ function render(updateUrl = true) {
     + " curated resources.";
   clearButton.disabled = !(filters.query || filters.category || filters.kind);
   exportButton.disabled = matched.length === 0;
+  updateComparisonControls();
+  renderComparison();
 
-  // file:// snapshots cannot reliably modify history; filtering still works locally.
-  if (updateUrl && window.location.protocol !== "file:" && window.history?.replaceState) {
-    const next = window.location.pathname + filtersToQuery(filters) + window.location.hash;
-    window.history.replaceState(null, "", next);
-  }
+  if (updateUrl) saveViewUrl();
 }
 
 function restoreFromUrl() {
   const filters = parseFilters(window.location.search);
+  selectedIds = parseComparison(window.location.search, entries);
   queryInput.value = filters.query;
   categoryInput.value = [...categoryInput.options].some((opt) => opt.value === filters.category)
     ? filters.category : "";
@@ -208,6 +324,13 @@ async function initialize() {
     queryInput.addEventListener("input", () => render());
     categoryInput.addEventListener("change", () => render());
     kindInput.addEventListener("change", () => render());
+    clearComparison.addEventListener("click", () => {
+      selectedIds = [];
+      updateComparisonControls();
+      renderComparison();
+      saveViewUrl();
+      queryInput.focus();
+    });
     clearButton.addEventListener("click", () => {
       queryInput.value = "";
       categoryInput.value = "";
