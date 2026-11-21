@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   normalizeText, searchResources, parseFilters, filtersToQuery, countBy, resourcesToCsv,
+  parseComparison, sanitizeComparisonIds,
 } from "../site/search.mjs";
 
 const records = [
@@ -86,4 +87,24 @@ test("CSV export escapes quotes and neutralizes spreadsheet formulas", () => {
   assert.ok(csv.includes('"A ""quoted"", section"'));
   assert.ok(csv.includes("\"'\t+SUM(1,2)\""));
   assert.ok(csv.endsWith("\r\n"));
+});
+
+test("comparison IDs are deduplicated, validated against the catalog and capped at three", () => {
+  assert.deepEqual(sanitizeComparisonIds(
+    ["rust", "rust", "deleted", "react", "python", "bad/id", "rust"],
+    records,
+  ), ["rust", "react", "python"]);
+  assert.deepEqual(parseComparison("?compare=rust,unknown,react,rust,bad%2Fid,python,extra", records),
+    ["rust", "react", "python"]);
+  assert.deepEqual(parseComparison("?compare=__proto__,constructor", records), []);
+  assert.deepEqual(parseComparison("?compare=", records), []);
+});
+
+test("comparison share links round-trip with filters without changing search semantics", () => {
+  const filters = { query: "guide", category: "programming-languages", kind: "" };
+  const url = filtersToQuery(filters, ["rust", "python", "rust", "react", "invalid/id"]);
+  assert.deepEqual(parseFilters(url), filters);
+  assert.deepEqual(parseComparison(url, records), ["rust", "python", "react"]);
+  assert.equal(filtersToQuery({ query: "", category: "", kind: "" }), "");
+  assert.deepEqual(searchResources(records, filters).map((r) => r.id), ["rust", "python"]);
 });
