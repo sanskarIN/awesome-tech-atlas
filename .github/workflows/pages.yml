@@ -1,0 +1,62 @@
+name: Build and publish Awesome Tech Atlas
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Pull requests build without deployment privileges. Only main may publish.
+permissions:
+  contents: read
+
+concurrency:
+  group: atlas-pages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Validate and package static site
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate curated content and local links
+        run: python3 scripts/validate.py
+      - name: Run Python regression tests
+        run: python3 -m unittest discover -s tests -v
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate JavaScript modules and browser behavior
+        run: |
+          node --check site/app.mjs
+          node --check site/search.mjs
+          node --test tests/test_search.mjs tests/test_cli_csv_parity.mjs tests/test_offline_script.mjs tests/test_app_fallback.mjs
+      - name: Build project-path-aware static artifact
+        run: python3 scripts/build_pages.py --output "$RUNNER_TEMP/atlas-pages"
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ runner.temp }}/atlas-pages
+
+  deploy:
+    name: Publish validated main build
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/configure-pages@v5
+      - name: Publish to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

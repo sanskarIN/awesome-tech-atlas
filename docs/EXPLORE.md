@@ -1,6 +1,6 @@
 # Explore the atlas locally
 
-Awesome Tech Atlas has three optional, **dependency-light** ways to browse the same curated `data/resources.json` file: a Python terminal explorer, a locally served static browser, and a generated single-file offline snapshot. All three are read-only: none edits the catalog, collects analytics, needs a database, or automatically deploys GitHub Pages.
+Awesome Tech Atlas has three optional, **dependency-light** ways to browse the same curated `data/resources.json` file: a Python terminal explorer, a locally served static browser, and a generated single-file offline snapshot. All three local commands are read-only: none edits the catalog, collects analytics, needs a database, or deploys GitHub Pages. A separate, opt-in GitHub Actions workflow can publish a validated static artifact after the repository's Pages setting is configured.
 
 The original [Markdown resource index](../resources/README.md) remains the primary, durable source. Every resource still needs a human-reviewed profile and an upstream reference.
 
@@ -89,7 +89,7 @@ python3 scripts/build_offline.py --output my-offline-atlas.html
 
 **Offline limits:** The embedded curated profiles can be read, searched by catalog metadata, and saved without internet. Links to GitHub, official upstream manuals, and other external pages still need connectivity. Profile text is shown as Markdown source rather than formatted HTML; snippets are documentation, not executable programs. Unlike the locally served version, a `file://` snapshot deliberately avoids storing filters in shareable URL query parameters. It does not install a service worker, update itself, collect usage statistics, or silently fetch new catalog entries.
 
-For a shareable or regularly updated hosted site, a separate deployment decision and testing process would be required. This builder **does not enable GitHub Pages or upload anything**.
+For an optional regularly updated hosted site, see [GitHub Pages publishing](PAGES.md). This standalone snapshot builder **does not enable GitHub Pages or upload anything**.
 
 ## Tests and maintenance
 
@@ -144,7 +144,7 @@ the most predictable experience.
 
 ## Hosting and releases
 
-**No GitHub Pages deployment is enabled by this feature.** The hosted site remains a local/static preview, while the optional single-file HTML build is an offline snapshot. Publishing it later would be a separate opt-in decision requiring a deployment configuration, a base-path check, and deployment verification. Do not approve unknown Pages deployments simply because this folder exists.
+**A separate GitHub Pages publishing workflow is now available.** It packages the same static explorer and offline snapshot, but publishes only from the protected `main` branch after validation and only when the repository's Pages settings support GitHub Actions. Pull requests build without deployment privileges. See [the Pages runbook](PAGES.md) for setup, project base paths, verification, manual accessibility checks and rollback. The local explorer and the standalone snapshot builder do not publish anything on their own.
 
 The offline export contains the original profiles stored in this repository, which are covered by its CC0 contribution policy. It does **not** bundle upstream manuals, third-party logos, images, or downloaded documentation.
 

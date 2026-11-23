@@ -75,11 +75,16 @@ class SiteTests(unittest.TestCase):
         self.assertNotIn("localStorage", app)
         self.assertNotIn("sessionStorage", app)
 
-    def test_no_automatic_pages_workflow(self):
-        workflows = ROOT / ".github/workflows"
-        text = "\n".join(path.read_text(encoding="utf-8") for path in workflows.glob("*.yml"))
-        self.assertNotIn("actions/deploy-pages", text)
-        self.assertNotIn("pages: write", text)
+    def test_pages_deployment_requires_main_and_passing_build(self):
+        workflow = (ROOT / ".github/workflows/pages.yml").read_text(encoding="utf-8")
+        self.assertIn("actions/upload-pages-artifact@v3", workflow)
+        self.assertIn("actions/deploy-pages@v4", workflow)
+        self.assertIn("python3 scripts/validate.py", workflow)
+        self.assertIn("python3 scripts/build_pages.py", workflow)
+        self.assertIn("needs: build", workflow)
+        self.assertIn("if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'", workflow)
+        self.assertIn("pages: write", workflow)
+        self.assertIn("id-token: write", workflow)
 
 
 if __name__ == "__main__":
