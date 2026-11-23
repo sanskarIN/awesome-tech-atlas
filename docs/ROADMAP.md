@@ -22,11 +22,11 @@ This roadmap is a **direction**, not a release schedule or promise.
 - A reproducible single-file HTML snapshot can be opened directly from disk without starting a server; it embeds the reviewed catalog and all original curated Markdown profiles at build time.
 - Python and Node tests guard search semantics, browser asset structure, and documentation navigation.
 - Local and offline browsers allow up to three resources to be compared using existing catalog metadata; HTTP pages support shareable comparison query parameters without tracking or saved browsing history.
-- GitHub Pages deployment remains a separate, explicit decision; no publication workflow is added.
+- An opt-in GitHub Pages workflow builds a verified, project-path-aware artifact and deploys only after checks pass on protected `main`; setup and post-deploy verification are documented in [the Pages runbook](PAGES.md).
 
 ## Later, only if justified
 
-- Consider a separately hosted, searchable documentation site only if local Markdown navigation proves insufficient; assess hosting cost and long-term maintenance first.
+- Consider a richer documentation site only if existing Markdown navigation and the static Pages explorer prove insufficient; assess maintenance and accessibility first.
 - Multilingual guides reviewed by fluent contributors.
 - Documented, independently reproducible benchmarks when comparison needs warrant them.
 - Richer structured metadata only after concrete use cases emerge.
