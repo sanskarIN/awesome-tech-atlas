@@ -110,18 +110,19 @@
       </section>
     </main>
 
-    <dialog id="offline-profile-dialog" class="offline-profile-dialog" aria-labelledby="offline-profile-title">
+    <dialog id="offline-profile-dialog" class="offline-profile-dialog" aria-labelledby="offline-profile-title" aria-describedby="profile-reader-note">
       <div class="offline-dialog-header">
         <div>
-          <p class="section-kicker">Included in your offline snapshot</p>
+          <p class="section-kicker">Curated resource profile</p>
           <h2 id="offline-profile-title">Resource profile</h2>
-          <p class="reader-note">Complete curated Markdown, shown as text to preserve original code blocks and references. Upstream URLs may need internet access.</p>
+          <p class="reader-note" id="profile-reader-note">Curated Markdown is displayed as plain text without executing code. External upstream links may require internet access.</p>
+          <p class="reader-status" id="profile-reader-status" role="status" aria-live="polite" aria-atomic="true">Open a resource to read its profile.</p>
         </div>
-        <button type="button" id="offline-profile-close" class="reader-close" aria-label="Close offline profile">Close</button>
+        <button type="button" id="offline-profile-close" class="reader-close" aria-label="Close resource profile">Close</button>
       </div>
       <pre id="offline-profile-markdown" class="offline-markdown" tabindex="0"></pre>
       <div class="offline-dialog-footer">
-        <button type="button" id="download-profile-markdown" class="reader-download">Download Markdown</button>
+        <button type="button" id="download-profile-markdown" class="reader-download" disabled>Download Markdown</button>
         <a id="offline-profile-github" href="https://github.com/sanskarIN/awesome-tech-atlas" target="_blank" rel="noopener noreferrer">View on GitHub ↗</a>
       </div>
     </dialog>

@@ -74,6 +74,48 @@ def run_checks(browser_name: str = "chromium") -> None:
             assert all(urlsplit(url).hostname == "127.0.0.1" for url in requests), requests
             passed.append("desktop catalog load and local-only requests")
 
+            # Profiles live beside the catalog, not behind a third-party API.
+            first_profile = page.locator("#cards .profile-link").first
+            expect(first_profile).to_have_attribute("href", "../resources/android-dev.md")
+            first_profile.focus()
+            page.keyboard.press("Enter")
+            expect(page.locator("#offline-profile-dialog")).to_be_visible()
+            expect(page.locator("#profile-reader-status")).to_have_text("Profile ready.")
+            expect(page.locator("#offline-profile-markdown")).to_contain_text(
+                "https://developer.android.com/"
+            )
+            expect(page.locator("#download-profile-markdown")).to_be_enabled()
+            assert any(u.endswith("/resources/android-dev.md") for u in requests)
+            with page.expect_download() as download_event:
+                page.locator("#download-profile-markdown").click()
+            assert download_event.value.suggested_filename == "android-dev.md"
+            page.keyboard.press("Escape")
+            expect(page.locator("#offline-profile-dialog")).to_be_hidden()
+
+            initial_requests = sum(u.endswith("/resources/android-dev.md") for u in requests)
+            first_profile.click()
+            expect(page.locator("#profile-reader-status")).to_have_text("Profile ready.")
+            page.locator("#offline-profile-close").click()
+            assert sum(u.endswith("/resources/android-dev.md") for u in requests) == initial_requests
+            passed.append("same-origin profile reader, keyboard access, Markdown download and cache")
+
+            # A failed local read must be visible and leave a direct GitHub fallback.
+            page.route("**/resources/rust.md", lambda route: route.abort())
+            page.locator("#cards .profile-link").filter(
+                has_text="The Rust Programming Language"
+            ).click()
+            expect(page.locator("#profile-reader-status")).to_contain_text(
+                "Local profile unavailable"
+            )
+            expect(page.locator("#download-profile-markdown")).to_be_disabled()
+            expect(page.locator("#offline-profile-github")).to_have_attribute(
+                "href",
+                "https://github.com/sanskarIN/awesome-tech-atlas/blob/main/resources/rust.md",
+            )
+            page.locator("#offline-profile-close").click()
+            page.unroute("**/resources/rust.md")
+            passed.append("profile network failure has a safe, explicit fallback")
+
             page.locator("#query").fill("rust")
             assert page.locator("#cards article").count() > 0
             expect(page.locator("#clear-filters")).to_be_enabled()

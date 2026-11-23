@@ -78,9 +78,12 @@ under the *same* prefix, not at the domain root.
 4. In a browser, open the homepage and confirm it lands on the explorer.
    Search, filter, clear filters, and compare 2–3 entries. Refresh a copied
    filtered URL and verify the same selection is restored.
-5. Open a profile and an official upstream source. Download JSON, CSV and
-   offline HTML; disconnect from the network and open the offline file to
-   confirm its embedded catalog and profiles still work.
+5. Select a resource name and confirm curated Markdown opens in the site's
+   read-only dialog from the same-origin resources/ folder; download a copy.
+   Check the GitHub fallback when the profile fetch fails. Open an official
+   upstream source separately. Download JSON, CSV and offline HTML; disconnect
+   from the network and open the offline file to confirm its embedded catalog
+   and profiles still work.
 6. Check keyboard navigation, the skip link, dark mode, mobile layouts and
    at least one screen reader manually. Issue #10 tracks this outstanding
    accessibility/real-browser review; automated smoke tests do not close it.

@@ -51,6 +51,8 @@ class PagesBuilderTests(unittest.TestCase):
             self.assertIn('href="./styles.css"', page)
             self.assertIn('src="./app.mjs"', page)
             self.assertIn('rel="canonical"', page)
+            self.assertIn("profile-reader-status", page)
+            self.assertIn("localProfilePath", (output / "site/app.mjs").read_text(encoding="utf-8"))
             self.assertIn("globalThis.__ATLAS_EMBEDDED_CATALOG__", snapshot)
             self.assertIn("globalThis.__ATLAS_EMBEDDED_PROFILES__", snapshot)
             self.assertNotIn('src="./app.mjs"', snapshot)

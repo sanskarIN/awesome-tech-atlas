@@ -54,7 +54,7 @@ The interface provides visible labels, a keyboard skip link, dark-mode and reduc
 
 **When JavaScript is disabled**, use the Markdown catalog link on the page. **When catalog loading fails**, the explorer reveals a direct link to the local Markdown resource index, which can also be opened from disk. The interactive interface is an enhancement, not the only way to discover resources.
 
-The local search page loads only files from your own server. Clicking the **profile** opens GitHub and clicking the **official source** opens the upstream website, which require network access and have their own privacy and licensing policies. An inspection date is a documentation-review marker, **not** a runtime, performance, maintenance, or security guarantee.
+The local search page loads only files from your own server. Clicking a **resource name** reads the curated Markdown profile directly from the local `resources/` directory into an accessible plain-text dialog (no Markdown-to-HTML execution). The dialog lets you download the Markdown and provides a separate **View on GitHub** link. The same reader works from the hosted GitHub Pages site, and comparison-table profile links open it too. Embedded offline profiles use the same reader without network requests. Opening a resource name in a new tab follows its direct local Markdown URL; if an in-page profile request fails, the dialog reports the problem and leaves the GitHub link available, without automatically contacting a third-party site. Clicking **official source** opens the upstream website, which requires connectivity and has its own privacy and licensing policies. An inspection date is a documentation-review marker, **not** a runtime, performance, maintenance, or security guarantee.
 
 ## Option C: Build a fully offline searchable HTML file
 
@@ -72,7 +72,7 @@ dist/awesome-tech-atlas-offline.html
 
 Double-click that file to open it with a modern browser. The HTML includes the catalog JSON, **all currently curated original resource profiles**, local search/filter code, and styles in **one file**. Search, category filters, kind filters, a **Download snapshot JSON** button, and **Download matching results CSV** work even with your network disconnected.
 
-- Select a resource title to open its complete profile in an offline dialog. The profile is deliberately displayed as **plain Markdown text**, preserving examples, links, headings, and code exactly rather than attempting an incomplete or unsafe Markdown renderer.
+- Select a resource title to open its complete profile in the shared read-only dialog. The profile is deliberately displayed as **plain Markdown text**, preserving examples, links, headings, and code exactly rather than attempting an incomplete or unsafe Markdown renderer.
 - Use **Download Markdown** in the dialog to save the original profile locally. Press **Escape** or **Close** to return to the search results.
 - The **View on GitHub** and **Official source** links still open external websites if network access is available.
 - With JavaScript disabled, the generated HTML contains an offline expandable resource index with each complete profile as escaped plain text, not just a summary.

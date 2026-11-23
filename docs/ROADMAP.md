@@ -22,6 +22,7 @@ This roadmap is a **direction**, not a release schedule or promise.
 - A reproducible single-file HTML snapshot can be opened directly from disk without starting a server; it embeds the reviewed catalog and all original curated Markdown profiles at build time.
 - Python and Node tests guard search semantics, browser asset structure, and documentation navigation.
 - Local and offline browsers allow up to three resources to be compared using existing catalog metadata; HTTP pages support shareable comparison query parameters without tracking or saved browsing history.
+- The local and Pages explorers read curated Markdown profiles on demand from same-origin files, with safe plain-text rendering and download support; offline snapshots use embedded profiles without a network request.
 - An opt-in GitHub Pages workflow builds a verified, project-path-aware artifact and deploys only after checks pass on protected `main`; setup and post-deploy verification are documented in [the Pages runbook](PAGES.md).
 
 ## Later, only if justified
