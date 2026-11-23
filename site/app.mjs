@@ -405,7 +405,6 @@ async function initialize() {
       setTimeout(() => URL.revokeObjectURL(url), 0);
     });
     const readerDialog = document.querySelector("#offline-profile-dialog");
-    readerDialog.addEventListener("close", () => { profileRequest += 1; });
     document.querySelector("#offline-profile-close").addEventListener("click", () => {
       readerDialog.close();
     });
