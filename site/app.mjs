@@ -127,7 +127,7 @@ async function openProfile(record) {
 
 function profileControl(record, label, className) {
   if (hasOfflineProfile(record.id)) {
-    const button = el("button", className, label);
+    const button = el("button", className === "profile-link" ? className + " offline-profile-trigger" : className, label);
     button.type = "button";
     button.addEventListener("click", () => openProfile(record));
     return button;
