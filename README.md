@@ -13,7 +13,7 @@ When GitHub Pages is configured and the `main` deployment succeeds, the [online 
 
 - **[Browse by topic](categories/README.md)** — programming, AI, systems, databases, web, security, and more.
 - **[Browse every vetted entry](resources/README.md)** — resource profiles with documented trade-offs.
-- **[Explore locally](docs/EXPLORE.md)** — search without external services, compare up to three resources side by side in the local/offline browser, and export filtered results as formula-safe CSV.
+- **[Explore locally](docs/EXPLORE.md)** — search without external services, read curated profiles inside the explorer, compare up to three resources side by side, and export filtered results as formula-safe CSV.
 - **[Build a single-file offline atlas](docs/EXPLORE.md#option-c-build-a-fully-offline-searchable-html-file)** — browse, read and save curated profiles without a server.
 - **[Try a hands-on example](docs/EXAMPLES.md)** — twelve compact, evidence-linked walkthroughs across major topics.
 - **[Follow a learning path](guides/learning-paths.md)** — build foundations before specializing.
