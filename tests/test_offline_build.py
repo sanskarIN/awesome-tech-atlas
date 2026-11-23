@@ -53,6 +53,8 @@ class OfflineBuilderTests(unittest.TestCase):
         self.assertIn("globalThis.__ATLAS_EMBEDDED_PROFILES__", document)
         self.assertIn("offline-profile-dialog", document)
         self.assertIn("download-profile-markdown", document)
+        self.assertIn("profile-reader-status", document)
+        self.assertIn("Curated resource profile", document)
         self.assertIn("## Worked example", document)
         self.assertIn('<details><summary>', document)
 
