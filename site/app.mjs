@@ -52,27 +52,96 @@ function hasOfflineProfile(id) {
     && typeof offlineProfiles[id] === "string";
 }
 
-function openOfflineProfile(record) {
-  if (!hasOfflineProfile(record.id)) return;
+const profileCache = new Map();
+let profileRequest = 0;
+const MAX_PROFILE_CHARS = 150_000;
+
+function localProfilePath(id) {
+  // IDs are strictly validated slugs before rendering. Never use an upstream URL for fetch.
+  return "../resources/" + encodeURIComponent(id) + ".md";
+}
+
+function saveProfileMarkdown(record, content) {
+  const blob = new Blob([content], { type: "text/markdown;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = record.id + ".md";
+  anchor.click();
+  setTimeout(() => URL.revokeObjectURL(url), 0);
+}
+
+async function openProfile(record) {
   const dialog = document.querySelector("#offline-profile-dialog");
   const heading = document.querySelector("#offline-profile-title");
   const markdown = document.querySelector("#offline-profile-markdown");
   const githubLink = document.querySelector("#offline-profile-github");
   const download = document.querySelector("#download-profile-markdown");
+  const readerStatus = document.querySelector("#profile-reader-status");
+  const request = ++profileRequest;
 
   heading.textContent = record.name;
-  markdown.textContent = offlineProfiles[record.id];
   githubLink.href = GITHUB_PROFILES + encodeURIComponent(record.id) + ".md";
-  download.onclick = () => {
-    const blob = new Blob([offlineProfiles[record.id]], { type: "text/markdown;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const anchor = document.createElement("a");
-    anchor.href = url;
-    anchor.download = record.id + ".md";
-    anchor.click();
-    setTimeout(() => URL.revokeObjectURL(url), 0);
-  };
+  markdown.textContent = "";
+  readerStatus.textContent = "Loading curated profile…";
+  download.disabled = true;
+  download.onclick = null;
   dialog.showModal();
+
+  const show = (content) => {
+    // An in-flight response must not overwrite a profile opened after it.
+    if (request !== profileRequest || !dialog.open) return;
+    markdown.textContent = content;
+    readerStatus.textContent = "Profile ready.";
+    download.disabled = false;
+    download.onclick = () => saveProfileMarkdown(record, content);
+  };
+
+  if (hasOfflineProfile(record.id)) {
+    show(offlineProfiles[record.id]);
+    return;
+  }
+  if (profileCache.has(record.id)) {
+    show(profileCache.get(record.id));
+    return;
+  }
+  try {
+    const response = await fetch(new URL(localProfilePath(record.id), document.baseURI), {
+      credentials: "omit",
+    });
+    if (!response.ok) throw new Error("Profile request failed.");
+    const declaredLength = Number(response.headers.get("content-length"));
+    if (declaredLength > MAX_PROFILE_CHARS * 4) throw new Error("Profile is too large.");
+    const text = await response.text();
+    if (!text.trim() || text.length > MAX_PROFILE_CHARS || !text.includes(record.url)) {
+      throw new Error("Profile does not match the catalog.");
+    }
+    profileCache.set(record.id, text);
+    show(text);
+  } catch {
+    if (request !== profileRequest || !dialog.open) return;
+    markdown.textContent = "This profile could not be read from the local site.";
+    readerStatus.textContent = "Local profile unavailable. Use View on GitHub when online.";
+  }
+}
+
+function profileControl(record, label, className) {
+  if (hasOfflineProfile(record.id)) {
+    const button = el("button", className, label);
+    button.type = "button";
+    button.addEventListener("click", () => openProfile(record));
+    return button;
+  }
+  // The real local Markdown URL remains usable when opening a new tab or without JS.
+  const link = el("a", className, label);
+  link.href = localProfilePath(record.id);
+  link.addEventListener("click", (event) => {
+    if (event.defaultPrevented || event.button !== 0
+        || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    openProfile(record);
+  });
+  return link;
 }
 
 function labelFor(key) {
@@ -103,16 +172,7 @@ function validRecord(record) {
 function resourceCard(record) {
   const article = el("article", "resource-card");
   const heading = el("h3", "card-title");
-  if (hasOfflineProfile(record.id)) {
-    const profileButton = el("button", "profile-link offline-profile-trigger", record.name);
-    profileButton.type = "button";
-    profileButton.addEventListener("click", () => openOfflineProfile(record));
-    heading.append(profileButton);
-  } else {
-    const profileLink = el("a", "profile-link", record.name);
-    profileLink.href = GITHUB_PROFILES + encodeURIComponent(record.id) + ".md";
-    heading.append(profileLink);
-  }
+  heading.append(profileControl(record, record.name, "profile-link"));
 
   const meta = el("div", "card-meta");
   meta.append(
@@ -197,17 +257,7 @@ function renderComparison() {
       return link;
     }],
     ["Last source inspection", (record) => record.verified_on],
-    ["Curated profile", (record) => {
-      if (hasOfflineProfile(record.id)) {
-        const button = el("button", "comparison-profile", "Read offline profile");
-        button.type = "button";
-        button.addEventListener("click", () => openOfflineProfile(record));
-        return button;
-      }
-      const link = el("a", "", "Read full profile");
-      link.href = GITHUB_PROFILES + encodeURIComponent(record.id) + ".md";
-      return link;
-    }],
+    ["Curated profile", (record) => profileControl(record, "Read full profile", "comparison-profile")],
   ];
   for (const [label, getValue] of fields) {
     const tr = el("tr");
@@ -354,8 +404,10 @@ async function initialize() {
       anchor.click();
       setTimeout(() => URL.revokeObjectURL(url), 0);
     });
+    const readerDialog = document.querySelector("#offline-profile-dialog");
+    readerDialog.addEventListener("close", () => { profileRequest += 1; });
     document.querySelector("#offline-profile-close").addEventListener("click", () => {
-      document.querySelector("#offline-profile-dialog").close();
+      readerDialog.close();
     });
     window.addEventListener("popstate", restoreFromUrl);
     document.addEventListener("keydown", (event) => {
