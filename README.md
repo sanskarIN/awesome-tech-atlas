@@ -9,6 +9,8 @@
 
 ## Start exploring
 
+When GitHub Pages is configured and the `main` deployment succeeds, the [online explorer](https://sanskarin.github.io/awesome-tech-atlas/site/) is available without installation. See the [Pages publishing and verification runbook](docs/PAGES.md) for activation and deployment status checks; the hosted link is not evidence of a successful deployment by itself.
+
 - **[Browse by topic](categories/README.md)** — programming, AI, systems, databases, web, security, and more.
 - **[Browse every vetted entry](resources/README.md)** — resource profiles with documented trade-offs.
 - **[Explore locally](docs/EXPLORE.md)** — search without external services, compare up to three resources side by side in the local/offline browser, and export filtered results as formula-safe CSV.
