@@ -1,11 +1,15 @@
 """GitHub Pages packaging regression checks (no network or external packages)."""
 
 from pathlib import Path
+from functools import partial
+from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 import json
 import tempfile
+from threading import Thread
 import unittest
 from unittest.mock import patch
 from urllib.parse import urljoin
+from urllib.request import urlopen
 
 from scripts import build_pages
 
@@ -67,6 +71,46 @@ class PagesBuilderTests(unittest.TestCase):
             urljoin(site_url, "../downloads/awesome-tech-atlas-offline.html"),
             base + "downloads/awesome-tech-atlas-offline.html",
         )
+
+    def test_http_site_assets_work_under_real_repository_prefix(self):
+        """Exercise the actual HTTP paths, not just inferred URL joins."""
+        class QuietHandler(SimpleHTTPRequestHandler):
+            def log_message(self, format, *args):
+                pass
+
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory) / "awesome-tech-atlas"
+            build_pages.build_pages(target)
+            handler = partial(QuietHandler, directory=directory)
+            server = ThreadingHTTPServer(("127.0.0.1", 0), handler)
+            thread = Thread(target=server.serve_forever, daemon=True)
+            thread.start()
+            try:
+                prefix = f"http://127.0.0.1:{server.server_port}/awesome-tech-atlas/"
+                with urlopen(prefix, timeout=5) as response:
+                    self.assertEqual(response.status, 200)
+                    self.assertIn(b'url=./site/', response.read())
+                with urlopen(prefix + "site/", timeout=5) as response:
+                    self.assertEqual(response.status, 200)
+                    self.assertIn(b"Explore the catalog", response.read())
+                with urlopen(prefix + "data/resources.json", timeout=5) as response:
+                    records = json.load(response)
+                    self.assertEqual(len(records), 37)
+                for relative in (
+                    "site/app.mjs",
+                    "site/search.mjs",
+                    "site/styles.css",
+                    "resources/README.md",
+                    "downloads/awesome-tech-atlas-offline.html",
+                    "sitemap.xml",
+                ):
+                    with self.subTest(path=relative), urlopen(prefix + relative, timeout=5) as response:
+                        self.assertEqual(response.status, 200)
+                        self.assertTrue(response.read())
+            finally:
+                server.shutdown()
+                thread.join(timeout=5)
+                server.server_close()
 
     def test_repeated_build_cleans_only_marked_generated_folder(self):
         with tempfile.TemporaryDirectory() as directory:
