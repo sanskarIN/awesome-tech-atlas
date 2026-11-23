@@ -210,7 +210,7 @@ button, input, select { font: inherit; }
 }
 
 
-/* Read-only embedded Markdown viewer for generated offline snapshots. */
+/* Read-only Markdown viewer shared by the served and standalone offline explorers. */
 .offline-profile-trigger {
   border: 0; padding: 0; background: transparent;
   color: inherit; font: inherit; font-weight: inherit;
@@ -233,12 +233,14 @@ button, input, select { font: inherit; }
 }
 .offline-dialog-header h2 { font-size: 1.35rem; line-height: 1.3; margin: 4px 0 8px; }
 .reader-note { margin: 0; color: var(--muted); font-size: .82rem; max-width: 660px; }
+.reader-status { margin: 10px 0 0; color: var(--muted); font-size: .83rem; font-weight: 650; }
 .reader-close, .reader-download {
   border: 1px solid var(--border); background: var(--surface);
   color: var(--text); border-radius: 8px; padding: 7px 13px;
   cursor: pointer; font-size: .85rem; font-weight: 700;
 }
-.reader-close:hover, .reader-download:hover { background: var(--border); }
+.reader-close:hover, .reader-download:hover:not(:disabled) { background: var(--border); }
+.reader-download:disabled { opacity: .5; cursor: not-allowed; }
 .offline-markdown {
   flex: 1; min-height: 0; overflow: auto; margin: 0;
   padding: 24px clamp(15px, 4vw, 34px);
