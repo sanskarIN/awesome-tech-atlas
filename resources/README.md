@@ -1,6 +1,6 @@
 # Resource index
 
-This is the maintained directory of **37 upstream-inspected starter resources**. Every entry links to an explanatory profile, not merely an external URL. Each catalog record has its own upstream inspection date; see the [editorial policy](../docs/EDITORIAL_POLICY.md) for the limits of verification.
+This is the maintained directory of **42 upstream-inspected starter resources**. Every entry links to an explanatory profile, not merely an external URL. Each catalog record has its own upstream inspection date; see the [editorial policy](../docs/EDITORIAL_POLICY.md) for the limits of verification.
 
 | Resource | Subject | Category |
 | --- | --- | --- |
@@ -9,15 +9,18 @@ This is the maintained directory of **37 upstream-inspected starter resources**.
 | [TypeScript documentation](typescript.md) | Typed JavaScript | [Programming languages](../categories/programming-languages.md) |
 | [MDN JavaScript](javascript-mdn.md) | JavaScript fundamentals | [Programming languages](../categories/programming-languages.md) |
 | [The Missing Semester](missing-semester.md) | Developer foundations | [Computer science fundamentals](../categories/computer-science-fundamentals.md) |
+| [Harvard CS50x](cs50x.md) | Introductory computer science | [Computer science fundamentals](../categories/computer-science-fundamentals.md) |
 | [scikit-learn documentation](scikit-learn.md) | Classical machine learning | [AI & machine learning](../categories/artificial-intelligence-machine-learning.md) |
 | [JAX documentation](jax.md) | Differentiable numerical computing | [AI & machine learning](../categories/artificial-intelligence-machine-learning.md) |
 | [PyTorch documentation](pytorch.md) | Deep learning framework | [Deep learning & neural networks](../categories/deep-learning-neural-networks.md) |
 | [TensorFlow Guide](tensorflow.md) | Deep learning framework | [Deep learning & neural networks](../categories/deep-learning-neural-networks.md) |
 | [Git reference](git.md) | Version control | [Software engineering](../categories/software-engineering.md) |
+| [Python unittest documentation](python-unittest.md) | Automated unit testing | [Software engineering](../categories/software-engineering.md) |
 | [The Embedded Rust Book](embedded-rust.md) | Bare-metal embedded programming | [Systems programming](../categories/systems-programming.md) |
 | [LLVM documentation](llvm.md) | Compiler infrastructure | [Compiler development](../categories/compiler-development.md) |
 | [Crafting Interpreters](crafting-interpreters.md) | Language implementation | [Compiler development](../categories/compiler-development.md) |
 | [Linux kernel documentation](linux-kernel-docs.md) | Operating-system internals | [Operating systems](../categories/operating-systems.md) |
+| [Operating Systems: Three Easy Pieces](ostep.md) | Operating-system concepts | [Operating systems](../categories/operating-systems.md) |
 | [PostgreSQL documentation](postgresql.md) | Client-server relational database | [Databases & storage systems](../categories/databases-storage.md) |
 | [SQLite documentation](sqlite.md) | Embedded relational database | [Databases & storage systems](../categories/databases-storage.md) |
 | [Visual Studio Code documentation](vscode.md) | Code editor | [Developer tools](../categories/developer-tools.md) |
@@ -32,7 +35,9 @@ This is the maintained directory of **37 upstream-inspected starter resources**.
 | [NumPy documentation](numpy.md) | Numerical arrays | [Scientific computing](../categories/scientific-computing.md) |
 | [SciPy documentation](scipy.md) | Scientific algorithms | [Scientific computing](../categories/scientific-computing.md) |
 | [CP-Algorithms](cp-algorithms.md) | Algorithm reference | [Algorithms & data structures](../categories/algorithms-data-structures.md) |
+| [MIT 6.006 Introduction to Algorithms](mit-6006.md) | Algorithm design and analysis | [Algorithms & data structures](../categories/algorithms-data-structures.md) |
 | [RISC-V unprivileged ISA specification](risc-v.md) | Instruction-set architecture | [Computer architecture](../categories/computer-architecture.md) |
+| [Nand to Tetris](nand2tetris.md) | Computer construction from logic gates | [Computer architecture](../categories/computer-architecture.md) |
 | [Wireshark documentation](wireshark.md) | Network analysis | [Networking & distributed systems](../categories/networking-distributed-systems.md) |
 | [OpenTelemetry documentation](opentelemetry.md) | Application observability | [Networking & distributed systems](../categories/networking-distributed-systems.md) |
 | [OWASP Cheat Sheet Series](owasp-cheatsheets.md) | Defensive application security | [Cybersecurity & secure engineering](../categories/cybersecurity-secure-engineering.md) |

@@ -59,7 +59,7 @@ class OfflineBuilderTests(unittest.TestCase):
         self.assertIn('<details><summary>', document)
 
         records = json.loads((ROOT / "data/resources.json").read_text(encoding="utf-8"))
-        self.assertEqual(len(records), 37)
+        self.assertEqual(len(records), 42)
         self.assertTrue(
             {"crafting-interpreters", "gdb", "wai-tutorials", "opentelemetry", "cmake-tutorial", "mdn-webassembly", "openssf-scorecard"}
             <= {record["id"] for record in records}
@@ -97,7 +97,7 @@ class OfflineBuilderTests(unittest.TestCase):
         records = json.loads((ROOT / "data/resources.json").read_text(encoding="utf-8"))
         profiles = build_offline.load_profiles(ROOT, records)
         self.assertEqual(set(profiles), {entry["id"] for entry in records})
-        self.assertEqual(len(profiles), 37)
+        self.assertEqual(len(profiles), 42)
         for ident, source in profiles.items():
             with self.subTest(profile=ident):
                 self.assertEqual(
