@@ -30,6 +30,34 @@ class AtlasExplorerTests(unittest.TestCase):
         self.assertEqual(atlas.normalize_text("Café / Scikit-Learn!"), "cafe scikit learn")
         self.assertEqual(atlas.normalize_text("RUST  & Python"), "rust python")
 
+    def test_technical_names_and_id_lookup(self):
+        entries = [
+            record("c-msvc", "C language"),
+            record("cpp-msvc", "C++ reference"),
+            record("csharp", "C# guide"),
+            record("rust", "Rust documentation"),
+            record("cmake", "CMake tools"),
+            record("interop", "Interop", "Connects C and C++ APIs"),
+        ]
+        for query, expected in (
+            ("C", ["c-msvc", "interop"]),
+            ("C++", ["cpp-msvc", "interop"]),
+            ("C#", ["csharp"]),
+            ("cpp-msvc", ["cpp-msvc"]),
+            ("c++ guide", []),
+        ):
+            with self.subTest(query=query):
+                self.assertEqual([x["id"] for x in atlas.search_records(entries, query)], expected)
+        self.assertEqual(atlas.normalize_text("C++ / C# / C"), "c++ c# c")
+        self.assertEqual(atlas.normalize_text("C++17"), "c++ 17")
+
+    def test_tied_results_sort_by_lowercase_name_then_id(self):
+        entries = [record("b", "Éclair"), record("z", "Zoo"),
+                   record("a", "éclair"), record("cpp", "C++"),
+                   record("c", "C")]
+        self.assertEqual([x["id"] for x in atlas.search_records(entries)],
+                         ["c", "cpp", "z", "a", "b"])
+
     def test_search_and_ranking(self):
         entries = [
             record("a", "Python"),

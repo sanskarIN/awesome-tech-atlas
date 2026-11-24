@@ -24,6 +24,7 @@ DEFAULT_CATALOG = ROOT / "data" / "resources.json"
 SLUG = re.compile(r"^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$")
 CSV_COLUMNS = ("id", "name", "category", "subcategory", "kind", "summary", "url", "verified_on")
 FORMULA_PREFIX = re.compile(r"^[\s\x00-\x1f]*[=+\-@]")
+SEARCH_TOKEN = re.compile(r"(?<!\w)c(?:\+\+|#)|\w+")
 
 
 class CatalogError(ValueError):
@@ -31,10 +32,17 @@ class CatalogError(ValueError):
 
 
 def normalize_text(value: str) -> str:
-    """Case-fold, remove combining accents and split punctuation into spaces."""
-    decomposed = unicodedata.normalize("NFKD", value).casefold()
-    plain = "".join(char for char in decomposed if not unicodedata.combining(char))
-    return " ".join(re.findall(r"\w+", plain))
+    """Normalize case and marks; retain meaningful C++ and C# punctuation."""
+    decomposed = unicodedata.normalize("NFKD", value)
+    plain = "".join(char for char in decomposed if not unicodedata.category(char).startswith("M")).lower()
+    return " ".join(SEARCH_TOKEN.findall(plain))
+
+
+def matches_token(token: str, text: str) -> bool:
+    """Single-letter names and punctuated C-family names require whole tokens."""
+    if len(token) == 1 or token in {"c++", "c#"}:
+        return token in text.split()
+    return token in text
 
 
 def load_catalog(path: Path = DEFAULT_CATALOG) -> list[dict[str, str]]:
@@ -71,6 +79,7 @@ def search_records(
     weights = (
         ("name", 8),
         ("subcategory", 5),
+        ("id", 4),
         ("summary", 3),
         ("category", 2),
         ("kind", 1),
@@ -82,14 +91,14 @@ def search_records(
         if kind and entry["kind"] != kind:
             continue
         fields = [(normalize_text(entry[field]), weight) for field, weight in weights]
-        if not all(any(token in text for text, _ in fields) for token in tokens):
+        if not all(any(matches_token(token, text) for text, _ in fields) for token in tokens):
             continue
         score = sum(
-            max((weight for text, weight in fields if token in text), default=0)
+            max((weight for text, weight in fields if matches_token(token, text)), default=0)
             for token in tokens
         )
         scored.append((score, entry))
-    scored.sort(key=lambda item: (-item[0], item[1]["name"].casefold(), item[1]["id"]))
+    scored.sort(key=lambda item: (-item[0], item[1]["name"].lower(), item[1]["id"]))
     results = [entry for _, entry in scored]
     return results[:limit] if limit is not None else results
 
@@ -194,7 +203,7 @@ def make_parser() -> argparse.ArgumentParser:
     )
     commands = parser.add_subparsers(dest="command", required=True)
 
-    search = commands.add_parser("search", help="Search titles, topics, summaries and kinds")
+    search = commands.add_parser("search", help="Search titles, resource IDs, topics, summaries and kinds")
     search.add_argument("query", nargs="?", default="", help="Words to match (AND semantics)")
     search.add_argument("--category", default="", help="Exact category slug")
     search.add_argument("--kind", default="", help="Exact resource kind")
