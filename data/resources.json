@@ -368,5 +368,55 @@
     "url": "https://opentelemetry.io/docs/",
     "summary": "Upstream documentation for vendor-neutral instrumentation, traces, metrics, logs, and telemetry collection in distributed applications.",
     "verified_on": "2026-11-14"
+  },
+  {
+    "id": "cs50x",
+    "name": "Harvard CS50x",
+    "category": "computer-science-fundamentals",
+    "subcategory": "Introductory computer science",
+    "kind": "learning-course",
+    "url": "https://cs50.harvard.edu/x/",
+    "summary": "Structured introductory course connecting programming, memory, algorithms, data structures and application development.",
+    "verified_on": "2026-11-24"
+  },
+  {
+    "id": "ostep",
+    "name": "Operating Systems: Three Easy Pieces",
+    "category": "operating-systems",
+    "subcategory": "Operating-system concepts",
+    "kind": "learning-guide",
+    "url": "https://pages.cs.wisc.edu/~remzi/OSTEP/",
+    "summary": "Author-published operating systems textbook organized around virtualization, concurrency and persistence.",
+    "verified_on": "2026-11-24"
+  },
+  {
+    "id": "mit-6006",
+    "name": "MIT 6.006 Introduction to Algorithms",
+    "category": "algorithms-data-structures",
+    "subcategory": "Algorithm design and analysis",
+    "kind": "learning-course",
+    "url": "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/",
+    "summary": "Undergraduate course materials for designing algorithms, analyzing complexity and choosing data structures.",
+    "verified_on": "2026-11-24"
+  },
+  {
+    "id": "nand2tetris",
+    "name": "Nand to Tetris",
+    "category": "computer-architecture",
+    "subcategory": "Computer construction from logic gates",
+    "kind": "learning-course",
+    "url": "https://www.nand2tetris.org/",
+    "summary": "Project-driven course connecting digital logic, computer organization and a software stack through an educational computer.",
+    "verified_on": "2026-11-24"
+  },
+  {
+    "id": "python-unittest",
+    "name": "Python unittest documentation",
+    "category": "software-engineering",
+    "subcategory": "Automated unit testing",
+    "kind": "official-docs",
+    "url": "https://docs.python.org/3/library/unittest.html",
+    "summary": "Standard-library reference for test cases, assertions, fixtures, discovery and test execution in Python.",
+    "verified_on": "2026-11-24"
   }
 ]

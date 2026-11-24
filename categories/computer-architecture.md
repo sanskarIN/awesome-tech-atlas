@@ -6,4 +6,6 @@ These are starting points, not an exhaustive list. Explore each profile for a pr
 
 - **[RISC-V unprivileged ISA specification](../resources/risc-v.md):** Official unprivileged RISC-V instruction-set manual for architectural behavior and extensions.
 
+- **[Nand to Tetris](../resources/nand2tetris.md):** Project-driven course connecting digital logic, computer organization and a software stack through an educational computer.
+
 [Browse all categories](README.md) · [Contribute a resource](../CONTRIBUTING.md)
