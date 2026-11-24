@@ -65,8 +65,10 @@ class AtlasExplorerTests(unittest.TestCase):
             result = atlas.main(["stats", "--json"])
         self.assertEqual(result, 0)
         stats = json.loads(output.getvalue())
-        self.assertEqual(stats["resources"], 42)
-        self.assertEqual(stats["categories"], 19)
+        source = json.loads((atlas.ROOT / "data/resources.json").read_text(encoding="utf-8"))
+        self.assertTrue(source, "catalog must not be empty")
+        self.assertEqual(stats["resources"], len(source))
+        self.assertEqual(stats["categories"], len({entry["category"] for entry in source}))
 
         error = StringIO()
         with contextlib.redirect_stderr(error):

@@ -418,5 +418,55 @@
     "url": "https://docs.python.org/3/library/unittest.html",
     "summary": "Standard-library reference for test cases, assertions, fixtures, discovery and test execution in Python.",
     "verified_on": "2026-11-24"
+  },
+  {
+    "id": "c-msvc",
+    "name": "Microsoft C language documentation",
+    "category": "programming-languages",
+    "subcategory": "C language and MSVC",
+    "kind": "official-docs",
+    "url": "https://learn.microsoft.com/en-us/cpp/c-language/",
+    "summary": "Vendor documentation for C declarations, functions, expressions, implementation behavior and the Microsoft C runtime.",
+    "verified_on": "2026-11-24"
+  },
+  {
+    "id": "cpp-msvc",
+    "name": "Microsoft C++ documentation",
+    "category": "programming-languages",
+    "subcategory": "C++ language and MSVC",
+    "kind": "official-docs",
+    "url": "https://learn.microsoft.com/en-us/cpp/cpp/",
+    "summary": "Vendor C++ reference linking language constructs, standard library usage, compiler options and native build tooling.",
+    "verified_on": "2026-11-24"
+  },
+  {
+    "id": "java-dev",
+    "name": "Dev.java learning tutorials",
+    "category": "programming-languages",
+    "subcategory": "Java language and JVM",
+    "kind": "official-docs",
+    "url": "https://dev.java/learn/",
+    "summary": "Java learning portal covering language fundamentals, collections, runtime tools and application organization.",
+    "verified_on": "2026-11-24"
+  },
+  {
+    "id": "go-docs",
+    "name": "Go documentation",
+    "category": "programming-languages",
+    "subcategory": "Go language and tooling",
+    "kind": "official-docs",
+    "url": "https://go.dev/doc/",
+    "summary": "Official Go documentation spanning introductory tutorials, language rules, dependency management, testing and runtime diagnostics.",
+    "verified_on": "2026-11-24"
+  },
+  {
+    "id": "kotlin-basic",
+    "name": "Kotlin basic syntax documentation",
+    "category": "programming-languages",
+    "subcategory": "Kotlin language",
+    "kind": "official-docs",
+    "url": "https://kotlinlang.org/docs/basic-syntax.html",
+    "summary": "Upstream syntax guide introducing Kotlin functions, variables, control flow, collections and nullable types.",
+    "verified_on": "2026-11-24"
   }
 ]

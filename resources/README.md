@@ -1,6 +1,6 @@
 # Resource index
 
-This is the maintained directory of **42 upstream-inspected starter resources**. Every entry links to an explanatory profile, not merely an external URL. Each catalog record has its own upstream inspection date; see the [editorial policy](../docs/EDITORIAL_POLICY.md) for the limits of verification.
+This is the maintained directory of **47 upstream-inspected starter resources**. Every entry links to an explanatory profile, not merely an external URL. Each catalog record has its own upstream inspection date; see the [editorial policy](../docs/EDITORIAL_POLICY.md) for the limits of verification.
 
 | Resource | Subject | Category |
 | --- | --- | --- |
@@ -8,6 +8,11 @@ This is the maintained directory of **42 upstream-inspected starter resources**.
 | [The Rust Programming Language](rust.md) | Rust language | [Programming languages](../categories/programming-languages.md) |
 | [TypeScript documentation](typescript.md) | Typed JavaScript | [Programming languages](../categories/programming-languages.md) |
 | [MDN JavaScript](javascript-mdn.md) | JavaScript fundamentals | [Programming languages](../categories/programming-languages.md) |
+| [Microsoft C language documentation](c-msvc.md) | C language and MSVC | [Programming languages](../categories/programming-languages.md) |
+| [Microsoft C++ documentation](cpp-msvc.md) | C++ language and MSVC | [Programming languages](../categories/programming-languages.md) |
+| [Dev.java learning tutorials](java-dev.md) | Java language and JVM | [Programming languages](../categories/programming-languages.md) |
+| [Go documentation](go-docs.md) | Go language and tooling | [Programming languages](../categories/programming-languages.md) |
+| [Kotlin basic syntax documentation](kotlin-basic.md) | Kotlin language | [Programming languages](../categories/programming-languages.md) |
 | [The Missing Semester](missing-semester.md) | Developer foundations | [Computer science fundamentals](../categories/computer-science-fundamentals.md) |
 | [Harvard CS50x](cs50x.md) | Introductory computer science | [Computer science fundamentals](../categories/computer-science-fundamentals.md) |
 | [scikit-learn documentation](scikit-learn.md) | Classical machine learning | [AI & machine learning](../categories/artificial-intelligence-machine-learning.md) |

@@ -23,7 +23,9 @@ test("generated offline script is valid classic JavaScript with embedded catalog
     const data = scripts[0][1].match(/globalThis\.__ATLAS_EMBEDDED_CATALOG__ = (\[[^\n]+\]);/);
     assert.ok(data, "expected embedded JSON assignment");
     const resources = JSON.parse(data[1]);
-    assert.equal(resources.length, 42);
+    const expected = JSON.parse(readFileSync(new URL("../data/resources.json", import.meta.url), "utf8"));
+    assert.ok(expected.length > 0);
+    assert.deepEqual(resources, expected);
     for (const id of ["crafting-interpreters", "gdb", "wai-tutorials", "opentelemetry", "cmake-tutorial", "mdn-webassembly", "openssf-scorecard"]) {
       assert.ok(resources.some((entry) => entry.id === id), `missing ${id}`);
     }
@@ -36,7 +38,11 @@ test("generated offline script is valid classic JavaScript with embedded catalog
     );
     assert.ok(profileAssignment, "expected full embedded resource profiles");
     const profiles = JSON.parse(profileAssignment[1]);
-    assert.equal(Object.keys(profiles).length, resources.length);
+    assert.deepEqual(Object.keys(profiles).sort(), resources.map((entry) => entry.id).sort());
+    for (const entry of resources) {
+      const source = readFileSync(new URL(`../resources/${entry.id}.md`, import.meta.url), "utf8");
+      assert.equal(profiles[entry.id], source, `embedded profile differs: ${entry.id}`);
+    }
     assert.ok(profiles.rust.includes("## Worked example"));
     assert.equal(typeof profiles.python, "string");
   } finally {

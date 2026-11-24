@@ -4,9 +4,9 @@ A learning path is an **editable sequence**, not a universal curriculum. Pick on
 
 ## Path A: New to software development
 
-1. Learn core language fundamentals from [Python](../resources/python.md) or [JavaScript (MDN)](../resources/javascript-mdn.md). Practice variables, functions, loops, and reading errors.
+1. Start with [Harvard CS50x](../resources/cs50x.md) if you want a broad introduction to computer science, or learn core language fundamentals from [Python](../resources/python.md) or [JavaScript (MDN)](../resources/javascript-mdn.md). Practice variables, functions, loops, and reading errors.
 2. Learn the shell, editor, and debugging basics in [The Missing Semester](../resources/missing-semester.md).
-3. Learn commits, branches, and collaboration in [Git](../resources/git.md).
+3. Learn commits, branches, and collaboration in [Git](../resources/git.md). If using Python, add a small [unittest](../resources/python-unittest.md) regression suite.
 4. Build one small project and document how to run it. Explore [VS Code](../resources/vscode.md) if you need an editor.
 
 **Outcome:** write, run, explain, and version-control a small program.
@@ -25,8 +25,8 @@ A learning path is an **editable sequence**, not a universal curriculum. Pick on
 
 ## Path C: Systems and infrastructure
 
-1. Learn [Rust](../resources/rust.md) or a systems language and understand pointers, memory layout, error handling, and I/O.
-2. Consult [Linux Kernel documentation](../resources/linux-kernel-docs.md) to understand processes and kernel interfaces.
+1. Learn [Rust](../resources/rust.md), [C](../resources/c-msvc.md) or [C++](../resources/cpp-msvc.md) and understand pointers, memory layout, error handling, and I/O. The C and C++ references focus on Microsoft toolchains; consult your compiler's documentation for portability.
+2. Study [Operating Systems: Three Easy Pieces](../resources/ostep.md) for conceptual foundations before consulting [Linux kernel documentation](../resources/linux-kernel-docs.md). For the hardware/software boundary, explore [Nand to Tetris](../resources/nand2tetris.md).
 3. Learn the compiler pipeline through [LLVM](../resources/llvm.md). For native C/C++ builds, follow the [CMake Tutorial](../resources/cmake-tutorial.md) to understand configuration and targets.
 4. Containerize a toy service with [Docker](../resources/docker.md), then learn why [Kubernetes](../resources/kubernetes.md) exists for orchestration.
 
@@ -61,3 +61,13 @@ A learning path is an **editable sequence**, not a universal curriculum. Pick on
 See also the [decision worksheet](decision-worksheet.md) for evaluating tools for a specific use case, and the [five project tracks](project-based-tracks.md) for concrete milestones.
 
 Avoid starting with everything at once. Verify new tools against the upstream documentation for your environment.
+
+## Path F: Typed application development
+
+1. Choose [Java](../resources/java-dev.md), [Kotlin](../resources/kotlin-basic.md) or [Go](../resources/go-docs.md) according to your target runtime and deployment needs.
+2. Write a local command-line inventory application using functions, collections and clear validation errors. Keep the input data synthetic.
+3. Work through selected [MIT 6.006](../resources/mit-6006.md) materials to reason about lookup cost and choose a suitable data structure.
+4. Add repeatable tests for empty inputs, duplicate keys and invalid values. Record the toolchain version and commands needed to reproduce the results.
+5. For JVM projects, investigate dependency and runtime packaging; for Go projects, investigate modules and the built-in test runner. Do not assume results transfer between toolchains.
+
+**Outcome:** deliver a typed, tested application with a reproducible local build and an explanation of its data structure and runtime choices.
