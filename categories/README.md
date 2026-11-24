@@ -4,7 +4,7 @@ Choose a field to find a small, editorially reviewed starting collection. Catego
 
 | Category | Starting entries |
 | --- | ---: |
-| [Programming languages](programming-languages.md) | 4 |
+| [Programming languages](programming-languages.md) | 9 |
 | [Computer science fundamentals](computer-science-fundamentals.md) | 2 |
 | [AI & machine learning](artificial-intelligence-machine-learning.md) | 2 |
 | [Deep learning & neural networks](deep-learning-neural-networks.md) | 2 |
