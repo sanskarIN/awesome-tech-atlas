@@ -97,7 +97,9 @@ class PagesBuilderTests(unittest.TestCase):
                     self.assertIn(b"Explore the catalog", response.read())
                 with urlopen(prefix + "data/resources.json", timeout=5) as response:
                     records = json.load(response)
-                    self.assertEqual(len(records), 42)
+                    expected = json.loads((ROOT / "data/resources.json").read_text(encoding="utf-8"))
+                    self.assertTrue(expected)
+                    self.assertEqual(records, expected)
                 for relative in (
                     "site/app.mjs",
                     "site/search.mjs",
