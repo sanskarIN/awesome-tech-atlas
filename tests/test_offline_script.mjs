@@ -23,7 +23,7 @@ test("generated offline script is valid classic JavaScript with embedded catalog
     const data = scripts[0][1].match(/globalThis\.__ATLAS_EMBEDDED_CATALOG__ = (\[[^\n]+\]);/);
     assert.ok(data, "expected embedded JSON assignment");
     const resources = JSON.parse(data[1]);
-    assert.equal(resources.length, 37);
+    assert.equal(resources.length, 42);
     for (const id of ["crafting-interpreters", "gdb", "wai-tutorials", "opentelemetry", "cmake-tutorial", "mdn-webassembly", "openssf-scorecard"]) {
       assert.ok(resources.some((entry) => entry.id === id), `missing ${id}`);
     }
