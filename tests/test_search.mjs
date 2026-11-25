@@ -108,3 +108,36 @@ test("comparison share links round-trip with filters without changing search sem
   assert.equal(filtersToQuery({ query: "", category: "", kind: "" }), "");
   assert.deepEqual(searchResources(records, filters).map((r) => r.id), ["python", "rust"]);
 });
+
+test("technical names and resource identifiers are searchable without punctuation collapse", () => {
+  const template = records[0];
+  const languages = [
+    { ...template, id: "c-msvc", name: "C language" },
+    { ...template, id: "cpp-msvc", name: "C++ reference", summary: "Native reference" },
+    { ...template, id: "csharp", name: "C# guide" },
+    { ...template, id: "rust", name: "Rust documentation" },
+    { ...template, id: "cmake", name: "CMake tools" },
+    { ...template, id: "interop", name: "Interop", summary: "Connects C and C++ APIs" },
+  ].map((item) => ({ ...item, subcategory: "Language tooling" }));
+  for (const [query, expected] of [
+    ["C", ["c-msvc", "interop"]],
+    ["C++", ["cpp-msvc", "interop"]],
+    ["C#", ["csharp"]],
+    ["cpp-msvc", ["cpp-msvc"]],
+    ["c++ guide", []],
+  ]) {
+    assert.deepEqual(searchResources(languages, { query }).map((x) => x.id), expected, query);
+  }
+  assert.equal(normalizeText("C++ / C# / C"), "c++ c# c");
+  assert.equal(normalizeText("C++17"), "c++ 17");
+  for (const query of ["C++", "C#", "C++ reference"]) {
+    assert.equal(parseFilters(filtersToQuery({ query })).query, query);
+  }
+});
+
+test("tie ordering uses lowercase code points and then resource ID", () => {
+  const entries = [
+    ["b", "Éclair"], ["z", "Zoo"], ["a", "éclair"], ["cpp", "C++"], ["c", "C"],
+  ].map(([id, name]) => ({ ...records[0], id, name }));
+  assert.deepEqual(searchResources(entries).map((x) => x.id), ["c", "cpp", "z", "a", "b"]);
+});

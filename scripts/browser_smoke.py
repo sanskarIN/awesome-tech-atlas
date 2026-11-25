@@ -133,6 +133,16 @@ def run_checks(browser_name: str = "chromium") -> None:
             assert page.locator("#cards article").count() > 0
             passed.append("shareable URL filter restoration")
 
+            page.goto(base + "/site/?q=C%2B%2B")
+            expect(page.locator("#query")).to_have_value("C++")
+            expect(page.locator('[data-compare-id="cpp-msvc"]')).to_be_visible()
+            expect(page.locator('[data-compare-id="python"]')).to_have_count(0)
+            page.locator("#query").fill("C")
+            expect(page.locator('[data-compare-id="c-msvc"]')).to_be_visible()
+            page.locator("#query").fill("C++")
+            assert "q=C%2B%2B" in page.url, page.url
+            passed.append("C-family token search and escaped URL sharing")
+
             page.goto(base + "/site/")
             page.locator('[data-compare-id="rust"]').click()
             page.locator('[data-compare-id="python"]').click()
