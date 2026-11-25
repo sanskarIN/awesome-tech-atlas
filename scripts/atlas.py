@@ -94,6 +94,25 @@ def search_records(
     return results[:limit] if limit is not None else results
 
 
+def compare_records(
+    records: list[dict[str, str]], ids: list[str],
+) -> list[dict[str, str]]:
+    """Resolve a shortlist of two or three distinct exact IDs in selection order.
+
+    Reject the entire request on invalid input rather than silently comparing
+    a different shortlist. No scores, recommendations or new claims are added.
+    """
+    if not 2 <= len(ids) <= 3:
+        raise CatalogError("Compare requires two or three resource IDs.")
+    if len(set(ids)) != len(ids):
+        raise CatalogError("Compare requires distinct resource IDs.")
+    by_id = {entry["id"]: entry for entry in records}
+    missing = [ident for ident in ids if ident not in by_id]
+    if missing:
+        raise CatalogError("Unknown resource ID(s): " + ", ".join(repr(ident) for ident in missing))
+    return [by_id[ident] for ident in ids]
+
+
 def resources_to_csv(records: list[dict[str, str]]) -> str:
     """Serialize search results with the same columns and formula protections as the browser.
 
@@ -207,6 +226,10 @@ def make_parser() -> argparse.ArgumentParser:
     show.add_argument("id", help="Example: scikit-learn")
     show.add_argument("--json", action="store_true")
 
+    compare = commands.add_parser("compare", help="Compare two or three curated resources by exact ID")
+    compare.add_argument("ids", nargs="+", metavar="ID")
+    compare.add_argument("--json", action="store_true", help="Ordered array of catalog records")
+
     for name, description in (
         ("categories", "Show category counts"),
         ("kinds", "Show resource-kind counts"),
@@ -284,6 +307,31 @@ def main(argv: list[str] | None = None) -> int:
             for field, value in entry.items():
                 print(f"{field}: {value}")
             print(f"profile: resources/{entry['id']}.md")
+        return 0
+
+    if args.command == "compare":
+        try:
+            selected = compare_records(catalog, args.ids)
+        except CatalogError as exc:
+            print(f"Error: {exc}", file=sys.stderr)
+            return 1
+        if args.json:
+            print(json.dumps(selected, ensure_ascii=False, indent=2))
+        else:
+            print("Selected resources (in input order; not a ranking):")
+            for entry in selected:
+                print(f"\n{entry['name']} [{entry['id']}]")
+                for field, label in (
+                    ("category", "Topic"),
+                    ("subcategory", "Subcategory"),
+                    ("kind", "Resource type"),
+                    ("summary", "Summary"),
+                    ("url", "Official source"),
+                    ("verified_on", "Last source inspection"),
+                ):
+                    print(f"  {label}: {entry[field]}")
+                print(f"  Curated profile: resources/{entry['id']}.md")
+            print("\nInspection dates are not security, performance or quality scores.")
         return 0
 
     if args.command == "review-queue":
