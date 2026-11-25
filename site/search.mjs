@@ -5,6 +5,7 @@
 const FIELD_WEIGHTS = [
   ["name", 8],
   ["subcategory", 5],
+  ["id", 4],
   ["summary", 3],
   ["category", 2],
   ["kind", 1],
@@ -15,7 +16,25 @@ export function normalizeText(value) {
     .normalize("NFKD")
     .replace(/\p{M}/gu, "")
     .toLowerCase();
-  return (text.match(/[\p{L}\p{N}_]+/gu) ?? []).join(" ");
+  return (text.match(/(?<![\p{L}\p{N}_])c(?:\+\+|#)|[\p{L}\p{N}_]+/gu) ?? []).join(" ");
+}
+
+function matchesToken(token, text) {
+  if ([...token].length === 1 || token === "c++" || token === "c#") {
+    return text.split(" ").includes(token);
+  }
+  return text.includes(token);
+}
+
+// Compare Unicode code points rather than locale-dependent collation. Python
+// compares strings by code point, so this keeps tied result ordering aligned.
+function compareCodePoints(a, b) {
+  const left = Array.from(a, (ch) => ch.codePointAt(0));
+  const right = Array.from(b, (ch) => ch.codePointAt(0));
+  for (let i = 0; i < Math.min(left.length, right.length); i++) {
+    if (left[i] !== right[i]) return left[i] - right[i];
+  }
+  return left.length - right.length;
 }
 
 export function searchResources(records, filters = {}) {
@@ -29,10 +48,10 @@ export function searchResources(records, filters = {}) {
     if (category && entry.category !== category) continue;
     if (kind && entry.kind !== kind) continue;
     const fields = FIELD_WEIGHTS.map(([key, weight]) => [normalizeText(entry[key]), weight]);
-    if (!tokens.every((token) => fields.some(([text]) => text.includes(token)))) continue;
+    if (!tokens.every((token) => fields.some(([text]) => matchesToken(token, text)))) continue;
     const score = tokens.reduce(
       (sum, token) => sum + Math.max(0, ...fields
-        .filter(([text]) => text.includes(token))
+        .filter(([text]) => matchesToken(token, text))
         .map(([, weight]) => weight)),
       0,
     );
@@ -40,8 +59,8 @@ export function searchResources(records, filters = {}) {
   }
 
   matches.sort((a, b) => b.score - a.score
-    || a.entry.name.toLowerCase().localeCompare(b.entry.name.toLowerCase(), "en")
-    || a.entry.id.localeCompare(b.entry.id, "en"));
+    || compareCodePoints(a.entry.name.toLowerCase(), b.entry.name.toLowerCase())
+    || compareCodePoints(a.entry.id, b.entry.id));
   return matches.map(({ entry }) => entry);
 }
 
