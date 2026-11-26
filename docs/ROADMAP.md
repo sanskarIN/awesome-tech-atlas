@@ -17,7 +17,7 @@ This roadmap is a **direction**, not a release schedule or promise.
 
 ## Local-first tooling
 
-- A dependency-free terminal explorer reads the existing JSON catalog and supports searchable JSON output.
+- A dependency-free terminal explorer reads the existing JSON catalog, supports searchable JSON output, and compares two or three exact resource IDs with deterministic selection order and optional JSON output.
 - An optional accessible static preview lets readers filter resources without a search server, database or analytics.
 - A reproducible single-file HTML snapshot can be opened directly from disk without starting a server; it embeds the reviewed catalog and all original curated Markdown profiles at build time.
 - Python and Node tests guard search semantics, browser asset structure, and documentation navigation. Technical keywords such as C++ retain their punctuation, and real-catalog parity tests cover result ordering and CSV export across runtimes.
