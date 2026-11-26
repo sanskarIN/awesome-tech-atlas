@@ -122,6 +122,24 @@ def compare_records(
     return [by_id[ident] for ident in ids]
 
 
+def read_profile(
+    records: list[dict[str, str]], ident: str, root: Path = ROOT,
+) -> str:
+    """Read the exact curated UTF-8 Markdown profile without rendering or fetching it."""
+    if not SLUG.fullmatch(ident) or not any(entry["id"] == ident for entry in records):
+        raise CatalogError(f"Unknown resource ID: {ident!r}")
+    try:
+        expected = root.resolve() / "resources" / f"{ident}.md"
+        resolved = expected.resolve(strict=True)
+        # Profiles must be ordinary files at their catalog-derived location.
+        # Do not follow a symlink to another profile or outside the chosen root.
+        if resolved != expected or not resolved.is_file():
+            raise CatalogError(f"{ident}: profile is not a regular file at its expected path.")
+        return resolved.read_bytes().decode("utf-8")
+    except (OSError, UnicodeError, RuntimeError) as exc:
+        raise CatalogError(f"{ident}: cannot read local UTF-8 profile: {exc}") from exc
+
+
 def resources_to_csv(records: list[dict[str, str]]) -> str:
     """Serialize search results with the same columns and formula protections as the browser.
 
@@ -235,6 +253,11 @@ def make_parser() -> argparse.ArgumentParser:
     show.add_argument("id", help="Example: scikit-learn")
     show.add_argument("--json", action="store_true")
 
+    profile = commands.add_parser("profile", help="Read the full local curated Markdown profile")
+    profile.add_argument("id", help="Exact resource ID, e.g. scikit-learn")
+    profile.add_argument("--root", type=Path, default=ROOT,
+                         help="Repository root containing resources/ (default: this repository)")
+
     compare = commands.add_parser("compare", help="Compare two or three curated resources by exact ID")
     compare.add_argument("ids", nargs="+", metavar="ID")
     compare.add_argument("--json", action="store_true", help="Ordered array of catalog records")
@@ -316,6 +339,19 @@ def main(argv: list[str] | None = None) -> int:
             for field, value in entry.items():
                 print(f"{field}: {value}")
             print(f"profile: resources/{entry['id']}.md")
+        return 0
+
+    if args.command == "profile":
+        try:
+            markdown = read_profile(catalog, args.id, args.root)
+        except CatalogError as exc:
+            print(f"Error: {exc}", file=sys.stderr)
+            return 1
+        # Preserve UTF-8 bytes and existing line endings for redirection on Windows too.
+        if hasattr(sys.stdout, "buffer"):
+            sys.stdout.buffer.write(markdown.encode("utf-8"))
+        else:
+            sys.stdout.write(markdown)
         return 0
 
     if args.command == "compare":
