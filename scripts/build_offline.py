@@ -80,13 +80,21 @@ def script_safe_json(records: object) -> str:
 
 def load_profiles(root: Path, records: list[dict[str, str]]) -> dict[str, str]:
     """Read every original profile verbatim. Missing or mismatched files fail the build."""
+    root = Path(root).resolve()
     profiles: dict[str, str] = {}
     for entry in records:
-        path = root / "resources" / (entry["id"] + ".md")
-        body = path.read_text(encoding="utf-8")
+        ident = entry["id"]
+        if not SLUG.fullmatch(ident) or ident in profiles:
+            raise ValueError(f"Duplicate or invalid profile ID: {ident!r}")
+        path = root / "resources" / (ident + ".md")
+        resolved = path.resolve(strict=True)
+        if resolved != path or not resolved.is_file():
+            raise ValueError(f"Not a regular profile at its expected path: {ident}")
+        # Decode bytes directly: text-mode reading normalizes CRLF and bare CR.
+        body = resolved.read_bytes().decode("utf-8")
         if not body.strip() or entry["url"] not in body:
-            raise ValueError(f"Profile is empty or missing the official URL: {entry['id']}")
-        profiles[entry["id"]] = body
+            raise ValueError(f"Profile is empty or missing the official URL: {ident}")
+        profiles[ident] = body
     return profiles
 
 

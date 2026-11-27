@@ -91,7 +91,7 @@ Double-click that file to open it with a modern browser. The HTML includes the c
 - The **View on GitHub** and **Official source** links still open external websites if network access is available.
 - With JavaScript disabled, the generated HTML contains an offline expandable resource index with each complete profile as escaped plain text, not just a summary.
 
-The exporter fails if a catalog profile is missing or its official URL disagrees with the catalog. Catalog data and Markdown profiles are embedded without creating new editorial content or updating source inspection dates.
+The exporter preserves the original UTF-8 profile bytes in the embedded JSON (including mixed line endings), and rejects missing, invalid UTF-8, non-regular or symlinked profile files, invalid or duplicate profile IDs, and profiles whose official URL is absent from the Markdown. HTML display can normalize line endings; the embedded profile data retains them. Catalog data and Markdown profiles are embedded without creating new editorial content or updating source inspection dates.
 
 The result is a snapshot of the catalog at build time. **Rebuild it after changing resource data.** Files under `dist/` are ignored by Git and should not be committed automatically. To choose a destination:
 

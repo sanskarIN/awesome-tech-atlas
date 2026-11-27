@@ -103,7 +103,7 @@ class OfflineBuilderTests(unittest.TestCase):
             with self.subTest(profile=ident):
                 self.assertEqual(
                     source,
-                    (ROOT / "resources" / (ident + ".md")).read_text(encoding="utf-8"),
+                    (ROOT / "resources" / (ident + ".md")).read_bytes().decode("utf-8"),
                 )
 
     def test_missing_or_mismatched_profiles_fail_closed(self):
@@ -118,6 +118,73 @@ class OfflineBuilderTests(unittest.TestCase):
             )
             with self.assertRaisesRegex(ValueError, "missing the official URL"):
                 build_offline.load_profiles(root, [records[0]])
+
+    def test_original_utf8_and_mixed_line_endings_survive_embedding(self):
+        record = {"id": "example", "url": "https://example.org"}
+        original = "# Résumé\r\nhttps://example.org\rनमस्ते\n".encode("utf-8")
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            profiles = root / "resources"
+            profiles.mkdir()
+            (profiles / "example.md").write_bytes(original)
+            loaded = build_offline.load_profiles(root, [record])
+            self.assertEqual(loaded["example"].encode("utf-8"), original)
+            self.assertEqual(json.loads(build_offline.script_safe_json(loaded)), loaded)
+
+    def test_rejects_invalid_ids_and_duplicate_profiles(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            profiles = root / "resources"
+            profiles.mkdir()
+            (profiles / "example.md").write_text("https://example.org", encoding="utf-8")
+            record = {"id": "example", "url": "https://example.org"}
+            for ident in ("../example", "Example", "/example", ""):
+                with self.subTest(ident=ident):
+                    with self.assertRaisesRegex(ValueError, "invalid profile ID"):
+                        build_offline.load_profiles(root, [{**record, "id": ident}])
+            with self.assertRaisesRegex(ValueError, "Duplicate"):
+                build_offline.load_profiles(root, [record, record])
+
+    def test_symlinked_profile_and_resource_directory_are_rejected(self):
+        record = {"id": "example", "url": "https://example.org"}
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            profiles = root / "resources"
+            profiles.mkdir()
+            outside = root / "outside"
+            outside.mkdir()
+            external = outside / "example.md"
+            external.write_text("https://example.org", encoding="utf-8")
+            link = profiles / "example.md"
+            try:
+                link.symlink_to(external)
+            except (OSError, NotImplementedError) as exc:
+                self.skipTest(f"Symlinks unavailable: {exc}")
+            with self.assertRaisesRegex(ValueError, "Not a regular profile"):
+                build_offline.load_profiles(root, [record])
+            link.unlink()
+            profiles.rmdir()
+            try:
+                profiles.symlink_to(outside, target_is_directory=True)
+            except (OSError, NotImplementedError) as exc:
+                self.skipTest(f"Directory symlinks unavailable: {exc}")
+            with self.assertRaisesRegex(ValueError, "Not a regular profile"):
+                build_offline.load_profiles(root, [record])
+
+    def test_rejects_invalid_utf8_and_directories(self):
+        record = {"id": "example", "url": "https://example.org"}
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            profiles = root / "resources"
+            profiles.mkdir()
+            path = profiles / "example.md"
+            path.write_bytes(b"https://example.org\xff")
+            with self.assertRaises(UnicodeError):
+                build_offline.load_profiles(root, [record])
+            path.unlink()
+            path.mkdir()
+            with self.assertRaisesRegex(ValueError, "Not a regular profile"):
+                build_offline.load_profiles(root, [record])
 
     def test_profiles_are_escaped_in_fallback_and_embedded_script(self):
         record = {"id": "example", "name": "<unsafe>", "summary": "summary",
