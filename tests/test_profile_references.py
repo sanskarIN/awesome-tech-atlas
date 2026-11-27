@@ -82,6 +82,15 @@ class ProfileReferencesTests(unittest.TestCase):
         self.assertEqual(delta["incoming"], [])
         self.assertEqual(delta["untracked_outgoing"], [])
 
+    def test_one_way_link_is_not_treated_as_reciprocal(self):
+        self.write("beta", "# No outgoing links")
+        alpha = self.report("alpha")
+        beta = self.report("beta")
+        self.assertIn("beta", [item["id"] for item in alpha["outgoing"]])
+        self.assertNotIn("beta", [item["id"] for item in alpha["incoming"]])
+        self.assertEqual(beta["outgoing"], [])
+        self.assertEqual([item["id"] for item in beta["incoming"]], ["alpha"])
+
     def test_catalog_order_does_not_change_report(self):
         expected = self.report("alpha")
         self.records.reverse()
