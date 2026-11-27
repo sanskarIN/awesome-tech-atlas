@@ -163,3 +163,48 @@ def navigation_report(
             for source, profile in sorted(untracked)
         ],
     }
+
+
+def profile_references(
+    records: list[dict[str, str]], ident: str, root: Path,
+) -> dict[str, object]:
+    """Find actual outgoing and incoming links between curated profiles.
+
+    Scan every catalogued profile so incoming links are complete within the
+    supported Markdown syntax. Do not infer similarity, fetch upstream URLs,
+    or silently omit missing or unreadable profiles.
+    """
+    by_id = {record["id"]: record for record in records}
+    if ident not in by_id:
+        raise NavigationAuditError(f"Unknown resource ID: {ident!r}")
+    root = root.resolve()
+    links: dict[str, set[str]] = {}
+    for resource_id in sorted(by_id):
+        source = root / "resources" / f"{resource_id}.md"
+        try:
+            resolved = source.resolve(strict=True)
+            if resolved != source or not resolved.is_file():
+                raise NavigationAuditError(
+                    f"Not a regular profile at its expected path: {source}"
+                )
+        except (OSError, RuntimeError) as exc:
+            raise NavigationAuditError(f"Cannot resolve profile {source}: {exc}") from exc
+        links[resource_id] = _document_links(source, root) - {resource_id}
+
+    def describe(resource_ids: set[str]) -> list[dict[str, str]]:
+        return [
+            {"id": key, "name": by_id[key]["name"],
+             "category": by_id[key]["category"], "profile": f"resources/{key}.md"}
+            for key in sorted(resource_ids, key=lambda k: (by_id[k]["name"].casefold(), k))
+        ]
+
+    outgoing = links[ident]
+    incoming = {key for key, targets in links.items() if ident in targets}
+    return {
+        "scope": "explicit profile cross-references; not inferred recommendations",
+        "resource": describe({ident})[0],
+        "scanned_profiles": len(links),
+        "outgoing": describe(outgoing.intersection(by_id)),
+        "incoming": describe(incoming),
+        "untracked_outgoing": sorted(outgoing.difference(by_id)),
+    }
