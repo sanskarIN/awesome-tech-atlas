@@ -149,6 +149,19 @@ class PagesBuilderTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, "source files"):
                     build_pages.prepare_output(target, ROOT)
 
+    def test_marked_ancestor_cannot_be_removed_as_build_output(self):
+        with tempfile.TemporaryDirectory() as directory:
+            parent = Path(directory)
+            root = parent / "repository"
+            root.mkdir()
+            original = root / "README.md"
+            original.write_text("Keep source files", encoding="utf-8")
+            (parent / build_pages.MARKER).touch()
+            with self.assertRaisesRegex(ValueError, "source files"):
+                build_pages.prepare_output(parent, root)
+            self.assertEqual(original.read_text(encoding="utf-8"), "Keep source files")
+            self.assertTrue((parent / build_pages.MARKER).is_file())
+
     def test_builder_fails_before_mutating_destination_on_profile_error(self):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory) / "site"
