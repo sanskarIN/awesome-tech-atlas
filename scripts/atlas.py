@@ -15,9 +15,9 @@ import sys
 import unicodedata
 
 if __package__:
-    from .navigation_audit import NavigationAuditError, navigation_report
+    from .navigation_audit import NavigationAuditError, navigation_report, profile_references
 else:
-    from navigation_audit import NavigationAuditError, navigation_report
+    from navigation_audit import NavigationAuditError, navigation_report, profile_references
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CATALOG = ROOT / "data" / "resources.json"
@@ -262,6 +262,14 @@ def make_parser() -> argparse.ArgumentParser:
     compare.add_argument("ids", nargs="+", metavar="ID")
     compare.add_argument("--json", action="store_true", help="Ordered array of catalog records")
 
+    related = commands.add_parser(
+        "related", help="Find explicit incoming and outgoing curated profile links",
+    )
+    related.add_argument("id", help="Exact resource ID, e.g. python")
+    related.add_argument("--root", type=Path, default=ROOT,
+                         help="Repository root containing resources/")
+    related.add_argument("--json", action="store_true", help="Machine-readable cross-references")
+
     for name, description in (
         ("categories", "Show category counts"),
         ("kinds", "Show resource-kind counts"),
@@ -377,6 +385,29 @@ def main(argv: list[str] | None = None) -> int:
                     print(f"  {label}: {entry[field]}")
                 print(f"  Curated profile: resources/{entry['id']}.md")
             print("\nInspection dates are not security, performance or quality scores.")
+        return 0
+
+    if args.command == "related":
+        try:
+            report = profile_references(catalog, args.id, args.root)
+        except NavigationAuditError as exc:
+            print(f"Error: {exc}", file=sys.stderr)
+            return 1
+        if args.json:
+            print(json.dumps(report, ensure_ascii=False, indent=2))
+        else:
+            print(f"Profile cross-references for {report['resource']['name']} "
+                  f"[{args.id}] ({report['scanned_profiles']} profiles scanned)")
+            for key, label in (("outgoing", "Links to"), ("incoming", "Linked from")):
+                items = report[key]
+                print(f"{label} ({len(items)}):")
+                for item in items:
+                    print(f"  - {item['name']} [{item['category']}] {item['profile']}")
+                if not items:
+                    print("  None")
+            if report["untracked_outgoing"]:
+                print("Untracked outgoing IDs: " + ", ".join(report["untracked_outgoing"]))
+            print("Explicit editorial links, not inferred recommendations.")
         return 0
 
     if args.command == "review-queue":
