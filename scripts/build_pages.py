@@ -48,7 +48,7 @@ def prepare_output(output: Path, root: Path) -> None:
     """Rebuild only marked generated folders, never arbitrary source directories."""
     output = output.resolve()
     root = root.resolve()
-    if output == root or (output.is_relative_to(root) and not output.is_relative_to(root / "dist")):
+    if root.is_relative_to(output) or (output.is_relative_to(root) and not output.is_relative_to(root / "dist")):
         raise ValueError("Output must not overwrite repository source files.")
     if output.exists():
         if not output.is_dir():
